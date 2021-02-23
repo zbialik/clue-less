@@ -8,6 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
+/**
+ * TODO: define game
+ * 
+ * @author zachbialik
+ *
+ */
 class Game {
 
   private @Id @GeneratedValue Long id;
