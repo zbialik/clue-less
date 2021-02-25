@@ -90,7 +90,7 @@ class GameController {
 		gameRepository.deleteById(gid);
 	}
 	
-	// TODO: fix this
+	// TODO: fix this to get all players in game
 //	/**
 //	 * Returns list of players for a given game
 //	 * @return
