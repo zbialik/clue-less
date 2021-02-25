@@ -15,9 +15,10 @@ class LoadDatabase {
   CommandLineRunner initDatabase(GameRepository gameRepository) {
 
     return args -> {
-      log.info("Preloading " + gameRepository.save(new Game(new Player("Zach Bialik", (long) 1))));
-      log.info("Preloading " + gameRepository.save(new Game(new Player("Megan Tucker", (long) 1))));
-      log.info("Preloading " + gameRepository.save(new Game(new Player("Alex Wang", (long) 1))));
+    	log.info("Preloading " + gameRepository.save(new Game()));
+//      log.info("Preloading " + gameRepository.save(new Game(new Player("Zach Bialik", (long) 1))));
+//      log.info("Preloading " + gameRepository.save(new Game(new Player("Megan Tucker", (long) 1))));
+//      log.info("Preloading " + gameRepository.save(new Game(new Player("Alex Wang", (long) 1))));
     };
   }
 }
