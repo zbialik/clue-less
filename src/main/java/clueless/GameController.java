@@ -90,20 +90,18 @@ class GameController {
 		gameRepository.deleteById(gid);
 	}
 	
-	// TODO: fix this to get all players in game
-//	/**
-//	 * Returns list of players for a given game
-//	 * @return
-//	 */
-//	@GetMapping("/games/{gid}/players")
-//	CollectionModel<Player> allPlayersInGame(@PathVariable Long gid) {
-//		
-//		Game game = gameRepository.findById(gid) //
-//				.orElseThrow(() -> new GameNotFoundException(gid));
-//		
-//		ArrayList<Player> currPlayers = game.getPlayers();
-//		
-//		return CollectionModel.of(currPlayers);
-//	}
+	/**
+	 * Returns list of players for a given game
+	 * @return
+	 */
+	@GetMapping("/{gid}/players")
+	CollectionModel<Player> allPlayersInGame(@PathVariable Long gid) {
+		
+		Game game = gameRepository.findById(gid) //
+				.orElseThrow(() -> new GameNotFoundException(gid));
+		
+		ArrayList<Player> currPlayers = game.getPlayers();
+		return CollectionModel.of(currPlayers);
+	}
 	
 }
