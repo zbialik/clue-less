@@ -12,12 +12,12 @@ class LoadDatabase {
   private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
   @Bean
-  CommandLineRunner initDatabase(GameRepository repository) {
+  CommandLineRunner initDatabase(GameRepository gameRepository) {
 
     return args -> {
-      log.info("Preloading " + repository.save(new Game()));
-//      log.info("Preloading " + repository.save(new Game(new Player("Megan Tucker"))));
-//      log.info("Preloading " + repository.save(new Game(new Player("Alex Wang"))));
+      log.info("Preloading " + gameRepository.save(new Game(new Player("Zach Bialik", (long) 1))));
+      log.info("Preloading " + gameRepository.save(new Game(new Player("Megan Tucker", (long) 1))));
+      log.info("Preloading " + gameRepository.save(new Game(new Player("Alex Wang", (long) 1))));
     };
   }
 }

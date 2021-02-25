@@ -23,6 +23,7 @@ public class Game {
 
   Game() { // default constructor
 	  this.players = new ArrayList<Player>();
+	  this.players.add(new Player("Zach", this.getId())); // TODO: remove
 		// this.currMap = new ClueMap(); TODO update properly
   }
 
@@ -45,6 +46,20 @@ public class Game {
    */
   public void addPlayer(Player newPlayer) {
 	  this.players.add(newPlayer);
+  }
+  
+  /**
+   * Returns the player provided their pid
+   * @return
+   */
+  public Player getPlayer(Long pid) {
+	  for (Player player : players) {
+		  if (player.getId() == pid) {
+			  return player;
+		  }
+	  }
+	  
+	  throw new PlayerNotFoundException(pid); // if not found, throw exception
   }
   
   /**
