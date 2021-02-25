@@ -89,19 +89,21 @@ class GameController {
 	void deleteGame(@PathVariable Long gid) {
 		gameRepository.deleteById(gid);
 	}
-	
+
 	/**
 	 * Returns list of players for a given game
 	 * @return
 	 */
 	@GetMapping("/{gid}/players")
 	CollectionModel<Player> allPlayersInGame(@PathVariable Long gid) {
-		
+
 		Game game = gameRepository.findById(gid) //
 				.orElseThrow(() -> new GameNotFoundException(gid));
-		
+
 		ArrayList<Player> currPlayers = game.getPlayers();
 		return CollectionModel.of(currPlayers);
 	}
 	
+	// TODO: add put/post method for adding a player to game
+
 }
