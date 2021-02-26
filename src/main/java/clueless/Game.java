@@ -23,7 +23,6 @@ public class Game {
 
   Game() { // default constructor
 	  this.players = new ArrayList<Player>();
-	  this.players.add(new Player("Zach", this.getId())); // TODO: remove
 		// this.currMap = new ClueMap(); TODO update properly
   }
 

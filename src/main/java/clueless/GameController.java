@@ -103,7 +103,29 @@ class GameController {
 		ArrayList<Player> currPlayers = game.getPlayers();
 		return CollectionModel.of(currPlayers);
 	}
-	
-	// TODO: add put/post method for adding a player to game
 
+	/**
+	 * Adds a player to the game provided a string of the playerName
+	 * @param playerName
+	 * @param gid
+	 * @return
+	 */
+	// TODO: need to fix so that more than one player doesn't cause exception
+	//		likely cause of exception is the fact the added player has ID = null (which means the second player added 
+	// 		would have the same player ID and thus not be a valid addition to
+	@PutMapping("/{gid}/players")
+	EntityModel<Game> addPlayer(@RequestParam("playerName") String playerName, @PathVariable Long gid) {
+
+		Player newPlayer = new Player(playerName, gid);
+
+		Game game = gameRepository.findById(gid) //
+				.orElseThrow(() -> new GameNotFoundException(gid));
+
+		game.addPlayer(newPlayer);
+		gameRepository.save(game);
+
+		return EntityModel.of(game, //
+				linkTo(methodOn(GameController.class).one(gid)).withSelfRel(),
+				linkTo(methodOn(GameController.class).all()).withRel("games"));
+	}
 }
