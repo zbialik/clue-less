@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.hateoas.CollectionModel;
@@ -14,6 +17,8 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAutoConfiguration
 @RequestMapping("/games")
 class GameController {
-	
+
 	private int gameId = 1;
 	private final HashMap<Integer, Game> gamesHashMap;
 
@@ -41,11 +46,11 @@ class GameController {
 	 * Returns list of all active games
 	 * @return
 	 */
-	@GetMapping()
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	String getAllGames() {
 		return toStringAllGames();
 	}
-	
+
 	/**
 	 * Creates a new game object (starts new game)
 	 * @param newGame
@@ -95,40 +100,55 @@ class GameController {
 	 */
 	@PostMapping("/{gid}/players")
 	String createPlayerInGame(@RequestParam("name") String name, @PathVariable int gid) {
-		
+
 		this.gamesHashMap.get(gid).addPlayer(new Player(name)); // add player to game
-		
+
 		return this.toStringAllPlayersInGame(gid);
 	}
-	
-	
-	
-	
-	
+
 	/**
 	 * Returns string of all games
 	 * @return
 	 */
 	String toStringAllGames() {
-		String allGames = "Games: \n";
-		for (Game game : this.gamesHashMap.values()) {
-			allGames += "\t" + game.toString() + "\n";
-		}
-		return allGames;
+		return toJsonAllGames().toString(4); // apply pretty formatting;
 	}
 	
+	/**
+	 * Returns string of all games
+	 * @return
+	 */
+	JSONArray toJsonAllGames() {
+		
+		JSONArray allGamesJson = new JSONArray();
+		for (Game game : this.gamesHashMap.values()) {
+			allGamesJson.put(game.toJson());
+		}
+
+		return allGamesJson;
+	}
+
 	/**
 	 * Returns string of all players in a game
 	 * @param gid
 	 * @return
 	 */
 	String toStringAllPlayersInGame(int gid) {
-		String allPlayers = "Players in Game " + gid + ": \n";
-		for (Player player : this.gamesHashMap.get(gid).getPlayers().values()) {
-			allPlayers += "\t" + player.toString() + "\n";
-		}
-		return allPlayers;
+		return toJsonAllPlayersInGame(gid).toString(4); // apply pretty formatting;
 	}
 
+	/**
+	 * Returns JSONArray representing all players in a game
+	 * @param gid
+	 * @return
+	 */
+	JSONArray toJsonAllPlayersInGame(int gid) {
 
+		JSONArray playersJson = new JSONArray();
+		for (Player player : this.gamesHashMap.get(gid).getPlayers().values()) {
+			playersJson.put(player.toJson());
+		}
+
+		return playersJson;
+	}
 }

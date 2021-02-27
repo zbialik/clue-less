@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.json.JSONObject;
+
 @SuppressWarnings("serial")
 @Entity
 /**
@@ -83,6 +85,17 @@ public class Player implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "{ Player ID: " + this.playerId + ", Player Name: " + this.name + "}";
+		return this.toJson().toString(4); // applly pretty formatting
+	}
+	
+	/**
+	 * Returns information relevant to the player
+	 */
+	public JSONObject toJson() {
+		JSONObject playerJson = new JSONObject();
+		playerJson.put("id", this.playerId);
+		playerJson.put("name", this.name);
+		
+		return playerJson;
 	}
 }

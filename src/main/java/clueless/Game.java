@@ -7,6 +7,11 @@ import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
+
+import org.json.JSONArray;
+
 @Entity
 /**
  * The Game class represents a temporary game being held for a group
@@ -108,6 +113,24 @@ public class Game {
 	 */
 	@Override
 	public String toString() {
-		return "{ Game ID: " + this.gameId + ", Players: " + this.players.toString() + "}";
+		return this.toJson().toString(4); // apply pretty formatting
+	}
+	
+	/**
+	 * Returns information relevant to the game
+	 */
+	public JSONObject toJson() {
+		
+		JSONObject gameInfoJson = new JSONObject();
+		gameInfoJson.put("id",this.gameId);
+		
+		JSONArray playersJson = new JSONArray();
+		for (Player player : this.players.values()) {
+			playersJson.put(player.toJson());
+		}
+		
+		gameInfoJson.put("players", playersJson);
+		
+		return gameInfoJson; // apply pretty formatting
 	}
 }
