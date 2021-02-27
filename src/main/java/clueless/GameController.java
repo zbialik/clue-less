@@ -1,11 +1,13 @@
 package clueless;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -24,15 +26,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@EnableAutoConfiguration
 @RequestMapping("/games")
 class GameController {
+	
+	private int gameId = 1;
+	private final HashMap<Integer, Game> gamesHashMap;
 
-	private final GameRepository gameRepository;
-	private final GameModelAssembler gameAssembler;
-
-	GameController(GameRepository gameRepository, GameModelAssembler gameAssembler) {
-		this.gameRepository = gameRepository;
-		this.gameAssembler = gameAssembler;
+	GameController() {
+		this.gamesHashMap = new HashMap<Integer, Game>();
 	}
 
 	/**
@@ -40,29 +42,21 @@ class GameController {
 	 * @return
 	 */
 	@GetMapping()
-	CollectionModel<EntityModel<Game>> all() {
-		List<EntityModel<Game>> games = gameRepository.findAll().stream()
-				.map(game -> EntityModel.of(game,
-						linkTo(methodOn(GameController.class).one(game.getId())).withSelfRel(),
-						linkTo(methodOn(GameController.class).all()).withRel("games")))
-				.collect(Collectors.toList());
-
-		return CollectionModel.of(games, linkTo(methodOn(GameController.class).all()).withSelfRel());
+	String getAllGames() {
+		return allGamesToString();
 	}
-
+	
 	/**
 	 * Creates a new game object (starts new game)
 	 * @param newGame
 	 * @return
 	 */
 	@PostMapping()
-	ResponseEntity<?> newGame(@RequestBody Game newGame) {
+	String newGame() {
+		this.gamesHashMap.put(gameId, new Game(gameId)); // initialize empty new game
+		gameId++; // increment game ID to set unique ID's for games
 
-		EntityModel<Game> entityModel = gameAssembler.toModel(gameRepository.save(newGame));
-
-		return ResponseEntity //
-				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-				.body(entityModel);
+		return allGamesToString();
 	}
 
 	/**
@@ -71,14 +65,8 @@ class GameController {
 	 * @return
 	 */
 	@GetMapping("/{gid}")
-	EntityModel<Game> one(@PathVariable Long gid) {
-
-		Game game = gameRepository.findById(gid) //
-				.orElseThrow(() -> new GameNotFoundException(gid));
-
-		return EntityModel.of(game, //
-				linkTo(methodOn(GameController.class).one(gid)).withSelfRel(),
-				linkTo(methodOn(GameController.class).all()).withRel("games"));
+	String getGameByID(@PathVariable int gid) {
+		return this.gamesHashMap.get(gid).toString();
 	}
 
 	/**
@@ -86,8 +74,8 @@ class GameController {
 	 * @param gid
 	 */
 	@DeleteMapping("/{gid}")
-	void deleteGame(@PathVariable Long gid) {
-		gameRepository.deleteById(gid);
+	void deleteGameByID(@PathVariable int gid) {
+		this.gamesHashMap.remove(gid);
 	}
 
 	/**
@@ -95,37 +83,48 @@ class GameController {
 	 * @return
 	 */
 	@GetMapping("/{gid}/players")
-	CollectionModel<Player> allPlayersInGame(@PathVariable Long gid) {
-
-		Game game = gameRepository.findById(gid) //
-				.orElseThrow(() -> new GameNotFoundException(gid));
-
-		ArrayList<Player> currPlayers = game.getPlayers();
-		return CollectionModel.of(currPlayers);
+	String getAllPlayersInGame(@PathVariable int gid) {
+		return allPlayersInGameToString(gid);
 	}
 
 	/**
 	 * Adds a player to the game provided a string of the playerName
-	 * @param playerName
+	 * @param name
 	 * @param gid
 	 * @return
 	 */
-	// TODO: need to fix so that more than one player doesn't cause exception
-	//		likely cause of exception is the fact the added player has ID = null (which means the second player added 
-	// 		would have the same player ID and thus not be a valid addition to
-	@PutMapping("/{gid}/players")
-	EntityModel<Game> addPlayer(@RequestParam("playerName") String playerName, @PathVariable Long gid) {
-
-		Player newPlayer = new Player(playerName, gid);
-
-		Game game = gameRepository.findById(gid) //
-				.orElseThrow(() -> new GameNotFoundException(gid));
-
-		game.addPlayer(newPlayer);
-		gameRepository.save(game);
-
-		return EntityModel.of(game, //
-				linkTo(methodOn(GameController.class).one(gid)).withSelfRel(),
-				linkTo(methodOn(GameController.class).all()).withRel("games"));
+	@PostMapping("/{gid}/players")
+	String addPlayer(@RequestParam("name") String name, @PathVariable int gid) {
+		
+		this.gamesHashMap.get(gid).addPlayer(new Player(name)); // add player to game
+		
+		return this.allPlayersInGameToString(gid);
 	}
+	
+	/**
+	 * Returns string of all games
+	 * @return
+	 */
+	String allGamesToString() {
+		String allGames = "Games: \n";
+		for (Game game : this.gamesHashMap.values()) {
+			allGames += "\t" + game.toString() + "\n";
+		}
+		return allGames;
+	}
+	
+	/**
+	 * Returns string of all games
+	 * @param gid
+	 * @return
+	 */
+	String allPlayersInGameToString(int gid) {
+		String allPlayers = "Players in Game " + gid + ": \n";
+		for (Player player : this.gamesHashMap.get(gid).getPlayers().values()) {
+			allPlayers += "\t" + player.toString() + "\n";
+		}
+		return allPlayers;
+	}
+
+
 }
