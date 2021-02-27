@@ -43,7 +43,7 @@ class GameController {
 	 */
 	@GetMapping()
 	String getAllGames() {
-		return allGamesToString();
+		return toStringAllGames();
 	}
 	
 	/**
@@ -52,11 +52,11 @@ class GameController {
 	 * @return
 	 */
 	@PostMapping()
-	String newGame() {
+	String createGame() {
 		this.gamesHashMap.put(gameId, new Game(gameId)); // initialize empty new game
 		gameId++; // increment game ID to set unique ID's for games
 
-		return allGamesToString();
+		return toStringAllGames();
 	}
 
 	/**
@@ -65,7 +65,7 @@ class GameController {
 	 * @return
 	 */
 	@GetMapping("/{gid}")
-	String getGameByID(@PathVariable int gid) {
+	String getGame(@PathVariable int gid) {
 		return this.gamesHashMap.get(gid).toString();
 	}
 
@@ -74,7 +74,7 @@ class GameController {
 	 * @param gid
 	 */
 	@DeleteMapping("/{gid}")
-	void deleteGameByID(@PathVariable int gid) {
+	void deleteGame(@PathVariable int gid) {
 		this.gamesHashMap.remove(gid);
 	}
 
@@ -84,7 +84,7 @@ class GameController {
 	 */
 	@GetMapping("/{gid}/players")
 	String getAllPlayersInGame(@PathVariable int gid) {
-		return allPlayersInGameToString(gid);
+		return toStringAllPlayersInGame(gid);
 	}
 
 	/**
@@ -94,18 +94,22 @@ class GameController {
 	 * @return
 	 */
 	@PostMapping("/{gid}/players")
-	String addPlayer(@RequestParam("name") String name, @PathVariable int gid) {
+	String createPlayerInGame(@RequestParam("name") String name, @PathVariable int gid) {
 		
 		this.gamesHashMap.get(gid).addPlayer(new Player(name)); // add player to game
 		
-		return this.allPlayersInGameToString(gid);
+		return this.toStringAllPlayersInGame(gid);
 	}
+	
+	
+	
+	
 	
 	/**
 	 * Returns string of all games
 	 * @return
 	 */
-	String allGamesToString() {
+	String toStringAllGames() {
 		String allGames = "Games: \n";
 		for (Game game : this.gamesHashMap.values()) {
 			allGames += "\t" + game.toString() + "\n";
@@ -114,11 +118,11 @@ class GameController {
 	}
 	
 	/**
-	 * Returns string of all games
+	 * Returns string of all players in a game
 	 * @param gid
 	 * @return
 	 */
-	String allPlayersInGameToString(int gid) {
+	String toStringAllPlayersInGame(int gid) {
 		String allPlayers = "Players in Game " + gid + ": \n";
 		for (Player player : this.gamesHashMap.get(gid).getPlayers().values()) {
 			allPlayers += "\t" + player.toString() + "\n";
