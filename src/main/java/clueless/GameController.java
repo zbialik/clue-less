@@ -1,31 +1,16 @@
 package clueless;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.Link;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAutoConfiguration
 @RequestMapping("/games")
 class GameController {
+	
+    private static final Logger LOGGER = LogManager.getLogger(GameController.class);
+    
 
 	private int gameId = 1;
 	private final HashMap<Integer, Game> gamesHashMap;
@@ -48,6 +36,7 @@ class GameController {
 	 */
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	String getAllGames() {
+		LOGGER.info("All games returned.");
 		return toStringAllGames();
 	}
 
@@ -59,6 +48,8 @@ class GameController {
 	@PostMapping()
 	String createGame() {
 		this.gamesHashMap.put(gameId, new Game(gameId)); // initialize empty new game
+
+		LOGGER.info("Game " + gameId + " created.");
 		gameId++; // increment game ID to set unique ID's for games
 
 		return toStringAllGames();
@@ -71,6 +62,7 @@ class GameController {
 	 */
 	@GetMapping("/{gid}")
 	String getGame(@PathVariable int gid) {
+		LOGGER.info("Game " + gameId + " returned.");
 		return this.gamesHashMap.get(gid).toString();
 	}
 
@@ -80,6 +72,7 @@ class GameController {
 	 */
 	@DeleteMapping("/{gid}")
 	void deleteGame(@PathVariable int gid) {
+		LOGGER.info("Game " + gameId + " deleted.");
 		this.gamesHashMap.remove(gid);
 	}
 
@@ -89,6 +82,7 @@ class GameController {
 	 */
 	@GetMapping("/{gid}/players")
 	String getAllPlayersInGame(@PathVariable int gid) {
+		LOGGER.info("Players in game " + gameId + " returned.");
 		return toStringAllPlayersInGame(gid);
 	}
 
@@ -100,9 +94,9 @@ class GameController {
 	 */
 	@PostMapping("/{gid}/players")
 	String createPlayerInGame(@RequestParam("name") String name, @PathVariable int gid) {
-
 		this.gamesHashMap.get(gid).addPlayer(new Player(name)); // add player to game
-
+		
+		LOGGER.info("Player named " + name + " added to game " + gameId + ".");
 		return this.toStringAllPlayersInGame(gid);
 	}
 
@@ -111,7 +105,7 @@ class GameController {
 	 * @return
 	 */
 	String toStringAllGames() {
-		return toJsonAllGames().toString(4); // apply pretty formatting;
+		return toJsonAllGames().toString(4) + '\n'; // apply pretty formatting;
 	}
 	
 	/**
@@ -134,7 +128,7 @@ class GameController {
 	 * @return
 	 */
 	String toStringAllPlayersInGame(int gid) {
-		return toJsonAllPlayersInGame(gid).toString(4); // apply pretty formatting;
+		return toJsonAllPlayersInGame(gid).toString(4) + '\n'; // apply pretty formatting;
 	}
 
 	/**

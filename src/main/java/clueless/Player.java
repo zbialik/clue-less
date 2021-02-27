@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.json.JSONObject;
@@ -85,7 +83,7 @@ public class Player implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return this.toJson().toString(4); // applly pretty formatting
+		return this.toJson().toString(4) + '\n'; // applly pretty formatting
 	}
 	
 	/**
@@ -93,9 +91,9 @@ public class Player implements Serializable {
 	 */
 	public JSONObject toJson() {
 		JSONObject playerJson = new JSONObject();
-		playerJson.put("id", this.playerId);
+		playerJson.put("playerId", this.playerId);
 		playerJson.put("name", this.name);
-		
+		playerJson.put("isTurn", this.isTurn);
 		return playerJson;
 	}
 }

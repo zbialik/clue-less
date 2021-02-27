@@ -3,14 +3,13 @@ package clueless;
 import java.util.HashMap;
 import java.util.Objects;
 
-import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 @Entity
 /**
@@ -21,6 +20,8 @@ import org.json.JSONArray;
  * @author Zach Bialik
  */
 public class Game {
+	
+	private static final Logger LOGGER = LogManager.getLogger(Game.class); // use logger as needed
 	
 	@Id
 	private int gameId; // will use to set game ID's
@@ -113,7 +114,7 @@ public class Game {
 	 */
 	@Override
 	public String toString() {
-		return this.toJson().toString(4); // apply pretty formatting
+		return this.toJson().toString(4) + '\n'; // apply pretty formatting
 	}
 	
 	/**
@@ -122,7 +123,7 @@ public class Game {
 	public JSONObject toJson() {
 		
 		JSONObject gameInfoJson = new JSONObject();
-		gameInfoJson.put("id",this.gameId);
+		gameInfoJson.put("gameId",this.gameId);
 		
 		JSONArray playersJson = new JSONArray();
 		for (Player player : this.players.values()) {
