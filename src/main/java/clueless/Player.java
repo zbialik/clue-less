@@ -96,4 +96,5 @@ public class Player implements Serializable {
 		playerJson.put("isTurn", this.isTurn);
 		return playerJson;
 	}
+	
 }
