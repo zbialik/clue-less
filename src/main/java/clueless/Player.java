@@ -98,4 +98,5 @@ public class Player implements Serializable {
 	public void setGameId(Long gameId) {
 		this.gameId = gameId;
 	}
+	
 }
