@@ -39,17 +39,25 @@ class GameController {
 		LOGGER.info("All games returned.");
 		return toStringAllGames();
 	}
-
+	
 	/**
 	 * Creates a new game object (starts new game)
-	 * @param newGame
+	 * @param name (opt)
 	 * @return
 	 */
 	@PostMapping()
-	String createGame() {
-		this.gamesHashMap.put(gameId, new Game(gameId)); // initialize empty new game
+	String createGame(@RequestParam(required = false) String name) {
+		
+		Game newGame = new Game(gameId);
+		
+		if (!(name.isBlank() || name.isEmpty() || name == "")) {
+			newGame.addPlayer(new Player(name)); // include player in initialized game
+			LOGGER.info(name + " initialized Game " + gameId + ".");
+		} else {
+			LOGGER.info("Initialized empty Game " + gameId + ".");
+		}
 
-		LOGGER.info("Game " + gameId + " created.");
+		this.gamesHashMap.put(gameId, newGame); // initialize new game
 		gameId++; // increment game ID to set unique ID's for games
 
 		return toStringAllGames();
@@ -93,7 +101,7 @@ class GameController {
 	 * @return
 	 */
 	@PostMapping("/{gid}/players")
-	String createPlayerInGame(@RequestParam("name") String name, @PathVariable int gid) {
+	String createPlayerInGame(@RequestParam(required = true) String name, @PathVariable int gid) {
 		this.gamesHashMap.get(gid).addPlayer(new Player(name)); // add player to game
 		
 		LOGGER.info("Player named " + name + " added to game " + gameId + ".");

@@ -24,13 +24,13 @@ public class Game {
 	private static final Logger LOGGER = LogManager.getLogger(Game.class); // use logger as needed
 	
 	@Id
-	private int gameId; // will use to set game ID's
+	private int gameId; // game unique ID
 	
 	private int playerId = 1; // will use to set player ID's
 	private HashMap<Integer, Player> players; // map of players based on player ID
 	//  private ClueMap currMap; // current map of the game board.
 
-	public Game(int id) { // default constructor
+	public Game(int id) { // custom constructor
 		this.gameId = id;
 		this.players = new HashMap<Integer, Player>();
 		// this.currMap = new ClueMap(); TODO update properly
