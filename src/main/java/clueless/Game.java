@@ -112,9 +112,8 @@ public class Game {
 	/**
 	 * Returns information relevant to the game
 	 */
-	@Override
-	public String toString() {
-		return this.toJson().toString(4) + '\n'; // apply pretty formatting
+	public String toString(int jsonSpacing) {
+		return this.toJson().toString(jsonSpacing) + '\n'; // apply pretty formatting
 	}
 	
 	/**
@@ -132,6 +131,6 @@ public class Game {
 		
 		gameInfoJson.put("players", playersJson);
 		
-		return gameInfoJson; // apply pretty formatting
+		return gameInfoJson;
 	}
 }

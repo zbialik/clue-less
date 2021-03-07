@@ -91,7 +91,7 @@ public class Player implements Serializable {
 	 */
 	public JSONObject toJson() {
 		JSONObject playerJson = new JSONObject();
-		playerJson.put("playerId", this.playerId);
+		playerJson.put("id", this.playerId);
 		playerJson.put("name", this.name);
 		playerJson.put("isTurn", this.isTurn);
 		return playerJson;

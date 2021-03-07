@@ -5,8 +5,12 @@ import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +26,7 @@ class GameController {
 	
     private static final Logger LOGGER = LogManager.getLogger(GameController.class);
     
-
+    private final int JSON_SPACING = 4;
 	private int gameId = 1;
 	private final HashMap<Integer, Game> gamesHashMap;
 
@@ -35,32 +39,35 @@ class GameController {
 	 * @return
 	 */
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	String getAllGames() {
+	@CrossOrigin(origins = "http://localhost:4200")
+	ResponseEntity<String> getAllGames() {
 		LOGGER.info("All games returned.");
-		return toStringAllGames();
+//		return toStringAllGames();
+		return new ResponseEntity<String>(toStringAllGames(), HttpStatus.OK);
 	}
-	
+	 
 	/**
 	 * Creates a new game object (starts new game)
 	 * @param name (opt)
 	 * @return
 	 */
-	@PostMapping()
-	String createGame(@RequestParam(required = false) String name) {
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin(origins = "http://localhost:4200")
+	ResponseEntity<String> createGame(@RequestParam(required = false) String name) {
 		
-		Game newGame = new Game(gameId);
+		Game newGame = new Game(this.gameId);
 		
 		if (!(name.isBlank() || name.isEmpty() || name == "")) {
 			newGame.addPlayer(new Player(name)); // include player in initialized game
-			LOGGER.info(name + " initialized Game " + gameId + ".");
+			LOGGER.info(name + " initialized Game " + this.gameId + ".");
 		} else {
-			LOGGER.info("Initialized empty Game " + gameId + ".");
+			LOGGER.info("Initialized empty Game " + this.gameId + ".");
 		}
-
-		this.gamesHashMap.put(gameId, newGame); // initialize new game
-		gameId++; // increment game ID to set unique ID's for games
-
-		return toStringAllGames();
+		
+		this.gamesHashMap.put(this.gameId, newGame); // initialize new game
+		this.gameId++; // increment game ID to set unique ID's for games
+		
+		return new ResponseEntity<String>(this.toStringGameByID(this.gameId - 1), HttpStatus.OK);
 	}
 
 	/**
@@ -68,10 +75,11 @@ class GameController {
 	 * @param gid
 	 * @return
 	 */
-	@GetMapping("/{gid}")
-	String getGame(@PathVariable int gid) {
+	@GetMapping(value = "/{gid}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin(origins = "http://localhost:4200")
+	ResponseEntity<String> getGame(@PathVariable int gid) {
 		LOGGER.info("Game " + gameId + " returned.");
-		return this.gamesHashMap.get(gid).toString();
+		return new ResponseEntity<String>(this.toStringGameByID(gid), HttpStatus.OK);
 	}
 
 	/**
@@ -79,6 +87,7 @@ class GameController {
 	 * @param gid
 	 */
 	@DeleteMapping("/{gid}")
+	@CrossOrigin(origins = "http://localhost:4200")
 	void deleteGame(@PathVariable int gid) {
 		LOGGER.info("Game " + gameId + " deleted.");
 		this.gamesHashMap.remove(gid);
@@ -88,10 +97,11 @@ class GameController {
 	 * Returns list of players for a given game
 	 * @return
 	 */
-	@GetMapping("/{gid}/players")
-	String getAllPlayersInGame(@PathVariable int gid) {
+	@GetMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin(origins = "http://localhost:4200")
+	ResponseEntity<String> getAllPlayersInGame(@PathVariable int gid) {
 		LOGGER.info("Players in game " + gameId + " returned.");
-		return toStringAllPlayersInGame(gid);
+		return new ResponseEntity<String>(this.toStringAllPlayersInGame(gid), HttpStatus.OK);
 	}
 
 	/**
@@ -100,12 +110,13 @@ class GameController {
 	 * @param gid
 	 * @return
 	 */
-	@PostMapping("/{gid}/players")
-	String createPlayerInGame(@RequestParam(required = true) String name, @PathVariable int gid) {
+	@PostMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin(origins = "http://localhost:4200")
+	ResponseEntity<String> createPlayerInGame(@RequestParam(required = true) String name, @PathVariable int gid) {
 		this.gamesHashMap.get(gid).addPlayer(new Player(name)); // add player to game
 		
 		LOGGER.info("Player named " + name + " added to game " + gameId + ".");
-		return this.toStringAllPlayersInGame(gid);
+		return new ResponseEntity<String>(this.toStringAllPlayersInGame(gid), HttpStatus.OK);
 	}
 
 	/**
@@ -113,11 +124,11 @@ class GameController {
 	 * @return
 	 */
 	String toStringAllGames() {
-		return toJsonAllGames().toString(4) + '\n'; // apply pretty formatting;
+		return toJsonAllGames().toString(JSON_SPACING) + '\n'; // apply pretty formatting;
 	}
 	
 	/**
-	 * Returns string of all games
+	 * Returns json array of all games
 	 * @return
 	 */
 	JSONArray toJsonAllGames() {
@@ -129,6 +140,15 @@ class GameController {
 
 		return allGamesJson;
 	}
+	
+	/**
+	 * Returns string of game data
+	 * @param gid
+	 * @return
+	 */
+	String toStringGameByID(int gid) {
+		return this.gamesHashMap.get(gid).toString(JSON_SPACING) + '\n'; // apply pretty formatting;
+	}
 
 	/**
 	 * Returns string of all players in a game
@@ -136,7 +156,7 @@ class GameController {
 	 * @return
 	 */
 	String toStringAllPlayersInGame(int gid) {
-		return toJsonAllPlayersInGame(gid).toString(4) + '\n'; // apply pretty formatting;
+		return toJsonAllPlayersInGame(gid).toString(JSON_SPACING) + '\n'; // apply pretty formatting;
 	}
 
 	/**

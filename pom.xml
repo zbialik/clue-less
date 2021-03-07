@@ -16,6 +16,7 @@
 	<description>Clue Game by The Gold Team - JHU Foundations of Software Engineering - Team Project</description>
 	<properties>
 		<java.version>11</java.version>
+		<jackson.version>2.12.0</jackson.version>
 		<logging.level.org.springframework.web>DEBUG</logging.level.org.springframework.web>
 		<logging.level.org.hibernate>ERROR</logging.level.org.hibernate>
 	</properties>
@@ -54,9 +55,25 @@
 		</dependency>
 		<!-- yaml formatter -->
 		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-yaml</artifactId>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-scala_2.11</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
 		</dependency>
+	    <dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+        <dependency>
+	        <groupId>com.fasterxml.jackson.core</groupId>
+	        <artifactId>jackson-annotations</artifactId>
+	        <version>${jackson.version}</version>
+	       </dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -69,7 +86,6 @@
 			<version>20190722</version>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -78,5 +94,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
