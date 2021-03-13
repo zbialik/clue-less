@@ -22,15 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/games")
-class GameController {
+class GameService {
 	
-    private static final Logger LOGGER = LogManager.getLogger(GameController.class);
+    private static final Logger LOGGER = LogManager.getLogger(GameService.class);
     
     private final int JSON_SPACING = 4;
 	private int gameId = 1;
 	private final HashMap<Integer, Game> gamesHashMap;
 
-	GameController() {
+	GameService() {
 		this.gamesHashMap = new HashMap<Integer, Game>();
 	}
 
