@@ -14,8 +14,6 @@ public interface GameDataManager {
 	// game datastore
 	HashMap<Integer, Game> gamesHashMap = new HashMap<Integer, Game>();
 	
-	final int JSON_SPACING = 4;
-	
 	/**
 	 * Returns json array of all games
 	 * @return allGamesJson
@@ -45,7 +43,7 @@ public interface GameDataManager {
 		} else {
 			LOGGER.info("Initialized empty Game " + newGameId + ".");
 		}
-
+		
 		gamesHashMap.put(newGameId, newGame); // initialize new game
 		
 		return newGame.toJson();
