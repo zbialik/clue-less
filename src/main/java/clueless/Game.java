@@ -6,8 +6,6 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,17 +19,17 @@ import org.json.JSONObject;
  */
 public class Game {
 	
-	private static final Logger LOGGER = LogManager.getLogger(Game.class); // use logger as needed
-	
 	@Id
 	private int gameId; // game unique ID
 	
 	private int playerId = 1; // will use to set player ID's
+	private boolean hasStarted = false;
 	private HashMap<Integer, Player> players; // map of players based on player ID
 	//  private ClueMap currMap; // current map of the game board.
 
 	public Game(int id) { // custom constructor
 		this.gameId = id;
+		this.hasStarted = false;
 		this.players = new HashMap<Integer, Player>();
 		// this.currMap = new ClueMap(); TODO update properly
 	}
@@ -123,6 +121,7 @@ public class Game {
 		
 		JSONObject gameInfoJson = new JSONObject();
 		gameInfoJson.put("gameId",this.gameId);
+		gameInfoJson.put("hasStarted",this.hasStarted);
 		
 		JSONArray playersJson = new JSONArray();
 		for (Player player : this.players.values()) {
