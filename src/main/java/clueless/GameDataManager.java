@@ -75,7 +75,6 @@ public interface GameDataManager {
 		}
 
 		gamesHashMap.put(newGameId, newGame); // initialize new game
-		storeGameData();
 
 		return newGame.toJson();
 	}
@@ -89,34 +88,12 @@ public interface GameDataManager {
 	default JSONObject addNewPlayerInGame(String name, int gameId) {
 
 		gamesHashMap.get(gameId).addPlayer(new Player(name)); // add player to game
-		storeGameData();
 		
 		return gamesHashMap.get(gameId).toJson();
 	}
 
 	default void deleteGame(int gameId) {
 		gamesHashMap.remove(gameId);
-		storeGameData();
-	}
-
-	/**
-	 * Securely stores game data in persistent JSON file
-	 * 
-	 */
-	static void storeGameData() {
-		JSONArray allGamesJson = new JSONArray();
-		for (Game game : gamesHashMap.values()) {
-			allGamesJson.put(game.toJson());
-		}
-		
-		try {
-			FileWriter file = new FileWriter(GAME_DATASTORE_JSON_FILE);
-			file.write(allGamesJson.toString());
-			file.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("JSON file created: " + GAME_DATASTORE_JSON_FILE);
 	}
 
 }
