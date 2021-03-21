@@ -35,7 +35,7 @@ public class GameController implements GameDataManager {
 //    	        scheduler.schedule(new Runnable() {
 //    	                public void run() { saverHandle.cancel(false); }
 //    	            }, 60 * 60, TimeUnit.SECONDS);
-//    	    }
+//   }
 	
 	/**
 	 * Securely stores game data in persistent JSON file

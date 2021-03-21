@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/games")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 class GameService extends GameController {
 
 	private static final Logger LOGGER = LogManager.getLogger(GameService.class);
@@ -32,7 +33,6 @@ class GameService extends GameController {
 	 * @return
 	 */
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	ResponseEntity<String> getAllGamesHTTP() {
 		LOGGER.info("All games returned.");
 		return new ResponseEntity<String>(jsonToString(getAllGames()), HttpStatus.OK);
@@ -44,7 +44,6 @@ class GameService extends GameController {
 	 * @return
 	 */
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	ResponseEntity<String> createGameHTTP(@RequestParam(required = false) String name) {
 		
 		JSONObject newGameJson = addNewGame(name, this.gameId);
@@ -60,7 +59,6 @@ class GameService extends GameController {
 	 * @return
 	 */
 	@GetMapping(value = "/{gid}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	ResponseEntity<String> getGameHTTP(@PathVariable int gid) {
 		LOGGER.info("Game " + gid + " returned.");
 //		return new ResponseEntity<String>(this.toStringGameByID(gid), HttpStatus.OK);
@@ -72,7 +70,6 @@ class GameService extends GameController {
 	 * @param gid
 	 */
 	@DeleteMapping("/{gid}")
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	void deleteGameHTTP(@PathVariable int gid) {
 		LOGGER.info("Game " + gid + " deleted.");
 //		GameDataManager.gamesHashMap.remove(gid);
@@ -85,7 +82,6 @@ class GameService extends GameController {
 	 * @return
 	 */
 	@GetMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	ResponseEntity<String> getAllPlayersInGameHTTP(@PathVariable int gid) {
 		LOGGER.info("Players in game " + gid + " returned.");
 //		return new ResponseEntity<String>(this.toStringAllPlayersInGame(gid), HttpStatus.OK);
@@ -99,7 +95,6 @@ class GameService extends GameController {
 	 * @return
 	 */
 	@PostMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	ResponseEntity<String> createPlayerInGameHTTP(@RequestParam(required = true) String name, @PathVariable int gid) {
 //		GameDataManager.gamesHashMap.get(gid).addPlayer(new Player(name)); // add player to game
 		addNewPlayerInGame(name, gid);
