@@ -61,7 +61,6 @@ class GameService extends GameController {
 	@GetMapping(value = "/{gid}", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getGameHTTP(@PathVariable int gid) {
 		LOGGER.info("Game " + gid + " returned.");
-//		return new ResponseEntity<String>(this.toStringGameByID(gid), HttpStatus.OK);
 		return new ResponseEntity<String>(jsonToString(getGame(gid)), HttpStatus.OK);
 	}
 
@@ -72,8 +71,6 @@ class GameService extends GameController {
 	@DeleteMapping("/{gid}")
 	void deleteGameHTTP(@PathVariable int gid) {
 		LOGGER.info("Game " + gid + " deleted.");
-//		GameDataManager.gamesHashMap.remove(gid);
-		
 		deleteGame(gid);
 	}
 
@@ -84,7 +81,6 @@ class GameService extends GameController {
 	@GetMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getAllPlayersInGameHTTP(@PathVariable int gid) {
 		LOGGER.info("Players in game " + gid + " returned.");
-//		return new ResponseEntity<String>(this.toStringAllPlayersInGame(gid), HttpStatus.OK);
 		return new ResponseEntity<String>(jsonToString(getAllPlayersInGame(gid)), HttpStatus.OK);
 	}
 
@@ -96,11 +92,9 @@ class GameService extends GameController {
 	 */
 	@PostMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> createPlayerInGameHTTP(@RequestParam(required = true) String name, @PathVariable int gid) {
-//		GameDataManager.gamesHashMap.get(gid).addPlayer(new Player(name)); // add player to game
 		addNewPlayerInGame(name, gid);
 
 		LOGGER.info("Player named " + name + " added to game " + gid + ".");
-//		return new ResponseEntity<String>(this.toStringAllPlayersInGame(gid), HttpStatus.OK);
 		
 		return new ResponseEntity<String>(jsonToString(getGame(gid)), HttpStatus.OK);
 	}
