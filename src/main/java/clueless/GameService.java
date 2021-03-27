@@ -40,11 +40,11 @@ class GameService extends GameController {
 
 	/**
 	 * Creates a new game object (starts new game)
-	 * @param name (opt)
+	 * @param name 
 	 * @return
 	 */
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<String> createGameHTTP(@RequestParam(required = false) String name) {
+	ResponseEntity<String> createGameHTTP(@RequestParam(required = true) String name) {
 		
 		JSONObject newGameJson = addNewGame(name, this.gameId);
 		
