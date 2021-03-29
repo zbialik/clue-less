@@ -26,7 +26,6 @@ class GameService extends GameController {
 	private static final Logger LOGGER = LogManager.getLogger(GameService.class);
 
 	private final int JSON_SPACING = 4;
-	private int gameId = 1;
 
 	/**
 	 * Returns list of all active games
@@ -46,9 +45,7 @@ class GameService extends GameController {
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> createGameHTTP(@RequestParam(required = true) String name) {
 		
-		JSONObject newGameJson = addNewGame(name, this.gameId);
-		
-		this.gameId++; // increment game ID to set unique ID's for games
+		JSONObject newGameJson = addNewGame(name);
 
 		return new ResponseEntity<String>(jsonToString(newGameJson), HttpStatus.OK);
 	}
