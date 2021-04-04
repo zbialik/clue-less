@@ -1,135 +1,193 @@
 package clueless;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 @Entity
 /**
+ * TODO: check definition
  * The Game class represents a temporary game being held for a group
  * of players. Each Game instantation has a unique id, a set of players,
  * and map of the board (ClueMap object).
  * 
  * @author Zach Bialik
  */
-public class Game {
+public class Game implements ClueInterface {
+	private static final Logger LOGGER = LogManager.getLogger(Game.class);
 	
 	@Id
-	private int gameId; // game unique ID
-	
-	private int playerId = 1; // will use to set player ID's
-	private boolean hasStarted = false;
-	private HashMap<Integer, Player> players; // map of players based on player ID
-	//  private ClueMap currMap; // current map of the game board.
+	public int gameId; // game unique ID
+	private boolean hasStarted;
+	private List<Card> mysteryCards;
+	private List<Player> players; // list of active players in the game
+	private Map<Integer, Character> characterMap = new HashMap<Integer, Character>();
+	private String eventMessage;
 
 	public Game(int id) { // custom constructor
 		this.gameId = id;
+		this.mysteryCards = new ArrayList<Card>();
 		this.hasStarted = false;
-		this.players = new HashMap<Integer, Player>();
-		// this.currMap = new ClueMap(); TODO update properly
+		this.players = new ArrayList<Player>();
+		this.characterMap = CHARACTER_ID_MAP;
+		this.eventMessage = new String();
 	}
-
+	
 	/**
-	 * Returns get ID of the game
+	 * Starts the game by changing hasStarted to true
+	 */
+	public void startGame() {
+		this.hasStarted = true;
+	}
+	
+	/**
+	 * Changes turns for the game
+	 */
+	public void changeTurn() {
+		// TODO: complete logic
+	}
+	
+	/**
+	 * Returns the next player whose turn it is in the game
 	 * @return
 	 */
-	public int getId() {
-		return this.gameId;
+	public Player nextPlayer() {
+		Player pl = null;
+		
+		// TODO: complete logic
+		
+		return pl;
+	}
+	
+	/**
+	 * Helper method for determining if a location is occupied in this game
+	 */
+	public boolean isLocationOccupied() {
+		boolean occupied = false;
+
+		// TODO: complete logic
+		
+		return occupied;
+	}
+	
+	/**
+	 * Helper method for determining if a location is occupied in this game
+	 */
+	public void updatePossibleMoves(Character c) {
+		// TODO: complete logic
 	}
 
 	/**
 	 * Adds a player to the game
 	 * @param newPlayer
 	 */
-	public Game addPlayer(Player newPlayer) {
+	public Game setPlayerToCharacter(Player newPlayer) {
 		
-		newPlayer.setId(this.playerId); // set newPlayer's ID
+		// TODO: verify symbolic linkage works!
 		
-		this.players.put(this.playerId, newPlayer); // add new player to this game
+		// add new player to players list
+		this.players.add(newPlayer); 
 		
-		this.playerId++; // increment player ID for the next time we add a player
+		// update character map with new player
+		this.characterMap.put(newPlayer.characterId, this.players.get(-1)); 
 		
 		return this;
 	}
 	
 	/**
-	 * Update player in the game
-	 * @param updatedPlayer
+	 * Helper method for determining if accusation provided is correct
+	 * @param accusation
+	 * @return correct
 	 */
-	public Game updatePlayer(int pid, Player updatedPlayer) {
-		updatedPlayer.setId(this.players.get(pid).getId()); // ensure updatedPlayer has correct playerId before replacing
-		this.players.put(pid, updatedPlayer);
-		return this;
-	}
+	public boolean isAccusationCorrect(List<Card> accusation) {
+		boolean correct = false;
 
+		// TODO: complete logic
+		
+		return correct;
+	}
+	
 	/**
-	 * Returns the player provided their pid
+	 * Returns the player provided their characterId
+	 * @param characterId
 	 * @return
 	 */
-	public Player getPlayer(int pid) {
+	public Character getCharacter(int characterId) {
 		
 		try {
-			return this.players.get(pid);
+			return this.characterMap.get(characterId);
 		} catch (Exception e) {
-			throw new PlayerNotFoundException(pid); // if not found, throw exception
+			throw new PlayerNotFoundException(characterId); // if not found, throw exception
 		}
 		
 	}
 
 	/**
-	 * Returns the list of players in the game
+	 * Returns the player provided their characterId
+	 * @param characterId
 	 * @return
 	 */
-	public HashMap<Integer, Player> getPlayers() {
-		return this.players;
-	}
-
-	/**
-	 * Sets the ID for the game
-	 * @param id
-	 */
-	public void setId(int id) {
-		this.gameId = id;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Game))
-			return false;
-		Game gameO = (Game) o;
-		return Objects.equals(this.gameId, gameO.gameId) && Objects.equals(this.players, gameO.players);
-	}
-
-	/**
-	 * Returns information relevant to the game
-	 */
-	public String toString(int jsonSpacing) {
-		return this.toJson().toString(jsonSpacing) + '\n'; // apply pretty formatting
+	public Player getPlayer(int characterId) {
+		
+		try {
+			Character character = this.characterMap.get(characterId);
+			if (character instanceof Player) {
+				return (Player) character;
+			} else {
+				LOGGER.error("getPlayer( " + characterId +  " ) could not cast to Character to Player");
+				return null;
+			}
+		} catch (Exception e) {
+			throw new PlayerNotFoundException(characterId); // if not found, throw exception
+		}
 	}
 	
 	/**
-	 * Returns information relevant to the game
+	 * Returns the next player that has a clue for the suggestion. If no one, then returns null
+	 * @param suggestion
+	 * @return
+	 */
+	public Player whoHasClue(List<Card> suggestion) {
+		Player pl = null;
+		
+		// TODO: complete logic
+		
+		return pl;
+	}
+	
+	/**
+	 * Returns JSONObject representation for this game
 	 */
 	public JSONObject toJson() {
 		
-		JSONObject gameInfoJson = new JSONObject();
-		gameInfoJson.put("gameId",this.gameId);
-		gameInfoJson.put("hasStarted",this.hasStarted);
+		JSONObject gameJson = new JSONObject();
+		gameJson.put("gameId", this.gameId);
+		gameJson.put("hasStarted", this.gameId);
+		gameJson.put("players", playersToJsonArray(this.players));
+		gameJson.put("eventMessage", this.eventMessage); 
+		gameJson.put("characterMap", charMapToJsonObject(this.characterMap));
 		
-		JSONArray playersJson = new JSONArray();
-		for (Player player : this.players.values()) {
-			playersJson.put(player.toJson());
-		}
-		
-		gameInfoJson.put("players", playersJson);
-		
-		return gameInfoJson;
+		return gameJson;
 	}
+	
+//	TODO: delete if OBE
+//	@Override
+//	public boolean equals(Object o) {
+//		if (this == o)
+//			return true;
+//		if (!(o instanceof Game))
+//			return false;
+//		Game gameO = (Game) o;
+//		return Objects.equals(this.gameId, gameO.gameId) && Objects.equals(this.players, gameO.players);
+//	}
 }

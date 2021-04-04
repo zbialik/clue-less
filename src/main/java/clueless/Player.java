@@ -1,100 +1,175 @@
 package clueless;
 
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
-
 import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 @Entity
 /**
- * The Player class represents a unique player in a given player of clue-less.
+ * The Player class represents a unique player for a clue-less game.
  * 
  * @author Zach Bialik
  */
-public class Player implements Serializable {
+public class Player extends Character implements Serializable, ClueInterface {
 
-	@Id 
-	private int playerId; // player's unique ID
+	public String playerName;
+	public String state;
+	public boolean vip = false;
+	private List<Card> handCards = new ArrayList<Card>();
+	private List<Card> knownCards = new ArrayList<Card>();
+	private Card revealedClueCard = null;
+	private List<Location> possibleMoves = new ArrayList<Location>();
+	private String eventMessage = new String();
 
-	public String name;
-	public boolean isTurn;
-
-	// TODO: use boardLocation or remove
-	//	public int[] boardLocation; // current location of player on the clue board
-
-	public Player() { // default constructor
-		this.setName("NO NAME");
-		this.isTurn = false;
+	public Player(int charId, String name, Location home) { // unique constructor
+		super(charId, name, home);
+		this.playerName = null;
+		this.state = PLAYER_STATE_WAIT;
 	}
-
-	public Player(String name) { // unqique constructor
-		this.setName(name);
-		this.isTurn = false;
-	}
-
-	/**
-	 * Returns get ID of the player
-	 * @return
-	 */
-	public int getId() {
-		return this.playerId;
-	}
-
-	/**
-	 * Returns the name of the player
-	 * @return
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	/**
-	 * Sets the ID for the player
-	 * @param playerId
-	 */
-	public void setId(int playerId) {
-		this.playerId = playerId;
-	}
-
-	/**
-	 * Sets the name for the player
-	 * @param name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Player))
-			return false;
-		Player playerO = (Player) o;
-		return Objects.equals(this.playerId, playerO.playerId) && Objects.equals(this.name, playerO.name);
-	}
-
-	/**
-	 * Returns information relevant to the player
-	 */
-	@Override
-	public String toString() {
-		return this.toJson().toString(4) + '\n'; // applly pretty formatting
+	
+	public Player(int charId, String name, Location home, boolean firstPlayer) { // unique constructor
+		super(charId, name, home);
+		this.playerName = null;
+		this.state = PLAYER_STATE_WAIT;
+		this.vip = firstPlayer;
 	}
 	
 	/**
-	 * Returns information relevant to the player
+	 * Returns the list of cards in this player's hand
+	 * @return
+	 */
+	public List<Card> getHand() {
+		return this.handCards;
+	}
+	
+	/**
+	 * Returns true if this player's hand has a card in the provided suggestion
+	 * @return
+	 */
+	public boolean hasClue(List<Card> suggestion) {
+		
+		boolean hasClue = false;
+		
+		// TODO: verify works correctly
+		for (Card suggestedCard : suggestion) { 
+			for (Card handCard : this.handCards) { 
+				if (suggestedCard.equals(handCard)) {
+					return true;
+				}
+			}
+		}
+		
+		return hasClue;
+	}
+	
+	/**
+	 * Clears this player's list of possible moves
+	 * @return
+	 */
+	public void clearPossibleMoves() {
+		this.possibleMoves.clear();
+	}
+	
+	/**
+	 * Clears this player's revealedClueCard
+	 * @return
+	 */
+	public void clearRevealedClueCard() {
+		this.revealedClueCard = null;
+	}
+	
+	/**
+	 * Sets this player's revealedClueCard
+	 * @param c
+	 * @return
+	 */
+	public void setRevealedClueCard(Card c) {
+		this.revealedClueCard = c;
+	}
+	
+	/**
+	 * Sets this player's revealedClueCard
+	 * @return
+	 */
+	public Card getRevealedClueCard() {
+		return this.revealedClueCard;
+	}
+	
+	/**
+	 * Sets this player's possible moves list
+	 * param l
+	 * @return
+	 */
+	public void setPossibleMoves(List<Location> l) {
+		this.possibleMoves = l;
+	}
+	
+	/**
+	 * Gets this player's possible moves list
+	 * @return
+	 */
+	public List<Location> getPossibleMoves() {
+		return this.possibleMoves;
+	}
+	
+	/**
+	 * Sets this player's event message
+	 * param l
+	 * @return
+	 */
+	public void setEventMessage(String event) {
+		this.eventMessage = event;
+	}
+	
+	/**
+	 * Gets this player's event message
+	 * @return
+	 */
+	public String getEventMessage() {
+		return this.eventMessage;
+	}
+	
+	/**
+	 * Adds a card to this player's knownCards list
+	 * @return
+	 */
+	public void addKnownCard(Card c) {
+		this.knownCards.add(c);
+	}
+	
+	/**
+	 * Returns JSONObject representation for this player
 	 */
 	public JSONObject toJson() {
-		JSONObject playerJson = new JSONObject();
-		playerJson.put("id", this.playerId);
-		playerJson.put("name", this.name);
-		playerJson.put("isTurn", this.isTurn);
+		
+		JSONObject playerJson = super.toJson();
+		playerJson.put("playerName", this.playerName); 
+		playerJson.put("state", this.state); 
+		playerJson.put("vip", this.vip);
+		playerJson.put("handCards", cardsToJsonArray(this.handCards)); 
+		playerJson.put("knownCards", cardsToJsonArray(this.knownCards)); 
+		playerJson.put("revealedClueCard", this.revealedClueCard.toJson());
+		playerJson.put("possibleMoves", locationsToJsonArray(this.possibleMoves)); 
+		playerJson.put("eventMessage", this.eventMessage); 
+		
 		return playerJson;
 	}
+	
+	// TODO: delete if OBE
+//	@Override
+//	public boolean equals(Object o) {
+//		if (this == o)
+//			return true;
+//		if (!(o instanceof Player))
+//			return false;
+//		Player playerO = (Player) o;
+//		return Objects.equals(this.characterId, playerO.characterId) 
+//				&& Objects.equals(this.playerName, playerO.playerName) 
+//				&& Objects.equals(this.characterName, playerO.characterName);
+//	}
 	
 }

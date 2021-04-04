@@ -29,7 +29,7 @@ public class GameDataManager {
 	 * Returns json array of all games
 	 * @return allGamesJson
 	 */
-	public JSONArray getAllGames() {
+	public JSONArray getAllGamesJSON() {
 		JSONArray allGamesJson = new JSONArray();
 		for (Game game : gamesHashMap.values()) {
 			allGamesJson.put(game.toJson());
@@ -43,23 +43,8 @@ public class GameDataManager {
 	 * @param gid
 	 * @return gameJson
 	 */
-	public JSONObject getGame(int gid) {
-		return gamesHashMap.get(gid).toJson();
-	}
-
-	/**
-	 * Returns JSONArray representing all players in a game
-	 * @param gid
-	 * @return playersInGameJson
-	 */
-	public JSONArray getAllPlayersInGame(int gid) {
-
-		JSONArray playersJson = new JSONArray();
-		for (Player player : gamesHashMap.get(gid).getPlayers().values()) {
-			playersJson.put(player.toJson());
-		}
-
-		return playersJson;
+	public Game getGame(int gid) {
+		return gamesHashMap.get(gid);
 	}
 
 	/**
@@ -68,7 +53,7 @@ public class GameDataManager {
 	 * @param newGameId
 	 * @return newGameJson
 	 */
-	public JSONObject addNewGame(String name) {
+	public Game addNewGame(String name) {
 
 		Game newGame = new Game(this.gameIdCounter);
 
@@ -83,20 +68,7 @@ public class GameDataManager {
 
 		this.gameIdCounter++; // increment game ID to set unique ID's for games
 
-		return newGame.toJson();
-	}
-	
-	/**
-	 * Adds new player to the given game and returns game as JSON
-	 * @param name
-	 * @param gameId
-	 * @return gameJson
-	 */
-	public JSONObject addNewPlayerInGame(String name, int gameId) {
-
-		gamesHashMap.get(gameId).addPlayer(new Player(name)); // add player to game
-		
-		return gamesHashMap.get(gameId).toJson();
+		return newGame;
 	}
 
 	public void deleteGame(int gameId) {

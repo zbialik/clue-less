@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAutoConfiguration
 @RequestMapping("/games")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-class GameService extends GameController {
+class GameService extends GameDataManager {
 
 	private static final Logger LOGGER = LogManager.getLogger(GameService.class);
 
@@ -34,7 +34,7 @@ class GameService extends GameController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getAllGamesHTTP() {
 		LOGGER.info("All games returned.");
-		return new ResponseEntity<String>(jsonToString(getAllGames()), HttpStatus.OK);
+		return new ResponseEntity<String>(jsonToString(getAllGamesJSON()), HttpStatus.OK);
 	}
 
 	/**
@@ -45,7 +45,7 @@ class GameService extends GameController {
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> createGameHTTP(@RequestParam(required = true) String name) {
 		
-		JSONObject newGameJson = addNewGame(name);
+		JSONObject newGameJson = addNewGame(name).toJson();
 
 		return new ResponseEntity<String>(jsonToString(newGameJson), HttpStatus.OK);
 	}
@@ -53,13 +53,33 @@ class GameService extends GameController {
 	/**
 	 * Returns the specific game object requested
 	 * @param gid
-	 * @return
+	 * @return gameAsJson
 	 */
 	@GetMapping(value = "/{gid}", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getGameHTTP(@PathVariable int gid) {
 		LOGGER.info("Game " + gid + " returned.");
-		return new ResponseEntity<String>(jsonToString(getGame(gid)), HttpStatus.OK);
+		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
+	
+	/**
+	 * Starts the specific game object by changing the 
+	 * game's attribute hasStarted to true
+	 * @param gid
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> startGameHTTP(
+			@RequestParam(required = true) String startGame, 
+			@RequestParam(required = true) String name, 
+			@PathVariable int gid) {
+		
+		gamesHashMap.get(gid).startGame(); // add player to game
+
+		LOGGER.info("Game " + gid + " was started by " + name);
+		
+		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
+	}
+	
 
 	/**
 	 * Deletes the provided game
@@ -72,16 +92,6 @@ class GameService extends GameController {
 	}
 
 	/**
-	 * Returns list of players for a given game
-	 * @return
-	 */
-	@GetMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<String> getAllPlayersInGameHTTP(@PathVariable int gid) {
-		LOGGER.info("Players in game " + gid + " returned.");
-		return new ResponseEntity<String>(jsonToString(getAllPlayersInGame(gid)), HttpStatus.OK);
-	}
-
-	/**
 	 * Adds a player to the game provided a string of the playerName
 	 * @param name
 	 * @param gid
@@ -89,11 +99,12 @@ class GameService extends GameController {
 	 */
 	@PostMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> createPlayerInGameHTTP(@RequestParam(required = true) String name, @PathVariable int gid) {
-		addNewPlayerInGame(name, gid);
+		
+		gamesHashMap.get(gid).setPlayerToCharacter(new Player(name)); // add player to game
 
 		LOGGER.info("Player named " + name + " added to game " + gid + ".");
 		
-		return new ResponseEntity<String>(jsonToString(getGame(gid)), HttpStatus.OK);
+		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
 
 	/**
