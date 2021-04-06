@@ -1,5 +1,7 @@
 package clueless;
 
+import java.util.Objects;
+
 import org.json.JSONObject;
 
 
@@ -10,14 +12,14 @@ import org.json.JSONObject;
  */
 public class Location implements ClueInterface {
 
-	public int id;
+	public String name;
 	public String type;
 	public Location secretPassage = null;
 	public int x_coordinate;
 	public int y_coordinate;
 	
-	Location(int id, String type, int x, int y) {
-		this.id = id;
+	Location(String name, String type, int x, int y) {
+		this.name = name;
 		this.type = type;
 		this.x_coordinate = x;
 		this.y_coordinate = y;
@@ -29,7 +31,7 @@ public class Location implements ClueInterface {
 	 * @return
 	 */
 	public boolean equals(Location l) {
-		if (l.id == this.id) {
+		if (Objects.equals(l.name, this.name)) {
 			return true;
 		} else {
 			return false;
@@ -87,13 +89,12 @@ public class Location implements ClueInterface {
 	 */
 	public JSONObject toJson() {
 		JSONObject locationJson = new JSONObject();
-		locationJson.put("id", this.id);
 		locationJson.put("type", this.type);
 		
 		if (this.secretPassage == null) {
 			locationJson.put("secretPassage", "null"); // just put ID of secret passage for JSON
 		} else {
-			locationJson.put("secretPassage", this.secretPassage.id); // just put ID of secret passage for JSON
+			locationJson.put("secretPassage", this.secretPassage.toJson()); // put in JSON of location for secret passage
 		}
 		locationJson.put("x_coordinate", this.x_coordinate);
 		locationJson.put("y_coordinate", this.y_coordinate);

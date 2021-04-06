@@ -23,15 +23,15 @@ public class Player extends Character implements Serializable {
 	private List<Location> possibleMoves = new ArrayList<Location>();
 	private String eventMessage = new String();
 
-	public Player(int charId, String name) { // unique constructor
-		super(charId);
+	public Player(String charName, String name) { // unique constructor
+		super(charName); 
 		this.activate(); // always change character to active when player is instantiated
 		this.playerName = name;
 		this.state = PLAYER_STATE_WAIT;
 	}
 	
-	public Player(int charId,  String name, boolean firstPlayer) { // unique constructor
-		super(charId);
+	public Player(String charName, String name, boolean firstPlayer) { // unique constructor
+		super(charName);
 		this.activate(); // always change character to active when player is instantiated
 		this.playerName = name;
 		this.state = PLAYER_STATE_WAIT;

@@ -52,15 +52,15 @@ public class GameDataManager {
 	 * @param newGameId
 	 * @return newGameJson
 	 */
-	public Game addNewGame(String name, int characterId) {
+	public Game addNewGame(String name, String charName) {
 
 		Player newPlayer;
 		Game newGame = new Game(this.gameIdCounter);
 		
 		if (newGame.getActivePlayers().isEmpty()) { // this is VIP player
-			newPlayer = new Player(characterId, name, true);
+			newPlayer = new Player(charName, name, true);
 		} else {
-			newPlayer = new Player(characterId, name);
+			newPlayer = new Player(charName, name);
 		}
 		
 		newGame.setPlayerToCharacter(newPlayer); // include player in initialized game

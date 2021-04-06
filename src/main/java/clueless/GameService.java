@@ -43,9 +43,9 @@ class GameService extends GameDataManager {
 	 * @return
 	 */
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<String> createGameHTTP(@RequestParam(required = true) String name, @RequestParam(required = true) int charId) {
+	ResponseEntity<String> createGameHTTP(@RequestParam(required = true) String name, @RequestParam(required = true) String charName) {
 		
-		JSONObject newGameJson = addNewGame(name, charId).toJson();
+		JSONObject newGameJson = addNewGame(name, charName).toJson();
 
 		return new ResponseEntity<String>(jsonToString(newGameJson), HttpStatus.OK);
 	}
@@ -99,11 +99,11 @@ class GameService extends GameDataManager {
 	 */
 	@PostMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> createPlayerInGameHTTP(@RequestParam(required = true) String name, 
-			@RequestParam(required = true) int charId, 
+			@RequestParam(required = true) String charName, 
 			@PathVariable int gid) {
 		
 		
-		gamesHashMap.get(gid).setPlayerToCharacter(new Player(charId, name)); // add player to game
+		gamesHashMap.get(gid).setPlayerToCharacter(new Player(charName, name)); // add player to game
 
 		LOGGER.info("Player named " + name + " added to game " + gid + ".");
 		
