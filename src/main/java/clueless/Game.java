@@ -186,7 +186,7 @@ public class Game implements ClueInterface {
 		
 		JSONObject gameJson = new JSONObject();
 		gameJson.put("gameId", this.gameId);
-		gameJson.put("hasStarted", this.gameId);
+		gameJson.put("hasStarted", this.hasStarted);
 		gameJson.put("eventMessage", this.eventMessage); 
 		gameJson.put("characterMap", charMapToJsonObject(this.characterMap));
 		
