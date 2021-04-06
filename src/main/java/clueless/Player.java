@@ -4,11 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
 import org.json.JSONObject;
 
 @SuppressWarnings("serial")
-@Entity
 /**
  * The Player class represents a unique player for a clue-less game.
  * 
@@ -26,14 +24,16 @@ public class Player extends Character implements Serializable {
 	private String eventMessage = new String();
 
 	public Player(int charId, String name) { // unique constructor
-		super(charId, name);
-		this.playerName = null;
+		super(charId);
+		this.activate(); // always change character to active when player is instantiated
+		this.playerName = name;
 		this.state = PLAYER_STATE_WAIT;
 	}
 	
-	public Player(int charId, String name, boolean firstPlayer) { // unique constructor
-		super(charId, name);
-		this.playerName = null;
+	public Player(int charId,  String name, boolean firstPlayer) { // unique constructor
+		super(charId);
+		this.activate(); // always change character to active when player is instantiated
+		this.playerName = name;
 		this.state = PLAYER_STATE_WAIT;
 		this.vip = firstPlayer;
 	}
@@ -152,7 +152,11 @@ public class Player extends Character implements Serializable {
 		playerJson.put("vip", this.vip);
 		playerJson.put("handCards", cardsToJsonArray(this.handCards)); 
 		playerJson.put("knownCards", cardsToJsonArray(this.knownCards)); 
-		playerJson.put("revealedClueCard", this.revealedClueCard.toJson());
+		if (this.revealedClueCard == null) {
+			playerJson.put("revealedClueCard", "null"); // just put ID of secret passage for JSON
+		} else {
+			playerJson.put("revealedClueCard", this.revealedClueCard.toJson()); // just put ID of secret passage for JSON
+		}
 		playerJson.put("possibleMoves", locationsToJsonArray(this.possibleMoves)); 
 		playerJson.put("eventMessage", this.eventMessage); 
 		

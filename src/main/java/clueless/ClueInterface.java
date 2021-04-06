@@ -303,8 +303,8 @@ public interface ClueInterface extends ClueConstants {
 		
 		JSONObject charMapObject = new JSONObject();
 		
-		for (int characterId : characterMap.keySet()) {
-			charMapObject.append(String.valueOf(characterId), characterMap.get(characterId).toJson());
+		for (Character character : characterMap.values()) {
+			charMapObject.put(String.valueOf(character.characterId), character.toJson());
 		}
 		
 		return charMapObject;

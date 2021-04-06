@@ -16,7 +16,6 @@ public class Card {
 	public String type;
 	public boolean isWinner;
 	
-	
 	Card(int id, String n, boolean w, String tp) { // constructor
 		this.cardId = id;
 		this.name = n;
