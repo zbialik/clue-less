@@ -16,9 +16,9 @@ public interface ClueInterface extends ClueConstants {
 	public static final Map<String, Integer> LOCATION_ID_LOOKUP_MAP = initLocationLookupMap();
 
 	// set maps using ID's defined in CHARACTER_ID_LOOKUP_MAP and LOCATION_ID_LOOKUP_MAP
-	public static final Map<Integer, Card> CARD_ID_MAP = initCardMap();
-	public static final Map<Integer, Character> CHARACTER_ID_MAP = initCharacterMap();
-	public static final Map<Integer, Location> LOCATION_ID_MAP = initLocationMap();
+	public static Map<Integer, Card> CARD_ID_MAP = initCardMap();
+	public static Map<Integer, Character> CHARACTER_ID_MAP = initCharacterMap();
+	public static Map<Integer, Location> LOCATION_ID_MAP = initLocationMap();
 
 	public static Map<String, Integer> initCharacterLookupMap() {
 		Map<String, Integer> map = new HashMap<>();
@@ -103,7 +103,7 @@ public interface ClueInterface extends ClueConstants {
 		map.put(20, new SuspectCard(CHARACTER_ID_LOOKUP_MAP.get(LOCATION_NAME_MISS_SCARLET_HOME), 20, LOCATION_NAME_MISS_SCARLET_HOME));
 		map.put(21, new SuspectCard(CHARACTER_ID_LOOKUP_MAP.get(LOCATION_NAME_COLONEL_MUSTARD_HOME), 21, LOCATION_NAME_COLONEL_MUSTARD_HOME));
 
-		return Collections.unmodifiableMap(map);
+		return map;
 	}
 
 	public static Map<Integer, Location> initLocationMap() { 
@@ -169,7 +169,7 @@ public interface ClueInterface extends ClueConstants {
 		map.put(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_HALLWAY_56), new Location(
 				LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_HALLWAY_56), LOCATION_TYPE_HOME, 5, 6 ));
 
-		return Collections.unmodifiableMap(map);
+		return map;
 	}
 
 	public static Map<Integer, Character> initCharacterMap() { 
@@ -201,7 +201,7 @@ public interface ClueInterface extends ClueConstants {
 						CHARACTER_NAME_COLONEL_MUSTARD, 
 						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_COLONEL_MUSTARD_HOME))));
 		
-		return Collections.unmodifiableMap(map);
+		return map;
 	}
 
 	/**
