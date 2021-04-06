@@ -28,9 +28,6 @@ public class Game implements ClueInterface {
 	@Id
 	public int gameId; // game unique ID
 	
-	// TODO: potentially delete 'players' as we can get everything we need from characterMap
-//	public List<Player> players; // list of active players in the game
-	
 	public boolean hasStarted;
 	public List<Card> mysteryCards;
 	public Map<Integer, Character> characterMap = new HashMap<Integer, Character>();

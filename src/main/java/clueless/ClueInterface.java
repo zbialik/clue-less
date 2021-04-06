@@ -12,15 +12,15 @@ import org.json.JSONObject;
 public interface ClueInterface extends ClueConstants {
 	
 	// set ID lookup maps for characters and locations
-	public static final Map<String, Integer> CHARACTER_ID_LOOKUP_MAP = initCharacterIdMap();
-	public static final Map<String, Integer> LOCATION_ID_LOOKUP_MAP = initLocationIdMap();
+	public static final Map<String, Integer> CHARACTER_ID_LOOKUP_MAP = initCharacterLookupMap();
+	public static final Map<String, Integer> LOCATION_ID_LOOKUP_MAP = initLocationLookupMap();
 
 	// set maps using ID's defined in CHARACTER_ID_LOOKUP_MAP and LOCATION_ID_LOOKUP_MAP
 	public static final Map<Integer, Card> CARD_ID_MAP = initCardMap();
 	public static final Map<Integer, Character> CHARACTER_ID_MAP = initCharacterMap();
 	public static final Map<Integer, Location> LOCATION_ID_MAP = initLocationMap();
 
-	public static Map<String, Integer> initCharacterIdMap() {
+	public static Map<String, Integer> initCharacterLookupMap() {
 		Map<String, Integer> map = new HashMap<>();
 
 		// add characters
@@ -34,7 +34,7 @@ public interface ClueInterface extends ClueConstants {
 		return Collections.unmodifiableMap(map);
 	}
 
-	public static Map<String, Integer> initLocationIdMap() {
+	public static Map<String, Integer> initLocationLookupMap() {
 		Map<String, Integer> map = new HashMap<>();
 
 		// add rooms
@@ -242,7 +242,7 @@ public interface ClueInterface extends ClueConstants {
 	 * Deals cards for the game provided
 	 * @return cardDeck
 	 */
-	public default void dealCards(Game game) {
+	public static void dealCards(Game game) {
 		// TODO: fill with logic (use getShuffledDeck() helper for support)
 	}
 	
