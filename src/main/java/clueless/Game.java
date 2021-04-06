@@ -35,7 +35,7 @@ public class Game implements ClueInterface {
 		this.eventMessage = new String();
 
 	    // copy character map from interface to this game
-	    this.characterMap.putAll(CHARACTER_MAP);
+	    this.characterMap.putAll(INIT_CHARACTER_MAP);
 	}
 	
 	/**
