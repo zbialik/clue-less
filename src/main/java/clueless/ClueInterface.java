@@ -15,11 +15,6 @@ public interface ClueInterface extends ClueConstants {
 	public static final Map<String, Integer> CHARACTER_ID_LOOKUP_MAP = initCharacterLookupMap();
 	public static final Map<String, Integer> LOCATION_ID_LOOKUP_MAP = initLocationLookupMap();
 
-	// set maps using ID's defined in CHARACTER_ID_LOOKUP_MAP and LOCATION_ID_LOOKUP_MAP
-	public static Map<Integer, Card> CARD_ID_MAP = initCardMap();
-	public static Map<Integer, Character> CHARACTER_ID_MAP = initCharacterMap();
-	public static Map<Integer, Location> LOCATION_ID_MAP = initLocationMap();
-
 	public static Map<String, Integer> initCharacterLookupMap() {
 		Map<String, Integer> map = new HashMap<>();
 
@@ -73,7 +68,7 @@ public interface ClueInterface extends ClueConstants {
 		return Collections.unmodifiableMap(map);
 	}
 
-	public static Map<Integer, Card> initCardMap() {
+	public default Map<Integer, Card> initCardMap() {
 		Map<Integer, Card> map = new HashMap<>();
 
 		// add weapon cards
@@ -106,7 +101,7 @@ public interface ClueInterface extends ClueConstants {
 		return map;
 	}
 
-	public static Map<Integer, Location> initLocationMap() { 
+	public default Map<Integer, Location> initLocationMap() { 
 		Map<Integer, Location> map = new HashMap<>();
 
 		// add rooms
@@ -172,34 +167,34 @@ public interface ClueInterface extends ClueConstants {
 		return map;
 	}
 
-	public static Map<Integer, Character> initCharacterMap() { 
+	public default Map<Integer, Character> initCharacterMap() { 
 		Map<Integer, Character> map = new HashMap<>();
 		
 		// add characters
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MRS_WHITE), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MRS_WHITE), 
 						CHARACTER_NAME_MRS_WHITE, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MRS_WHITE_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MRS_WHITE_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MR_GREEN), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MR_GREEN), 
 						CHARACTER_NAME_MR_GREEN, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MR_GREEN_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MR_GREEN_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MRS_PEACOCK), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MRS_PEACOCK), 
 						CHARACTER_NAME_MRS_PEACOCK, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MRS_PEACOCK_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MRS_PEACOCK_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_PROF_PLUM), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_PROF_PLUM), 
 						CHARACTER_NAME_PROF_PLUM, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_PROF_PLUM_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_PROF_PLUM_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MISS_SCARLET), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MISS_SCARLET), 
 						CHARACTER_NAME_MISS_SCARLET, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MISS_SCARLET_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MISS_SCARLET_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_COLONEL_MUSTARD), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_COLONEL_MUSTARD), 
 						CHARACTER_NAME_COLONEL_MUSTARD, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_COLONEL_MUSTARD_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_COLONEL_MUSTARD_HOME))));
 		
 		return map;
 	}
@@ -211,12 +206,12 @@ public interface ClueInterface extends ClueConstants {
 	 */
 	public default Card identifyCard(int cardId) {
 
-		if (CARD_ID_MAP.get(cardId) instanceof SuspectCard) {
-			return (SuspectCard) CARD_ID_MAP.get(cardId);
-		} else if (CARD_ID_MAP.get(cardId) instanceof RoomCard) {
-			return (RoomCard) CARD_ID_MAP.get(cardId);
+		if (initCardMap().get(cardId) instanceof SuspectCard) {
+			return (SuspectCard) initCardMap().get(cardId);
+		} else if (initCardMap().get(cardId) instanceof RoomCard) {
+			return (RoomCard) initCardMap().get(cardId);
 		} else {
-			return CARD_ID_MAP.get(cardId);
+			return initCardMap().get(cardId);
 		}
 	}
 	
@@ -224,11 +219,11 @@ public interface ClueInterface extends ClueConstants {
 	 * Returns a list of card objects in random order
 	 * @return cardDeck
 	 */
-	public static List<Card> getShuffledDeck() {
+	public default List<Card> getShuffledDeck() {
 		
 		List<Card> cardDeck = new ArrayList<Card>();
 
-		for (Card card : CARD_ID_MAP.values()) {
+		for (Card card : initCardMap().values()) {
             cardDeck.add(card);
 		}
 		

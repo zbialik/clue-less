@@ -30,14 +30,13 @@ public class Game implements ClueInterface {
 	
 	public boolean hasStarted;
 	public List<Card> mysteryCards;
-	public Map<Integer, Character> characterMap;
+	public Map<Integer, Character> characterMap = initCharacterMap();
 	public String eventMessage;
 
 	public Game(int id) { // custom constructor
 		this.gameId = id;
 		this.mysteryCards = new ArrayList<Card>();
 		this.hasStarted = false;
-		this.characterMap = CHARACTER_ID_MAP;
 		this.eventMessage = new String();
 	}
 	

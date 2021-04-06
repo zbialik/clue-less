@@ -26,13 +26,13 @@ public class Player extends Character implements Serializable, ClueInterface {
 	private String eventMessage = new String();
 
 	public Player(int charId, String name) { // unique constructor
-		super(charId, name, CHARACTER_ID_MAP.get(charId).characterHome);
+		super(charId, name);
 		this.playerName = null;
 		this.state = PLAYER_STATE_WAIT;
 	}
 	
 	public Player(int charId, String name, boolean firstPlayer) { // unique constructor
-		super(charId, name, CHARACTER_ID_MAP.get(charId).characterHome);
+		super(charId, name);
 		this.playerName = null;
 		this.state = PLAYER_STATE_WAIT;
 		this.vip = firstPlayer;
