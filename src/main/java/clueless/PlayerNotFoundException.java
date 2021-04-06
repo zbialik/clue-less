@@ -1,9 +1,9 @@
 package clueless;
 
 @SuppressWarnings("serial")
-class PlayerNotFoundException extends RuntimeException {
+public class PlayerNotFoundException extends RuntimeException {
 
-	PlayerNotFoundException(Long id) {
-    super("Could not find player: " + id);
+	public PlayerNotFoundException(int pid) {
+    super("Could not find player: " + pid);
   }
 }
