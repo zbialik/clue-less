@@ -29,7 +29,7 @@ public class Game implements ClueInterface {
 	public int gameId; // game unique ID
 	
 	// TODO: potentially delete 'players' as we can get everything we need from characterMap
-//	public List<Player> players; // list of active players in the game
+	public List<Player> players; // list of active players in the game
 	
 	public boolean hasStarted;
 	public List<Card> mysteryCards;
@@ -57,6 +57,7 @@ public class Game implements ClueInterface {
 	 */
 	public void changeTurn() {
 		// TODO: complete logic
+		
 	}
 	
 	/**
@@ -180,11 +181,28 @@ public class Game implements ClueInterface {
 	 * @param suggestion
 	 * @return
 	 */
+	//Might want to add into the Player class, had to make changes to handCards attribute
 	public Player whoHasClue(List<Card> suggestion) {
 		Player pl = null;
 		
-		// TODO: complete logic
-		
+		// TODO: test logic
+	while(pl ==  null)
+	{
+		for(int i = 0; i <= players.size(); i++)
+		{
+			for(Card suggestedCard : suggestion)
+			{
+				for (Card handCard : Player.handCards) 
+				{ 
+					if (suggestedCard.equals(handCard))
+					{
+						pl = players.get(i);
+					}
+					else { pl = null; }
+				}
+			}
+		}
+	}
 		return pl;
 	}
 	

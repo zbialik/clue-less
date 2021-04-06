@@ -19,7 +19,9 @@ public class Player extends Character implements Serializable, ClueInterface {
 	public String playerName;
 	public String state;
 	public boolean vip = false;
-	private List<Card> handCards = new ArrayList<Card>();
+	
+	//made this attribute public to be viewed in game
+	public static List<Card> handCards = new ArrayList<Card>();
 	private List<Card> knownCards = new ArrayList<Card>();
 	private Card revealedClueCard = null;
 	private List<Location> possibleMoves = new ArrayList<Location>();
