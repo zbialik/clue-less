@@ -11,7 +11,6 @@ import javax.persistence.Id;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 @Entity
@@ -28,17 +27,20 @@ public class Game implements ClueInterface {
 	
 	@Id
 	public int gameId; // game unique ID
-	private boolean hasStarted;
-	private List<Card> mysteryCards;
-	private List<Player> players; // list of active players in the game
-	private Map<Integer, Character> characterMap = new HashMap<Integer, Character>();
-	private String eventMessage;
+	
+	// TODO: potentially delete 'players' as we can get everything we need from characterMap
+//	public List<Player> players; // list of active players in the game
+	
+	public boolean hasStarted;
+	public List<Card> mysteryCards;
+	public Map<Integer, Character> characterMap = new HashMap<Integer, Character>();
+	public String eventMessage;
 
 	public Game(int id) { // custom constructor
 		this.gameId = id;
 		this.mysteryCards = new ArrayList<Card>();
 		this.hasStarted = false;
-		this.players = new ArrayList<Player>();
+//		this.players = new ArrayList<Player>(); TODO: delete
 		this.characterMap = CHARACTER_ID_MAP;
 		this.eventMessage = new String();
 	}
@@ -88,18 +90,16 @@ public class Game implements ClueInterface {
 	}
 
 	/**
-	 * Adds a player to the game
+	 * Adds/sets a player to a character in the game
 	 * @param newPlayer
 	 */
 	public Game setPlayerToCharacter(Player newPlayer) {
 		
-		// TODO: verify symbolic linkage works!
-		
 		// add new player to players list
-		this.players.add(newPlayer); 
+//		this.players.add(newPlayer); TODO: delete
 		
 		// update character map with new player
-		this.characterMap.put(newPlayer.characterId, this.players.get(-1)); 
+		this.characterMap.put(newPlayer.characterId, newPlayer);
 		
 		return this;
 	}
@@ -153,6 +153,29 @@ public class Game implements ClueInterface {
 	}
 	
 	/**
+	 * Returns a list of active Players in the game
+	 * @param characterId
+	 * @return
+	 */
+	public List<Player> getActivePlayers() {
+		
+		List<Player> playersList = new ArrayList<Player>();
+		
+		// TODO: test this logic
+		
+		for ( Character character : characterMap.values() ) {
+			if (character instanceof Player) {
+				if ( ((Player) character).isActive() ) {
+					playersList.add((Player) character);
+				}
+			}
+		}
+		
+		return playersList;
+		
+	}
+	
+	/**
 	 * Returns the next player that has a clue for the suggestion. If no one, then returns null
 	 * @param suggestion
 	 * @return
@@ -173,7 +196,7 @@ public class Game implements ClueInterface {
 		JSONObject gameJson = new JSONObject();
 		gameJson.put("gameId", this.gameId);
 		gameJson.put("hasStarted", this.gameId);
-		gameJson.put("players", playersToJsonArray(this.players));
+//		gameJson.put("players", playersToJsonArray(this.players)); TODO: delete
 		gameJson.put("eventMessage", this.eventMessage); 
 		gameJson.put("characterMap", charMapToJsonObject(this.characterMap));
 		

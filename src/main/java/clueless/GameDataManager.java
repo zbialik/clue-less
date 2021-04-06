@@ -53,12 +53,20 @@ public class GameDataManager {
 	 * @param newGameId
 	 * @return newGameJson
 	 */
-	public Game addNewGame(String name) {
+	public Game addNewGame(String name, int characterId) {
 
+		Player newPlayer;
 		Game newGame = new Game(this.gameIdCounter);
 
 		if (!(name.isBlank() || name.isEmpty() || name == "")) {
-			newGame.addPlayer(new Player(name)); // include player in initialized game
+			
+			if (newGame.getActivePlayers().isEmpty()) { // this is VIP player
+				newPlayer = new Player(characterId, name, true);
+			} else {
+				newPlayer = new Player(characterId, name);
+			}
+			
+			newGame.setPlayerToCharacter(newPlayer); // include player in initialized game
 			LOGGER.info(name + " initialized Game " + this.gameIdCounter + ".");
 		} else {
 			LOGGER.info("Initialized empty Game " + this.gameIdCounter + ".");

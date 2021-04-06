@@ -83,7 +83,7 @@ public interface ClueInterface {
 	public static final Map<String, Integer> CHARACTER_ID_LOOKUP_MAP = initCharacterIdMap();
 	public static final Map<String, Integer> LOCATION_ID_LOOKUP_MAP = initLocationIdMap();
 
-	// set card map using ID's defined in CHARACTER_ID_LOOKUP_MAP and LOCATION_ID_LOOKUP_MAP
+	// set maps using ID's defined in CHARACTER_ID_LOOKUP_MAP and LOCATION_ID_LOOKUP_MAP
 	public static final Map<Integer, Card> CARD_ID_MAP = initCardMap();
 	public static final Map<Integer, Character> CHARACTER_ID_MAP = initCharacterMap();
 	public static final Map<Integer, Location> LOCATION_ID_MAP = initLocationMap();
@@ -292,7 +292,7 @@ public interface ClueInterface {
 	 * Returns a list of card objects in random order
 	 * @return cardDeck
 	 */
-	public default List<Card> getShuffledDeck() {
+	public static List<Card> getShuffledDeck() {
 		
 		List<Card> cardDeck = new ArrayList<Card>();
 
@@ -311,7 +311,7 @@ public interface ClueInterface {
 	 * @return cardDeck
 	 */
 	public default void dealCards(Game game) {
-		// TODO: fill with logic
+		// TODO: fill with logic (use getShuffledDeck() helper for support)
 	}
 	
 	/**
