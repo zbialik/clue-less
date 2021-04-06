@@ -172,4 +172,18 @@ public class Player extends Character implements Serializable, ClueInterface {
 //				&& Objects.equals(this.characterName, playerO.characterName);
 //	}
 	
+	
+	// TODO: delete if OBE
+//	@Override
+//	public boolean equals(Object o) {
+//		if (this == o)
+//			return true;
+//		if (!(o instanceof Player))
+//			return false;
+//		Player playerO = (Player) o;
+//		return Objects.equals(this.characterId, playerO.characterId) 
+//				&& Objects.equals(this.playerName, playerO.playerName) 
+//				&& Objects.equals(this.characterName, playerO.characterName);
+//	}
+	
 }
