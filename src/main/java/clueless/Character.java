@@ -15,14 +15,13 @@ public class Character implements ClueInterface {
 	protected boolean wasMovedToRoom;
 	protected boolean active;
 	
-	public Character(String charName, Location home) {
+	public Character(String charName, Location home) { // constructor solely used for ClueInterface (init map)
 		this.characterName = charName;
 		this.characterHome = home;
 		this.currLocation = home; // always starts at home
 		this.wasMovedToRoom = false; // always starts at home (not moved to room)
 		this.active = false; // always inactive until player is created
 	}
-	
 
 	public Character(String charName) {
 		this.characterName = charName;
