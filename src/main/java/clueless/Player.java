@@ -14,7 +14,7 @@ import org.json.JSONObject;
  * 
  * @author Zach Bialik
  */
-public class Player extends Character implements Serializable, ClueInterface {
+public class Player extends Character implements Serializable {
 
 	public String playerName;
 	public String state;
