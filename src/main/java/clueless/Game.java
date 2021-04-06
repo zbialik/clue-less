@@ -84,11 +84,10 @@ public class Game implements ClueInterface {
 	 */
 	public synchronized Game setPlayerToCharacter(Player newPlayer) {
 		
-		// TODO: verify logic
-		
 		// check if character is already a Player object, return null if so
 		if (this.characterMap.get(newPlayer.characterId) instanceof Player) {
-			return null;
+			// TODO: update this OR frontend component to say that the character was already selected
+			return this;
 		} else {
 			// update character map with new player
 			this.characterMap.put(newPlayer.characterId, newPlayer);
