@@ -56,7 +56,21 @@ public class Game implements ClueInterface {
 	 * Changes turns for the game
 	 */
 	public void changeTurn() {
-		// TODO: complete logic
+		// TODO: test
+		//ask about static
+		Player nextPlayer;
+		for(int i = 0; i <= players.size(); i++)
+		if (i < players.size() && Player.state == PLAYER_STATE_COMPLETE_TURN)
+		{
+			nextPlayer = players.get(i + 1);
+			nextPlayer.state = PLAYER_STATE_MOVE;			
+		}
+		else if (i == players.size() && Player.state == PLAYER_STATE_COMPLETE_TURN)
+		{
+			nextPlayer = players.get(0);
+			nextPlayer.state = PLAYER_STATE_MOVE;
+		}
+		
 		
 	}
 	
@@ -190,22 +204,31 @@ public class Game implements ClueInterface {
 	{
 		for(int i = 0; i <= players.size(); i++)
 		{
-			for(Card suggestedCard : suggestion)
+			if(Player.hasClue(suggestion))
 			{
-				for (Card handCard : Player.handCards) 
-				{ 
-					if (suggestedCard.equals(handCard))
-					{
-						pl = players.get(i);
-					}
-					else { pl = null; }
-				}
-			}
+					pl = players.get(i);
+					players.get(i).state = PLAYER_STATE_SUGGEST;
+			}			
+				else { pl = null; }
 		}
-	}
+	}					
 		return pl;
 	}
-	
+	/*	
+	for(Card suggestedCard : suggestion)
+	{
+		for (Card handCard : Player.handCards) 
+		{ 
+			if (suggestedCard.equals(handCard))
+			{
+				pl = players.get(i);
+				
+			}
+			else { pl = null; }
+		}
+	}
+}
+} */	
 	/**
 	 * Returns JSONObject representation for this game
 	 */
