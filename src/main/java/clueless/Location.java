@@ -1,8 +1,7 @@
 package clueless;
 
-import java.util.List;
+import org.json.JSONObject;
 
-import net.minidev.json.JSONObject;
 
 /**
  * TODO: describe the class
@@ -90,7 +89,12 @@ public class Location implements ClueInterface {
 		JSONObject locationJson = new JSONObject();
 		locationJson.put("id", this.id);
 		locationJson.put("type", this.type);
-		locationJson.put("secretPassage", this.secretPassage.id); // just put ID of secret passage for JSON
+		
+		if (this.secretPassage == null) {
+			locationJson.put("secretPassage", "null"); // just put ID of secret passage for JSON
+		} else {
+			locationJson.put("secretPassage", this.secretPassage.id); // just put ID of secret passage for JSON
+		}
 		locationJson.put("x_coordinate", this.x_coordinate);
 		locationJson.put("y_coordinate", this.y_coordinate);
 		

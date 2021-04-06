@@ -1,19 +1,13 @@
 package clueless;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-@Entity
 /**
  * TODO: check definition
  * The Game class represents a temporary game being held for a group
@@ -25,7 +19,6 @@ import org.json.JSONObject;
 public class Game implements ClueInterface {
 	private static final Logger LOGGER = LogManager.getLogger(Game.class);
 	
-	@Id
 	public int gameId; // game unique ID
 	
 	public boolean hasStarted;
@@ -85,18 +78,22 @@ public class Game implements ClueInterface {
 	}
 
 	/**
-	 * Adds/sets a player to a character in the game
+	 * Adds/sets a player to a character in the game. This method is synchronized to avoid two
+	 * players being added at same time and one overwriting the other.
 	 * @param newPlayer
 	 */
-	public Game setPlayerToCharacter(Player newPlayer) {
+	public synchronized Game setPlayerToCharacter(Player newPlayer) {
 		
-		// add new player to players list
-//		this.players.add(newPlayer); TODO: delete
+		// TODO: verify logic
 		
-		// update character map with new player
-		this.characterMap.put(newPlayer.characterId, newPlayer);
-		
-		return this;
+		// check if character is already a Player object, return null if so
+		if (this.characterMap.get(newPlayer.characterId) instanceof Player) {
+			return null;
+		} else {
+			// update character map with new player
+			this.characterMap.put(newPlayer.characterId, newPlayer);
+			return this;
+		}
 	}
 	
 	/**
@@ -191,7 +188,6 @@ public class Game implements ClueInterface {
 		JSONObject gameJson = new JSONObject();
 		gameJson.put("gameId", this.gameId);
 		gameJson.put("hasStarted", this.gameId);
-//		gameJson.put("players", playersToJsonArray(this.players)); TODO: delete
 		gameJson.put("eventMessage", this.eventMessage); 
 		gameJson.put("characterMap", charMapToJsonObject(this.characterMap));
 		

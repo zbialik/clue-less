@@ -1,7 +1,5 @@
 package clueless;
 
-import javax.persistence.Id;
-
 import org.json.JSONObject;
 
 /**
@@ -11,7 +9,6 @@ import org.json.JSONObject;
  */
 public class Character implements ClueInterface {
 	
-	@Id 
 	public int characterId;
 	
 	public String characterName;
@@ -29,11 +26,11 @@ public class Character implements ClueInterface {
 		this.active = false; // always inactive until player is created
 	}
 	
-	public Character(int charId, String name) {
+	public Character(int charId) {
 		this.characterId = charId;
-		this.characterName = name;
+		this.characterName = initCharacterMap().get(charId).characterName;
 		this.characterHome = initCharacterMap().get(charId).characterHome;
-		this.characterHome = initCharacterMap().get(charId).characterHome; // always starts at home
+		this.currLocation = initCharacterMap().get(charId).characterHome; // always starts at home
 		this.wasMovedToRoom = false; // always starts at home (not moved to room)
 		this.active = false; // always inactive until player is created
 	}

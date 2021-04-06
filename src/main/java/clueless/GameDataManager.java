@@ -56,20 +56,15 @@ public class GameDataManager {
 
 		Player newPlayer;
 		Game newGame = new Game(this.gameIdCounter);
-
-		if (!(name.isBlank() || name.isEmpty() || name == "")) {
-			
-			if (newGame.getActivePlayers().isEmpty()) { // this is VIP player
-				newPlayer = new Player(characterId, name, true);
-			} else {
-				newPlayer = new Player(characterId, name);
-			}
-			
-			newGame.setPlayerToCharacter(newPlayer); // include player in initialized game
-			LOGGER.info(name + " initialized Game " + this.gameIdCounter + ".");
+		
+		if (newGame.getActivePlayers().isEmpty()) { // this is VIP player
+			newPlayer = new Player(characterId, name, true);
 		} else {
-			LOGGER.info("Initialized empty Game " + this.gameIdCounter + ".");
+			newPlayer = new Player(characterId, name);
 		}
+		
+		newGame.setPlayerToCharacter(newPlayer); // include player in initialized game
+		LOGGER.info(name + " initialized Game " + this.gameIdCounter + ".");
 
 		gamesHashMap.put(this.gameIdCounter, newGame); // initialize new game
 
