@@ -26,13 +26,13 @@ public class Player extends Character implements Serializable, ClueInterface {
 	private String eventMessage = new String();
 
 	public Player(int charId, String name) { // unique constructor
-		super(charId, name, CHARACTER_ID_MAP.get(charId).characterHome);
+		super(charId, name);
 		this.playerName = null;
 		this.state = PLAYER_STATE_WAIT;
 	}
 	
 	public Player(int charId, String name, boolean firstPlayer) { // unique constructor
-		super(charId, name, CHARACTER_ID_MAP.get(charId).characterHome);
+		super(charId, name);
 		this.playerName = null;
 		this.state = PLAYER_STATE_WAIT;
 		this.vip = firstPlayer;
@@ -158,6 +158,20 @@ public class Player extends Character implements Serializable, ClueInterface {
 		
 		return playerJson;
 	}
+	
+	// TODO: delete if OBE
+//	@Override
+//	public boolean equals(Object o) {
+//		if (this == o)
+//			return true;
+//		if (!(o instanceof Player))
+//			return false;
+//		Player playerO = (Player) o;
+//		return Objects.equals(this.characterId, playerO.characterId) 
+//				&& Objects.equals(this.playerName, playerO.playerName) 
+//				&& Objects.equals(this.characterName, playerO.characterName);
+//	}
+	
 	
 	// TODO: delete if OBE
 //	@Override

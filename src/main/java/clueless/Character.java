@@ -9,7 +9,7 @@ import org.json.JSONObject;
  * @author zachbialik
  *
  */
-public class Character {
+public class Character implements ClueInterface {
 	
 	@Id 
 	public int characterId;
@@ -20,11 +20,20 @@ public class Character {
 	protected boolean wasMovedToRoom;
 	protected boolean active;
 	
-	public Character(int charId, String name, Location home) {
+	public Character(int charId, String name, Location home) { // use this constructor for initCharacterMap() in ClueInterface
 		this.characterId = charId;
 		this.characterName = name;
 		this.characterHome = home;
 		this.currLocation = home; // always starts at home
+		this.wasMovedToRoom = false; // always starts at home (not moved to room)
+		this.active = false; // always inactive until player is created
+	}
+	
+	public Character(int charId, String name) {
+		this.characterId = charId;
+		this.characterName = name;
+		this.characterHome = initCharacterMap().get(charId).characterHome;
+		this.characterHome = initCharacterMap().get(charId).characterHome; // always starts at home
 		this.wasMovedToRoom = false; // always starts at home (not moved to room)
 		this.active = false; // always inactive until player is created
 	}

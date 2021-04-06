@@ -9,86 +9,13 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public interface ClueInterface {
-
-	// set card type constants
-	public static final String CARD_TYPE_WEAPON = "weapon";
-	public static final String CARD_TYPE_ROOM = "room";
-	public static final String CARD_TYPE_SUSPECT = "suspect";
-
-	// set location type constants
-	public static final String LOCATION_TYPE_ROOM = "room";
-	public static final String LOCATION_TYPE_HALLWAY = "hallway";
-	public static final String LOCATION_TYPE_HOME = "home";
-
-	// set card name constants
-	public static final String WEAPON_NAME_KNIFE = "knife";
-	public static final String WEAPON_NAME_REVOLVER = "revolver";
-	public static final String WEAPON_NAME_ROPE = "rope";
-	public static final String WEAPON_NAME_WRENCH = "wrench";
-	public static final String WEAPON_NAME_CANDLESTICK = "candlestick";
-	public static final String WEAPON_NAME_LEADPIPE = "leadpipe";
-
-	// set location name constants
-	public static final String LOCATION_NAME_BALL_ROOM = "ball room";
-	public static final String LOCATION_NAME_BILLIARD_ROOM = "billiard room";
-	public static final String LOCATION_NAME_CONSERVATORY = "conservatory";
-	public static final String LOCATION_NAME_DINING_ROOM = "dining room";
-	public static final String LOCATION_NAME_HALL = "hall";
-	public static final String LOCATION_NAME_KITCHEN = "kitchen";
-	public static final String LOCATION_NAME_LOUNGE = "lounge";
-	public static final String LOCATION_NAME_LIBRARY = "library";
-	public static final String LOCATION_NAME_STUDY = "study";
-	public static final String LOCATION_NAME_MRS_WHITE_HOME = "mrs. white home";
-	public static final String LOCATION_NAME_MR_GREEN_HOME = "mr. green home";
-	public static final String LOCATION_NAME_MRS_PEACOCK_HOME = "mrs. peacock home";
-	public static final String LOCATION_NAME_PROF_PLUM_HOME = "professor plum home";
-	public static final String LOCATION_NAME_MISS_SCARLET_HOME = "miss scarlet home";
-	public static final String LOCATION_NAME_COLONEL_MUSTARD_HOME = "colonel mustard home";
-	public static final String LOCATION_NAME_HALLWAY_32 = "hallway 32";
-	public static final String LOCATION_NAME_HALLWAY_52 = "hallway 52";
-	public static final String LOCATION_NAME_HALLWAY_23 = "hallway 23";
-	public static final String LOCATION_NAME_HALLWAY_43 = "hallway 43";
-	public static final String LOCATION_NAME_HALLWAY_63= "hallway 63";
-	public static final String LOCATION_NAME_HALLWAY_34 = "hallway 34";
-	public static final String LOCATION_NAME_HALLWAY_54 = "hallway 54";
-	public static final String LOCATION_NAME_HALLWAY_25 = "hallway 25";
-	public static final String LOCATION_NAME_HALLWAY_45 = "hallway 45";
-	public static final String LOCATION_NAME_HALLWAY_65 = "hallway 65";
-	public static final String LOCATION_NAME_HALLWAY_36 = "hallway 36";
-	public static final String LOCATION_NAME_HALLWAY_56 = "hallway 56";
-
-	// set character name constants
-	public static final String CHARACTER_NAME_MRS_WHITE = "mrs. white";
-	public static final String CHARACTER_NAME_MR_GREEN = "mr. green";
-	public static final String CHARACTER_NAME_MRS_PEACOCK = "mrs. peacock";
-	public static final String CHARACTER_NAME_PROF_PLUM = "professor plum";
-	public static final String CHARACTER_NAME_MISS_SCARLET = "miss scarlet";
-	public static final String CHARACTER_NAME_COLONEL_MUSTARD = "colonel mustard";
+public interface ClueInterface extends ClueConstants {
 	
-	// set player state constants
-	public static final String PLAYER_STATE_WAIT = "wait";
-	public static final String PLAYER_STATE_MOVE = "move";
-	public static final String PLAYER_STATE_SUGGEST = "suggest";
-	public static final String PLAYER_STATE_ACCUSE = "accuse";
-	public static final String PLAYER_STATE_REVEAL = "reveal";
-	public static final String PLAYER_STATE_AWAIT_REVEAL = "await_reveal";
-	public static final String PLAYER_STATE_ACCEPT_REVEAL = "accept_reveal";
-	public static final String PLAYER_STATE_COMPLETE_TURN = "complete_turn";
-	public static final String PLAYER_STATE_WIN = "win";
-	public static final String PLAYER_STATE_LOSE = "lose";
-	
-
 	// set ID lookup maps for characters and locations
-	public static final Map<String, Integer> CHARACTER_ID_LOOKUP_MAP = initCharacterIdMap();
-	public static final Map<String, Integer> LOCATION_ID_LOOKUP_MAP = initLocationIdMap();
+	public static final Map<String, Integer> CHARACTER_ID_LOOKUP_MAP = initCharacterLookupMap();
+	public static final Map<String, Integer> LOCATION_ID_LOOKUP_MAP = initLocationLookupMap();
 
-	// set maps using ID's defined in CHARACTER_ID_LOOKUP_MAP and LOCATION_ID_LOOKUP_MAP
-	public static final Map<Integer, Card> CARD_ID_MAP = initCardMap();
-	public static final Map<Integer, Character> CHARACTER_ID_MAP = initCharacterMap();
-	public static final Map<Integer, Location> LOCATION_ID_MAP = initLocationMap();
-
-	public static Map<String, Integer> initCharacterIdMap() {
+	public static Map<String, Integer> initCharacterLookupMap() {
 		Map<String, Integer> map = new HashMap<>();
 
 		// add characters
@@ -102,7 +29,7 @@ public interface ClueInterface {
 		return Collections.unmodifiableMap(map);
 	}
 
-	public static Map<String, Integer> initLocationIdMap() {
+	public static Map<String, Integer> initLocationLookupMap() {
 		Map<String, Integer> map = new HashMap<>();
 
 		// add rooms
@@ -141,7 +68,7 @@ public interface ClueInterface {
 		return Collections.unmodifiableMap(map);
 	}
 
-	public static Map<Integer, Card> initCardMap() {
+	public default Map<Integer, Card> initCardMap() {
 		Map<Integer, Card> map = new HashMap<>();
 
 		// add weapon cards
@@ -171,10 +98,10 @@ public interface ClueInterface {
 		map.put(20, new SuspectCard(CHARACTER_ID_LOOKUP_MAP.get(LOCATION_NAME_MISS_SCARLET_HOME), 20, LOCATION_NAME_MISS_SCARLET_HOME));
 		map.put(21, new SuspectCard(CHARACTER_ID_LOOKUP_MAP.get(LOCATION_NAME_COLONEL_MUSTARD_HOME), 21, LOCATION_NAME_COLONEL_MUSTARD_HOME));
 
-		return Collections.unmodifiableMap(map);
+		return map;
 	}
 
-	public static Map<Integer, Location> initLocationMap() { 
+	public default Map<Integer, Location> initLocationMap() { 
 		Map<Integer, Location> map = new HashMap<>();
 
 		// add rooms
@@ -237,39 +164,39 @@ public interface ClueInterface {
 		map.put(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_HALLWAY_56), new Location(
 				LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_HALLWAY_56), LOCATION_TYPE_HOME, 5, 6 ));
 
-		return Collections.unmodifiableMap(map);
+		return map;
 	}
 
-	public static Map<Integer, Character> initCharacterMap() { 
+	public default Map<Integer, Character> initCharacterMap() { 
 		Map<Integer, Character> map = new HashMap<>();
 		
 		// add characters
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MRS_WHITE), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MRS_WHITE), 
 						CHARACTER_NAME_MRS_WHITE, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MRS_WHITE_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MRS_WHITE_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MR_GREEN), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MR_GREEN), 
 						CHARACTER_NAME_MR_GREEN, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MR_GREEN_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MR_GREEN_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MRS_PEACOCK), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MRS_PEACOCK), 
 						CHARACTER_NAME_MRS_PEACOCK, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MRS_PEACOCK_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MRS_PEACOCK_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_PROF_PLUM), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_PROF_PLUM), 
 						CHARACTER_NAME_PROF_PLUM, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_PROF_PLUM_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_PROF_PLUM_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MISS_SCARLET), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_MISS_SCARLET), 
 						CHARACTER_NAME_MISS_SCARLET, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MISS_SCARLET_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_MISS_SCARLET_HOME))));
 		map.put(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_COLONEL_MUSTARD), 
 				new Character(CHARACTER_ID_LOOKUP_MAP.get(CHARACTER_NAME_COLONEL_MUSTARD), 
 						CHARACTER_NAME_COLONEL_MUSTARD, 
-						LOCATION_ID_MAP.get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_COLONEL_MUSTARD_HOME))));
+						initLocationMap().get(LOCATION_ID_LOOKUP_MAP.get(LOCATION_NAME_COLONEL_MUSTARD_HOME))));
 		
-		return Collections.unmodifiableMap(map);
+		return map;
 	}
 
 	/**
@@ -279,12 +206,12 @@ public interface ClueInterface {
 	 */
 	public default Card identifyCard(int cardId) {
 
-		if (CARD_ID_MAP.get(cardId) instanceof SuspectCard) {
-			return (SuspectCard) CARD_ID_MAP.get(cardId);
-		} else if (CARD_ID_MAP.get(cardId) instanceof RoomCard) {
-			return (RoomCard) CARD_ID_MAP.get(cardId);
+		if (initCardMap().get(cardId) instanceof SuspectCard) {
+			return (SuspectCard) initCardMap().get(cardId);
+		} else if (initCardMap().get(cardId) instanceof RoomCard) {
+			return (RoomCard) initCardMap().get(cardId);
 		} else {
-			return CARD_ID_MAP.get(cardId);
+			return initCardMap().get(cardId);
 		}
 	}
 	
@@ -292,11 +219,11 @@ public interface ClueInterface {
 	 * Returns a list of card objects in random order
 	 * @return cardDeck
 	 */
-	public static List<Card> getShuffledDeck() {
+	public default List<Card> getShuffledDeck() {
 		
 		List<Card> cardDeck = new ArrayList<Card>();
 
-		for (Card card : CARD_ID_MAP.values()) {
+		for (Card card : initCardMap().values()) {
             cardDeck.add(card);
 		}
 		
@@ -310,7 +237,7 @@ public interface ClueInterface {
 	 * Deals cards for the game provided
 	 * @return cardDeck
 	 */
-	public default void dealCards(Game game) {
+	public static void dealCards(Game game) {
 		// TODO: fill with logic (use getShuffledDeck() helper for support)
 	}
 	

@@ -28,20 +28,15 @@ public class Game implements ClueInterface {
 	@Id
 	public int gameId; // game unique ID
 	
-	// TODO: potentially delete 'players' as we can get everything we need from characterMap
-//	public List<Player> players; // list of active players in the game
-	
 	public boolean hasStarted;
 	public List<Card> mysteryCards;
-	public Map<Integer, Character> characterMap = new HashMap<Integer, Character>();
+	public Map<Integer, Character> characterMap = initCharacterMap();
 	public String eventMessage;
 
 	public Game(int id) { // custom constructor
 		this.gameId = id;
 		this.mysteryCards = new ArrayList<Card>();
 		this.hasStarted = false;
-//		this.players = new ArrayList<Player>(); TODO: delete
-		this.characterMap = CHARACTER_ID_MAP;
 		this.eventMessage = new String();
 	}
 	
