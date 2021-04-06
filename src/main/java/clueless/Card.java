@@ -11,20 +11,17 @@ import org.json.JSONObject;
  */
 public class Card {
 	
-	public int cardId;
 	public String name;
 	public String type;
 	public boolean isWinner;
 	
-	Card(int id, String n, boolean w, String tp) { // constructor
-		this.cardId = id;
+	Card(String n, boolean w, String tp) { // constructor
 		this.name = n;
 		this.isWinner = w;
 		this.type = tp;
 	}
 	
-	Card(int id, String n, String tp) { // if boolean not provided, assume false
-		this.cardId = id;
+	Card(String n, String tp) { // if boolean not provided, assume false
 		this.name = n;
 		this.isWinner = false;
 		this.type = tp;
@@ -36,7 +33,6 @@ public class Card {
 	public JSONObject toJson() {
 		
 		JSONObject cardJson = new JSONObject();
-		cardJson.put("cardId",this.cardId);
 		cardJson.put("name",this.name);
 		cardJson.put("type",this.type);
 		cardJson.put("isWinner",this.isWinner);
@@ -53,8 +49,7 @@ public class Card {
 		if (!(o instanceof Card))
 			return false;
 		Card cardO = (Card) o;
-		return Objects.equals(this.cardId, cardO.cardId) 
-				&& Objects.equals(this.name, cardO.name) 
+		return Objects.equals(this.name, cardO.name) 
 				&& Objects.equals(this.type, cardO.type);
 	}
 

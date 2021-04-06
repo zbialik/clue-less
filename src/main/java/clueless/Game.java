@@ -1,6 +1,7 @@
 package clueless;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,14 +24,18 @@ public class Game implements ClueInterface {
 	
 	public boolean hasStarted;
 	public List<Card> mysteryCards;
-	public Map<Integer, Character> characterMap = initCharacterMap();
-	public String eventMessage;
+    public Map<String, Character> characterMap = new HashMap<String, Character>();
+	
+	public String eventMessage; 
 
 	public Game(int id) { // custom constructor
 		this.gameId = id;
 		this.mysteryCards = new ArrayList<Card>();
 		this.hasStarted = false;
 		this.eventMessage = new String();
+
+	    // copy character map from interface to this game
+	    this.characterMap.putAll(CHARACTER_MAP);
 	}
 	
 	/**
@@ -85,12 +90,14 @@ public class Game implements ClueInterface {
 	public synchronized Game setPlayerToCharacter(Player newPlayer) {
 		
 		// check if character is already a Player object, return null if so
-		if (this.characterMap.get(newPlayer.characterId) instanceof Player) {
+//		if (this.characterMap.get(newPlayer.characterId) instanceof Player) {TODO: delete from testing 
+		if (this.characterMap.get(newPlayer.characterName) instanceof Player) {
 			// TODO: update this OR frontend component to say that the character was already selected
 			return this;
 		} else {
 			// update character map with new player
-			this.characterMap.put(newPlayer.characterId, newPlayer);
+			this.characterMap.put(newPlayer.characterName, newPlayer);
+			// this.characterMap.put(newPlayer.characterId, newPlayer);  TODO: delete from testing
 			return this;
 		}
 	}

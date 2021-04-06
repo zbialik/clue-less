@@ -9,28 +9,25 @@ import org.json.JSONObject;
  */
 public class Character implements ClueInterface {
 	
-	public int characterId;
-	
 	public String characterName;
 	public Location characterHome;
 	protected Location currLocation;
 	protected boolean wasMovedToRoom;
 	protected boolean active;
 	
-	public Character(int charId, String name, Location home) { // use this constructor for initCharacterMap() in ClueInterface
-		this.characterId = charId;
-		this.characterName = name;
+	public Character(String charName, Location home) {
+		this.characterName = charName;
 		this.characterHome = home;
 		this.currLocation = home; // always starts at home
 		this.wasMovedToRoom = false; // always starts at home (not moved to room)
 		this.active = false; // always inactive until player is created
 	}
 	
-	public Character(int charId) {
-		this.characterId = charId;
-		this.characterName = initCharacterMap().get(charId).characterName;
-		this.characterHome = initCharacterMap().get(charId).characterHome;
-		this.currLocation = initCharacterMap().get(charId).characterHome; // always starts at home
+
+	public Character(String charName) {
+		this.characterName = charName;
+		this.characterHome = getCharacterHome(charName);
+		this.currLocation = getCharacterHome(charName); // always starts at home
 		this.wasMovedToRoom = false; // always starts at home (not moved to room)
 		this.active = false; // always inactive until player is created
 	}
@@ -94,7 +91,7 @@ public class Character implements ClueInterface {
 	 */
 	public JSONObject toJson() {
 		JSONObject characterJson = new JSONObject();
-		characterJson.put("id", this.characterId);
+//		characterJson.put("id", this.characterId);
 		characterJson.put("characterName", this.characterName);
 		characterJson.put("home", this.characterHome.toJson()); 
 		characterJson.put("currLocation", this.currLocation.toJson()); 
