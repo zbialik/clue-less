@@ -22,7 +22,7 @@ public class GameDataManager {
 	public HashMap<Integer, Game> gamesHashMap = new HashMap<Integer, Game>();
 	private int gameIdCounter = 1;
 	
-	// TODO: insert section for reading JSON file if it exists and reloading game datastore
+	// TODO: (ZACH) insert section for reading JSON file if it exists and reloading game datastore
 
 	/**
 	 * Returns json array of all games
@@ -52,7 +52,7 @@ public class GameDataManager {
 	 * @param name
 	 * @return newGameJson
 	 */
-	public Game addNewGame(String charName, String name) {
+	public synchronized Game addNewGame(String charName, String name) {
 
 		Game newGame = new Game(this.gameIdCounter);
 		
@@ -68,6 +68,7 @@ public class GameDataManager {
 
 	public void deleteGame(int gameId) {
 		gamesHashMap.remove(gameId);
+		LOGGER.info("Game " + gameId + " deleted.");
 	}
 	
 	

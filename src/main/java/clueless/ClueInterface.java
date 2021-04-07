@@ -68,6 +68,12 @@ public interface ClueInterface extends ClueConstants {
 				LOCATION_NAME_LIBRARY, LOCATION_TYPE_ROOM, 2, 4 ));
 		map.put(LOCATION_NAME_STUDY, new Location(
 				LOCATION_NAME_STUDY, LOCATION_TYPE_ROOM, 2, 6 ));
+		
+		// update rooms with secretPassages
+		map.get(LOCATION_NAME_LOUNGE).secretPassage = map.get(LOCATION_NAME_CONSERVATORY);
+		map.get(LOCATION_NAME_CONSERVATORY).secretPassage = map.get(LOCATION_NAME_LOUNGE);
+		map.get(LOCATION_NAME_KITCHEN).secretPassage = map.get(LOCATION_NAME_STUDY);
+		map.get(LOCATION_NAME_STUDY).secretPassage = map.get(LOCATION_NAME_KITCHEN);
 
 		// add homes
 		map.put(LOCATION_NAME_MRS_WHITE_HOME, new Location(

@@ -44,7 +44,7 @@ public class Game implements ClueInterface {
 	 */
 	public void startGame() {
 
-		// TODO: deal player's cards
+		// TODO: (ZACH) deal player's cards
 		this.hasStarted = true;
 	}
 
@@ -52,7 +52,7 @@ public class Game implements ClueInterface {
 	 * Changes turns for the game
 	 */
 	public void changeTurn() {
-		// TODO: complete logic
+		// TODO: (MEGAN) complete logic
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class Game implements ClueInterface {
 	public Player nextPlayer() {
 		Player pl = null;
 
-		// TODO: complete logic
+		// TODO: (ALEX) complete logic
 
 		return pl;
 	}
@@ -73,7 +73,7 @@ public class Game implements ClueInterface {
 	public boolean isLocationOccupied() {
 		boolean occupied = false;
 
-		// TODO: complete logic
+		// TODO: (ALEX) complete logic
 
 		return occupied;
 	}
@@ -82,7 +82,7 @@ public class Game implements ClueInterface {
 	 * Helper method for determining if a location is occupied in this game
 	 */
 	public void updatePossibleMoves(Character c) {
-		// TODO: complete logic
+		// TODO: (ZACH) complete logic
 	}
 
 	/**
@@ -93,13 +93,14 @@ public class Game implements ClueInterface {
 	public synchronized Game addPlayer(String charName, String name) {
 		Player newPlayer;
 		
-		if (this.getActivePlayers().isEmpty()) { // this is VIP player
-			newPlayer = new Player(charName, name, true);
-		} else {
+		if (this.hasPlayer()) { // the Game has a Player already (this player not VIP)
 			newPlayer = new Player(charName, name);
+		} else { // this is VIP player
+			newPlayer = new Player(charName, name, true);
 		}
 		// update character map with new player
 		this.characterMap.put(newPlayer.characterName, newPlayer);
+		
 		return this;
 	}
 
@@ -111,7 +112,7 @@ public class Game implements ClueInterface {
 	public boolean isAccusationCorrect(List<Card> accusation) {
 		boolean correct = false;
 
-		// TODO: complete logic
+		// TODO: (ALEX) complete logic
 
 		return correct;
 	}
@@ -132,8 +133,8 @@ public class Game implements ClueInterface {
 	}
 
 	/**
-	 * Returns the player provided their characterId
-	 * @param characterId
+	 * Returns the player provided their charName
+	 * @param charName
 	 * @return
 	 */
 	public Player getPlayer(String charName) {
@@ -152,25 +153,20 @@ public class Game implements ClueInterface {
 	}
 
 	/**
-	 * Returns a list of active Players in the game
-	 * @param characterId
-	 * @return
+	 * Returns true if there are currently no player's in the game
+	 * @return playerExists
 	 */
-	public List<Player> getActivePlayers() {
+	public boolean hasPlayer() {
 
-		List<Player> playersList = new ArrayList<Player>();
-
-		// TODO: test this logic
-
+		boolean playerExists = false;
+		
 		for ( Character character : characterMap.values() ) {
 			if (character instanceof Player) {
-				if ( ((Player) character).isActive() ) {
-					playersList.add((Player) character);
-				}
+				playerExists = true;
 			}
 		}
 
-		return playersList;
+		return playerExists;
 
 	}
 

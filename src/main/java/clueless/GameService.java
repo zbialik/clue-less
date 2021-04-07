@@ -43,7 +43,9 @@ class GameService extends GameDataManager {
 	 * @return
 	 */
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<String> createGameHTTP(@RequestParam(required = true) String name, @RequestParam(required = true) String charName) {
+	ResponseEntity<String> createGameHTTP(
+			@RequestParam(required = true) String charName,
+			@RequestParam(required = true) String name) {
 
 		JSONObject newGameJson = addNewGame(charName, name).toJson();
 
@@ -69,17 +71,23 @@ class GameService extends GameDataManager {
 	 */
 	@PostMapping(value = "/{gid}", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> startGameHTTP(
-			@RequestParam(required = true) String startGame, 
-			@RequestParam(required = true) String name, 
-			@PathVariable int gid) {
+			@PathVariable int gid, 
+			@RequestParam(required = true) String charName,
+			@RequestParam(required = true) Boolean startGame) {
 
-		gamesHashMap.get(gid).startGame(); // add player to game
-
-		LOGGER.info("Game " + gid + " was started by " + name);
-
+		// TODO: (low-priority) verify player is VIP to allow startGame action, return 409/CONFLICT if not VIP
+		
+		if (startGame) {
+			getGame(gid).startGame(); // add player to game
+			LOGGER.info("Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName);
+			// TODO: (low-priority) update game eventMessage
+		} else {
+			LOGGER.info("Game " + gid + " was stopped by " + getGame(gid).getPlayer(charName).playerName);
+			// TODO: (low-priority) update game eventMessage
+		}
+		
 		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
-
 
 	/**
 	 * Deletes the provided game
@@ -87,34 +95,187 @@ class GameService extends GameDataManager {
 	 */
 	@DeleteMapping("/{gid}")
 	void deleteGameHTTP(@PathVariable int gid) {
-		LOGGER.info("Game " + gid + " deleted.");
 		deleteGame(gid);
 	}
 
 	/**
 	 * Adds a player to the game provided a string of the playerName
-	 * @param name
 	 * @param gid
+	 * @param charName
+	 * @param name
 	 * @return
 	 */
 	@PostMapping(value = "/{gid}/players", produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<String> createPlayerInGameHTTP(@RequestParam(required = true) String name, 
+	ResponseEntity<String> createPlayerInGameHTTP(
+			@PathVariable int gid,
 			@RequestParam(required = true) String charName, 
-			@PathVariable int gid) {
+			@RequestParam(required = true) String name) {
 
-		// check if character is already a Player object, return null if so
-		if (gamesHashMap.get(gid).characterMap.get(charName) instanceof Player) {
-			// TODO: update this OR frontend component to say that the character was already selected
-		} else {
-			// update character map with new player
-			gamesHashMap.get(gid).addPlayer(charName, name); // add player to game
+		// check if character is already a Player object, return 409 status if so
+		if (getGame(gid).getCharacter(charName) instanceof Player) {
+			
+			LOGGER.error("The character named " + charName + " is already mapped to a player named "
+					+ getGame(gid).getPlayer(charName).playerName + ".");
+			
+			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.CONFLICT);
+			
+		} else { // update character map with new player
+			
+			getGame(gid).addPlayer(charName, name); // add player to game
+			LOGGER.info("Player named " + name + " added to game " + gid + ".");
+			
+			// TODO: (low-priority) update game eventMessage
+			
+			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 		}
-
-		LOGGER.info("Player named " + name + " added to game " + gid + ".");
-
-		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
 
+	/**
+	 * Updates the character's location
+	 * @param gid
+	 * @param charName
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}/players/location", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> updatePlayerLocationHTTP(
+			@PathVariable int gid,
+			@RequestParam(required = true) String charName) {
+		
+		// TODO: (ZACH) fill with logic
+		
+		// TODO: (low-priority) update game eventMessage
+
+		return null;
+	}
+
+	/**
+	 * Processes the player's accusation provided
+	 * @param gid
+	 * @param charName
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}/players/accusation/accuse", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> makeAccusationHTTP(
+			@PathVariable int gid,
+			@RequestParam(required = true) String charName,
+			@RequestParam(required = true) String weapon,
+			@RequestParam(required = true) String room,
+			@RequestParam(required = true) String suspect) {
+
+		// TODO: (ALEX) fill with logic
+		
+		// TODO: (low-priority) update game eventMessage
+
+		return null;
+	}
+
+	/**
+	 * Processes the player's accusation provided
+	 * @param gid
+	 * @param charName
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}/players/suggestion/suggest", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> makeSuggestionHTTP(
+			@PathVariable int gid,
+			@RequestParam(required = true) String charName,
+			@RequestParam(required = true) String weapon,
+			@RequestParam(required = true) String room,
+			@RequestParam(required = true) String suspect) {
+
+		// TODO: (ZACH) fill with logic
+		
+		// TODO: (low-priority) update game eventMessage
+
+		return null;
+	}
+
+	/**
+	 * Cancels the player's suggestion
+	 * @param gid
+	 * @param charName
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}/players/suggestion/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> cancelSuggestionHTTP(
+			@PathVariable int gid,
+			@RequestParam(required = true) String charName) {
+
+		// TODO: (ALEX) fill with logic
+
+		return null;
+	}
+	
+	/**
+	 * Cancels the player's accusation
+	 * @param gid
+	 * @param charName
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}/players/accusation/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> cancelAccusationHTTP(@PathVariable int gid,
+			@RequestParam(required = true) String charName) {
+		
+		// TODO: (ALEX) fill with logic
+
+		return null;
+	}
+	
+	/**
+	 * Reveal a clue for another suggestion
+	 * @param gid
+	 * @param charName
+	 * @param cardName
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}/players/suggestion/reveal", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> revealClueHTTP(
+			@PathVariable int gid,
+			@RequestParam(required = true) String charName,
+			@RequestParam(required = true) String cardName) {
+
+		// TODO: (ZACH) fill with logic
+		
+		// TODO: (low-priority) update game eventMessage
+
+		return null;
+	}
+	
+	/**
+	 * Accept a clue for another suggestion
+	 * @param gid
+	 * @param charName
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}/players/suggestion/accept", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> acceptRevealedClueHTTP(
+			@PathVariable int gid,
+			@RequestParam(required = true) String charName) {
+
+		// TODO: (MEGAN) fill with logic
+		
+		// TODO: (low-priority) update game eventMessage
+
+		return null;
+	}
+	
+	/**
+	 * Completes the player's turn
+	 * @param gid
+	 * @param charName
+	 * @return gameAsJson
+	 */
+	@PostMapping(value = "/{gid}/players/complete-turn", produces = MediaType.APPLICATION_JSON_VALUE)
+	ResponseEntity<String> completeTurnHTTP(@PathVariable int gid,
+			@RequestParam(required = true) String charName) {
+		
+		// TODO: (ALEX) fill with logic
+		
+		// TODO: (low-priority) update game eventMessage
+
+		return null;
+	}
+	
 	/**
 	 * Returns string of a given JSON
 	 * @return
