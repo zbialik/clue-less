@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -166,7 +168,7 @@ public interface ClueInterface extends ClueConstants {
 	 * Returns a list of card objects in random order
 	 * @return cardDeck
 	 */
-	public default List<Card> getShuffledDeck() {
+	public static List<Card> getShuffledDeck() {
 		
 		List<Card> cardDeck = new ArrayList<Card>();
 
@@ -184,8 +186,83 @@ public interface ClueInterface extends ClueConstants {
 	 * Deals cards for the game provided
 	 * @return cardDeck
 	 */
-	public static void dealCards(Game game) {
-		// TODO: fill with logic -- use getShuffledDeck() helper for support
+	public default void dealCards(Game game) {
+		
+		// get shuffled deck
+		List<Card> cardDeck = getShuffledDeck();
+		
+		// add suspect card to mysteryCards in game
+		addMysteryCard(game, cardDeck, CARD_TYPE_SUSPECT);
+		
+		// add room card to mysteryCards in game
+		addMysteryCard(game, cardDeck, CARD_TYPE_ROOM);
+		
+		// add weapon card to mysteryCards in game
+		addMysteryCard(game, cardDeck, CARD_TYPE_WEAPON);
+		
+		// distribute remaining cards to each player
+		dealPlayersCards(game, cardDeck);
+		
+	}
+	
+	/**
+	 * Returns the remaining shuffled deck after updating the game's mysteryCards with one
+	 * randomly selected card matching the provided cardType
+	 * @param game
+	 * @param shuffledDeck
+	 * @param cardType
+	 */
+	public static void addMysteryCard(Game game, List<Card> shuffledDeck, String cardType) {
+		boolean foundCard = false;
+		
+		int i = 0;
+		while (!foundCard) {
+			if (shuffledDeck.get(i).type == cardType) {
+				game.mysteryCards.add(shuffledDeck.get(i)); // add to mystery deck
+				shuffledDeck.remove(i); // remove from cardDeck to distribute
+				foundCard = true;
+			}
+			i++;
+			
+			if (i >= shuffledDeck.size()) {
+				throw new RuntimeException("could not find card in cardDeck that is of type: " + cardType);
+			}
+		}
+		foundCard = true;
+	}
+	
+	/**
+	 * Returns the remaining shuffled deck after updating the game's mysteryCards with one
+	 * randomly selected card matching the provided cardType
+	 * @param game
+	 * @param shuffledDeck
+	 */
+	public static void dealPlayersCards(Game game, List<Card> shuffledDeck) {
+		
+		// get list of players in the game
+		List<Player> players = new ArrayList<Player>();
+		for (Character character : game.characterMap.values()) {
+			if (character instanceof Player) {
+				players.add((Player) character);
+			}
+		}
+		
+		int j = 0;
+		while (shuffledDeck.size() >= 1) {
+			
+			// add card to player hand
+			players.get(j).addHandCard(shuffledDeck.get(0));
+			
+			// remove card from shuffled deck
+			shuffledDeck.remove(0);
+			
+			// point to next player
+			j++;
+			if (j >= players.size()) { // reset to first player in list
+				j = 0;
+			}
+		}
+		
 	}
 	
 	/**
