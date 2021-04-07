@@ -44,10 +44,11 @@ public class Game implements ClueInterface {
 	 */
 	public void startGame() {
 
-		// TODO: deal player's cards
+		// deal player's cards
 		dealCards(this);
 		
-		// TODO: set the player's turn
+		// set the starting player's turn
+		this.startingPlayer().state = PLAYER_STATE_WAIT;
 		
 		this.hasStarted = true;
 	}
@@ -57,18 +58,49 @@ public class Game implements ClueInterface {
 	 */
 	public void changeTurn() {
 		// TODO: (MEGAN) complete logic
+		
+		// NOTE: determine the next player using the this.nextPlayer()
 	}
 
 	/**
 	 * Returns the next player whose turn it is in the game
-	 * @return
+	 * @return nextPlayer
 	 */
 	public Player nextPlayer() {
-		Player pl = null;
 
 		// TODO: (MEGAN) complete logic
+		
+		/*
+		 * Normal Workflow:
+		 * 	1. find the Player in this.characterMap that does NOT have a 'wait' state
+		 * 			- you will want to use ' instanceof Player' logic to skip characters 
+		 * 			  that aren't Players
+		 * 			- you may assume only one character is NOT in 'wait' state when this method is called 
+		 * 			  during normal game runtime
+		 * 
+		 * 	2. determine what index this Player is at using the constant ordered array CHARACTER_TURN_ORDER (from ClueInterface)
+		 * 	3. grab the next player's name from CHARACTER_TURN_ORDER
+		 * 	4. use the grabbed player's name to return this.characterMap.get(<the player's name you grabbed>)
+		 * 
+		 * NOTE: you can see startingPlayer() for some guidance on looping over the ordered CHARACTER_TURN_ORDER array
+		 */
 
-		return pl;
+		return null;
+	}
+	
+	/**
+	 * Returns the player whose turn it is when starting the game
+	 * @return startingPlayer
+	 */
+	public Player startingPlayer() {
+		
+		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) {
+			if (this.characterMap.get(CHARACTER_TURN_ORDER[i]) instanceof Player) {
+				return ((Player) this.characterMap.get(CHARACTER_TURN_ORDER[i]));
+			}
+		}
+		
+		return null; // return null if couldn't find a player
 	}
 
 	/**
