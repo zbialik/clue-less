@@ -89,6 +89,7 @@ public class Location implements ClueInterface {
 	 */
 	public JSONObject toJson() {
 		JSONObject locationJson = new JSONObject();
+		locationJson.put("name", this.name);
 		locationJson.put("type", this.type);
 		
 		if (this.secretPassage == null) {
