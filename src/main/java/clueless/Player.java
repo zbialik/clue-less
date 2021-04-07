@@ -54,7 +54,6 @@ public class Player extends Character implements Serializable {
 		
 		boolean hasClue = false;
 		
-		// TODO: verify works correctly
 		for (Card suggestedCard : suggestion) { 
 			for (Card handCard : this.handCards) { 
 				if (suggestedCard.equals(handCard)) {

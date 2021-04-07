@@ -75,7 +75,7 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) Boolean startGame) {
 
-		// TODO: (low-priority) verify player is VIP to allow startGame action, return 409/CONFLICT if not VIP
+		// TODO: (ZACH) (low-priority) verify player is VIP to allow startGame action, return 409/CONFLICT if not VIP
 		
 		if (startGame) {
 			getGame(gid).startGame(); // add player to game
