@@ -44,8 +44,8 @@ class GameService extends GameDataManager {
 	 */
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> createGameHTTP(@RequestParam(required = true) String name, @RequestParam(required = true) String charName) {
-		
-		JSONObject newGameJson = addNewGame(name, charName).toJson();
+
+		JSONObject newGameJson = addNewGame(charName, name).toJson();
 
 		return new ResponseEntity<String>(jsonToString(newGameJson), HttpStatus.OK);
 	}
@@ -60,7 +60,7 @@ class GameService extends GameDataManager {
 		LOGGER.info("Game " + gid + " returned.");
 		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Starts the specific game object by changing the 
 	 * game's attribute hasStarted to true
@@ -72,14 +72,14 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String startGame, 
 			@RequestParam(required = true) String name, 
 			@PathVariable int gid) {
-		
+
 		gamesHashMap.get(gid).startGame(); // add player to game
 
 		LOGGER.info("Game " + gid + " was started by " + name);
-		
+
 		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
-	
+
 
 	/**
 	 * Deletes the provided game
@@ -101,12 +101,17 @@ class GameService extends GameDataManager {
 	ResponseEntity<String> createPlayerInGameHTTP(@RequestParam(required = true) String name, 
 			@RequestParam(required = true) String charName, 
 			@PathVariable int gid) {
-		
-		
-		gamesHashMap.get(gid).setPlayerToCharacter(new Player(charName, name)); // add player to game
+
+		// check if character is already a Player object, return null if so
+		if (gamesHashMap.get(gid).characterMap.get(charName) instanceof Player) {
+			// TODO: update this OR frontend component to say that the character was already selected
+		} else {
+			// update character map with new player
+			gamesHashMap.get(gid).addPlayer(charName, name); // add player to game
+		}
 
 		LOGGER.info("Player named " + name + " added to game " + gid + ".");
-		
+
 		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
 
