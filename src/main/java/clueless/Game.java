@@ -75,7 +75,7 @@ public class Game implements ClueInterface {
 		 * 	1. find the Player in this.characterMap that does NOT have a 'wait' state
 		 * 			- you will want to use ' instanceof Player' logic to skip characters 
 		 * 			  that aren't Players
-		 * 			- you may assume only one character is NOT in 'wait' state when this method is called 
+		 * 			- you may assume only one player is NOT in 'wait' state when this method is called 
 		 * 			  during normal game runtime
 		 * 
 		 * 	2. determine what index this Player is at using the constant ordered array CHARACTER_TURN_ORDER (from ClueInterface)
