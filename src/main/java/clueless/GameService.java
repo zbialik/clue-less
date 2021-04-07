@@ -102,7 +102,6 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String charName, 
 			@PathVariable int gid) {
 		
-		
 		gamesHashMap.get(gid).addPlayer(new Player(charName, name)); // add player to game
 
 		LOGGER.info("Player named " + name + " added to game " + gid + ".");
