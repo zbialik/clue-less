@@ -201,7 +201,7 @@ public interface ClueInterface extends ClueConstants {
 		addMysteryCard(game, cardDeck, CARD_TYPE_WEAPON);
 		
 		// distribute remaining cards to each player
-		
+		dealPlayersCards(game, cardDeck);
 		
 	}
 	
@@ -229,6 +229,40 @@ public interface ClueInterface extends ClueConstants {
 			}
 		}
 		foundCard = true;
+	}
+	
+	/**
+	 * Returns the remaining shuffled deck after updating the game's mysteryCards with one
+	 * randomly selected card matching the provided cardType
+	 * @param game
+	 * @param shuffledDeck
+	 */
+	public static void dealPlayersCards(Game game, List<Card> shuffledDeck) {
+		
+		// get list of players in the game
+		List<Player> players = new ArrayList<Player>();
+		for (Character character : game.characterMap.values()) {
+			if (character instanceof Player) {
+				players.add((Player) character);
+			}
+		}
+		
+		int j = 0;
+		while (shuffledDeck.size() >= 1) {
+			
+			// add card to player hand
+			players.get(j).addHandCard(shuffledDeck.get(0));
+			
+			// remove card from shuffled deck
+			shuffledDeck.remove(0);
+			
+			// point to next player
+			j++;
+			if (j >= players.size()) { // reset to first player in list
+				j = 0;
+			}
+		}
+		
 	}
 	
 	/**

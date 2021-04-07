@@ -133,6 +133,15 @@ public class Player extends Character implements Serializable {
 	}
 	
 	/**
+	 * Adds a card to this player's hand list and also updates knownCards
+	 * @return
+	 */
+	public void addHandCard(Card c) {
+		this.handCards.add(c);
+		this.knownCards.add(c);
+	}
+	
+	/**
 	 * Adds a card to this player's knownCards list
 	 * @return
 	 */
