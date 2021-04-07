@@ -123,6 +123,7 @@ class GameService extends GameDataManager {
 			
 			getGame(gid).addPlayer(charName, name); // add player to game
 			LOGGER.info("Player named " + name + " added to game " + gid + ".");
+			
 			// TODO: update game eventMessage
 			
 			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
