@@ -62,7 +62,7 @@ public class Game implements ClueInterface {
 	public Player nextPlayer() {
 		Player pl = null;
 
-		// TODO: (ALEX) complete logic
+		// TODO: (MEGAN) complete logic
 
 		return pl;
 	}
