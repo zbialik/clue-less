@@ -44,13 +44,15 @@ public class Card {
 	 * Returns true of the provided object is equivalent to this card
 	 */
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (!(o instanceof Card))
+		} else if (!(o instanceof Card)) {
 			return false;
-		Card cardO = (Card) o;
-		return Objects.equals(this.name, cardO.name) 
-				&& Objects.equals(this.type, cardO.type);
+		} else {
+			Card cardO = (Card) o;
+			return Objects.equals(this.name, cardO.name) 
+					&& Objects.equals(this.type, cardO.type);
+		}
 	}
 
 }
