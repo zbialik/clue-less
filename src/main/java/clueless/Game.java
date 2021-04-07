@@ -44,7 +44,11 @@ public class Game implements ClueInterface {
 	 */
 	public void startGame() {
 
-		// TODO: (ZACH) deal player's cards
+		// TODO: deal player's cards
+		dealCards(this);
+		
+		// TODO: set the player's turn
+		
 		this.hasStarted = true;
 	}
 
