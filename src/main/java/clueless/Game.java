@@ -39,9 +39,12 @@ public class Game implements ClueInterface {
 	}
 	
 	/**
-	 * Starts the game by changing hasStarted to true
+	 * Starts the game by dealing cards to players
+	 * and changing hasStarted to true
 	 */
 	public void startGame() {
+		
+		// TODO: deal player's cards
 		this.hasStarted = true;
 	}
 	
@@ -87,17 +90,15 @@ public class Game implements ClueInterface {
 	 * players being added at same time and one overwriting the other.
 	 * @param newPlayer
 	 */
-	public synchronized Game setPlayerToCharacter(Player newPlayer) {
+	public synchronized Game addPlayer(Player newPlayer) {
 		
 		// check if character is already a Player object, return null if so
-//		if (this.characterMap.get(newPlayer.characterId) instanceof Player) {TODO: delete from testing 
 		if (this.characterMap.get(newPlayer.characterName) instanceof Player) {
 			// TODO: update this OR frontend component to say that the character was already selected
 			return this;
 		} else {
 			// update character map with new player
 			this.characterMap.put(newPlayer.characterName, newPlayer);
-			// this.characterMap.put(newPlayer.characterId, newPlayer);  TODO: delete from testing
 			return this;
 		}
 	}
@@ -120,12 +121,12 @@ public class Game implements ClueInterface {
 	 * @param characterId
 	 * @return
 	 */
-	public Character getCharacter(int characterId) {
+	public Character getCharacter(String charName) {
 		
 		try {
-			return this.characterMap.get(characterId);
+			return this.characterMap.get(charName);
 		} catch (Exception e) {
-			throw new PlayerNotFoundException(characterId); // if not found, throw exception
+			throw new PlayerNotFoundException(charName); // if not found, throw exception
 		}
 		
 	}
@@ -135,18 +136,18 @@ public class Game implements ClueInterface {
 	 * @param characterId
 	 * @return
 	 */
-	public Player getPlayer(int characterId) {
+	public Player getPlayer(String charName) {
 		
 		try {
-			Character character = this.characterMap.get(characterId);
+			Character character = this.characterMap.get(charName);
 			if (character instanceof Player) {
 				return (Player) character;
 			} else {
-				LOGGER.error("getPlayer( " + characterId +  " ) could not cast to Character to Player");
+				LOGGER.error("getPlayer( " + charName +  " ) could not cast to Character to Player");
 				return null;
 			}
 		} catch (Exception e) {
-			throw new PlayerNotFoundException(characterId); // if not found, throw exception
+			throw new PlayerNotFoundException(charName); // if not found, throw exception
 		}
 	}
 	

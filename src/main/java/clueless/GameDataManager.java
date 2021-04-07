@@ -63,7 +63,7 @@ public class GameDataManager {
 			newPlayer = new Player(charName, name);
 		}
 		
-		newGame.setPlayerToCharacter(newPlayer); // include player in initialized game
+		newGame.addPlayer(newPlayer); // include player in initialized game
 		LOGGER.info(name + " initialized Game " + this.gameIdCounter + ".");
 
 		gamesHashMap.put(this.gameIdCounter, newGame); // initialize new game
