@@ -48,26 +48,19 @@ public class GameDataManager {
 
 	/**
 	 * Adds new game to datastore and returns the game created
+	 * @param charName
 	 * @param name
-	 * @param newGameId
 	 * @return newGameJson
 	 */
-	public Game addNewGame(String name, String charName) {
+	public Game addNewGame(String charName, String name) {
 
-		Player newPlayer;
 		Game newGame = new Game(this.gameIdCounter);
 		
-		if (newGame.getActivePlayers().isEmpty()) { // this is VIP player
-			newPlayer = new Player(charName, name, true);
-		} else {
-			newPlayer = new Player(charName, name);
-		}
+		newGame.addPlayer(charName, name); // include player in initialized game
 		
-		newGame.addPlayer(newPlayer); // include player in initialized game
 		LOGGER.info(name + " initialized Game " + this.gameIdCounter + ".");
-
 		gamesHashMap.put(this.gameIdCounter, newGame); // initialize new game
-
+		
 		this.gameIdCounter++; // increment game ID to set unique ID's for games
 
 		return newGame;
