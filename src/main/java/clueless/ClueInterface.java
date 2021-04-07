@@ -12,6 +12,15 @@ import org.json.JSONObject;
 public interface ClueInterface extends ClueConstants {
 	
 	public static final Map<String, Character> INIT_CHARACTER_MAP = initCharacterMap();
+	public static final String[] CHARACTER_TURN_ORDER = { // use this to determine order of turns
+			CHARACTER_NAME_MISS_SCARLET,
+			CHARACTER_NAME_COLONEL_MUSTARD,
+			CHARACTER_NAME_MRS_WHITE,
+			CHARACTER_NAME_MR_GREEN,
+			CHARACTER_NAME_MRS_WHITE,
+			CHARACTER_NAME_MRS_PEACOCK,
+			CHARACTER_NAME_PROF_PLUM
+	};
 
 	public static Map<String, Card> initCardMap() {
 		Map<String, Card> map = new HashMap<>();

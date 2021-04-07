@@ -44,7 +44,7 @@ public class Location implements ClueInterface {
 	 * @return
 	 */
 	public boolean isAdjacent(Location l) {
-		// TODO: determine if adjacent based on location coordinates
+		// TODO: (MEGAN) determine if adjacent based on location coordinates
 		return false;
 	}
 	

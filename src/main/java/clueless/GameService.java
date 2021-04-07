@@ -183,7 +183,7 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String room,
 			@RequestParam(required = true) String suspect) {
 
-		// TODO: (ZACH) fill with logic
+		// TODO: (MEGAN) fill with logic
 		
 		// TODO: (low-priority) update game eventMessage
 
