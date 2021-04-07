@@ -77,13 +77,14 @@ class GameService extends GameDataManager {
 
 		// TODO: (ZACH) (low-priority) verify player is VIP to allow startGame action, return 409/CONFLICT if not VIP
 		
+		
 		if (startGame) {
-			getGame(gid).startGame(); // add player to game
+			getGame(gid).startGame(); // initiate game's start game sequence
 			LOGGER.info("Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName);
-			// TODO: (low-priority) update game eventMessage
+			getGame(gid).eventMessage = "Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName;
 		} else {
 			LOGGER.info("Game " + gid + " was stopped by " + getGame(gid).getPlayer(charName).playerName);
-			// TODO: (low-priority) update game eventMessage
+			getGame(gid).eventMessage = "Game " + gid + " was stopped by " + getGame(gid).getPlayer(charName).playerName;
 		}
 		
 		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
