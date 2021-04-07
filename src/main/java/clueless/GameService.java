@@ -73,7 +73,8 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String name, 
 			@PathVariable int gid) {
 
-		gamesHashMap.get(gid).startGame(); // add player to game
+		// TODO: (low) verify player is VIP to allow startGame action, return 409/CONFLICT if not VIP
+		getGame(gid).startGame(); // add player to game
 
 		LOGGER.info("Game " + gid + " was started by " + name);
 
@@ -103,13 +104,13 @@ class GameService extends GameDataManager {
 			@PathVariable int gid) {
 
 		// check if character is already a Player object, return 409 status if so
-		if (gamesHashMap.get(gid).characterMap.get(charName) instanceof Player) {
+		if (getGame(gid).getCharacter(charName) instanceof Player) {
 			LOGGER.info("The character named " + charName + " is already mapped to a player named "
-					+ ((Player) gamesHashMap.get(gid).characterMap.get(charName)).playerName + ".");
+					+ getGame(gid).getPlayer(charName).playerName + ".");
 			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.CONFLICT);
 		} else {
 			// update character map with new player
-			gamesHashMap.get(gid).addPlayer(charName, name); // add player to game
+			getGame(gid).addPlayer(charName, name); // add player to game
 			LOGGER.info("Player named " + name + " added to game " + gid + ".");
 			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 		}
