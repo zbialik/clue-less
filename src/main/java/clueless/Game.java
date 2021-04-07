@@ -196,15 +196,4 @@ public class Game implements ClueInterface {
 
 		return gameJson;
 	}
-
-	//	TODO: delete if OBE
-	//	@Override
-	//	public boolean equals(Object o) {
-	//		if (this == o)
-	//			return true;
-	//		if (!(o instanceof Game))
-	//			return false;
-	//		Game gameO = (Game) o;
-	//		return Objects.equals(this.gameId, gameO.gameId) && Objects.equals(this.players, gameO.players);
-	//	}
 }
