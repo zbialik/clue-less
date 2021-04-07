@@ -68,6 +68,7 @@ public class GameDataManager {
 
 	public void deleteGame(int gameId) {
 		gamesHashMap.remove(gameId);
+		LOGGER.info("Game " + gameId + " deleted.");
 	}
 	
 	

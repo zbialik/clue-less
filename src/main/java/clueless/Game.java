@@ -46,8 +46,6 @@ public class Game implements ClueInterface {
 
 		// TODO: deal player's cards
 		this.hasStarted = true;
-
-		// TODO: update game eventMessage
 	}
 
 	/**
@@ -55,7 +53,6 @@ public class Game implements ClueInterface {
 	 */
 	public void changeTurn() {
 		// TODO: complete logic
-		// TODO: update game eventMessage
 	}
 
 	/**
@@ -104,7 +101,6 @@ public class Game implements ClueInterface {
 		// update character map with new player
 		this.characterMap.put(newPlayer.characterName, newPlayer);
 		
-		// TODO: update game eventMessage
 		return this;
 	}
 
