@@ -80,10 +80,10 @@ class GameService extends GameDataManager {
 		if (startGame) {
 			getGame(gid).startGame(); // add player to game
 			LOGGER.info("Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName);
-			// TODO: update game eventMessage
+			// TODO: (low-priority) update game eventMessage
 		} else {
 			LOGGER.info("Game " + gid + " was stopped by " + getGame(gid).getPlayer(charName).playerName);
-			// TODO: update game eventMessage
+			// TODO: (low-priority) update game eventMessage
 		}
 		
 		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
@@ -124,7 +124,7 @@ class GameService extends GameDataManager {
 			getGame(gid).addPlayer(charName, name); // add player to game
 			LOGGER.info("Player named " + name + " added to game " + gid + ".");
 			
-			// TODO: update game eventMessage
+			// TODO: (low-priority) update game eventMessage
 			
 			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 		}
@@ -143,7 +143,7 @@ class GameService extends GameDataManager {
 		
 		// TODO: (ZACH) fill with logic
 		
-		// TODO: update game eventMessage
+		// TODO: (low-priority) update game eventMessage
 
 		return null;
 	}
@@ -164,7 +164,7 @@ class GameService extends GameDataManager {
 
 		// TODO: (ALEX) fill with logic
 		
-		// TODO: update game eventMessage
+		// TODO: (low-priority) update game eventMessage
 
 		return null;
 	}
@@ -185,7 +185,7 @@ class GameService extends GameDataManager {
 
 		// TODO: (ZACH) fill with logic
 		
-		// TODO: update game eventMessage
+		// TODO: (low-priority) update game eventMessage
 
 		return null;
 	}
@@ -236,7 +236,7 @@ class GameService extends GameDataManager {
 
 		// TODO: (ZACH) fill with logic
 		
-		// TODO: update game eventMessage
+		// TODO: (low-priority) update game eventMessage
 
 		return null;
 	}
@@ -254,7 +254,7 @@ class GameService extends GameDataManager {
 
 		// TODO: (MEGAN) fill with logic
 		
-		// TODO: update game eventMessage
+		// TODO: (low-priority) update game eventMessage
 
 		return null;
 	}
@@ -271,7 +271,7 @@ class GameService extends GameDataManager {
 		
 		// TODO: (ALEX) fill with logic
 		
-		// TODO: update game eventMessage
+		// TODO: (low-priority) update game eventMessage
 
 		return null;
 	}
