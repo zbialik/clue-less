@@ -52,7 +52,7 @@ public class GameDataManager {
 	 * @param name
 	 * @return newGameJson
 	 */
-	public Game addNewGame(String charName, String name) {
+	public synchronized Game addNewGame(String charName, String name) {
 
 		Game newGame = new Game(this.gameIdCounter);
 		

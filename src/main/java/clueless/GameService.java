@@ -102,17 +102,17 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String charName, 
 			@PathVariable int gid) {
 
-		// check if character is already a Player object, return null if so
+		// check if character is already a Player object, return 409 status if so
 		if (gamesHashMap.get(gid).characterMap.get(charName) instanceof Player) {
-			// TODO: update this OR frontend component to say that the character was already selected
+			LOGGER.info("The character named " + charName + " is already mapped to a player named "
+					+ ((Player) gamesHashMap.get(gid).characterMap.get(charName)).playerName + ".");
+			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.CONFLICT);
 		} else {
 			// update character map with new player
 			gamesHashMap.get(gid).addPlayer(charName, name); // add player to game
+			LOGGER.info("Player named " + name + " added to game " + gid + ".");
+			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 		}
-
-		LOGGER.info("Player named " + name + " added to game " + gid + ".");
-
-		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
 
 	/**
