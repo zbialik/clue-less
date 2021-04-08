@@ -30,11 +30,15 @@ public class Location implements ClueInterface {
 	 * @param l
 	 * @return
 	 */
-	public boolean equals(Location l) {
-		if (Objects.equals(l.name, this.name)) {
+	public boolean equals(Object o) {
+		if (this == o) {
 			return true;
-		} else {
+		} else if (!(o instanceof Location)) {
 			return false;
+		} else {
+			Location locO = (Location) o;
+			return Objects.equals(this.name, locO.name) 
+					&& Objects.equals(this.type, locO.type);
 		}
 	}
 	
