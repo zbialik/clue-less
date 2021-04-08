@@ -155,11 +155,22 @@ class GameService extends GameDataManager {
 
 				// update character's current location
 				getGame(gid).getCharacter(charName).setCurrLocation(LOCATION_MAP.get(locName));
-
-				// update game eventMessage
-				getGame(gid).eventMessage = getGame(gid).getPlayer(charName).playerName
-						+ " moved " + charName + " to " + locName;
-
+				
+				if (LOCATION_MAP.get(locName).isRoom()) { // if room, prompt to make suggestion
+					getGame(gid).getPlayer(charName).state = PLAYER_STATE_SUGGEST;
+					
+					// update game eventMessage
+					getGame(gid).eventMessage = getGame(gid).getPlayer(charName).playerName
+							+ " moved " + charName + " to the " + locName;
+					
+				} else { // else, prompt to complete turn
+					getGame(gid).getPlayer(charName).state = PLAYER_STATE_COMPLETE_TURN;
+					
+					// update game eventMessage
+					getGame(gid).eventMessage = getGame(gid).getPlayer(charName).playerName
+							+ " moved " + charName + " to a " + LOCATION_MAP.get(locName).type;
+				}
+				
 				return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 			}
 		}
@@ -200,7 +211,7 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String room,
 			@RequestParam(required = true) String suspect) {
 
-		// TODO: (MEGAN) fill with logic
+		// TODO: (ZACH) fill with logic
 
 		// TODO: (low-priority) update game eventMessage
 
