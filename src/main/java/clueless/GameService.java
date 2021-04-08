@@ -1,5 +1,9 @@
 package clueless;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -155,22 +159,22 @@ class GameService extends GameDataManager {
 
 				// update character's current location
 				getGame(gid).getCharacter(charName).setCurrLocation(LOCATION_MAP.get(locName));
-				
+
 				if (LOCATION_MAP.get(locName).isRoom()) { // if room, prompt to make suggestion
 					getGame(gid).getPlayer(charName).state = PLAYER_STATE_SUGGEST;
-					
+
 					// update game eventMessage
 					getGame(gid).eventMessage = getGame(gid).getPlayer(charName).playerName
 							+ " moved " + charName + " to the " + locName;
-					
+
 				} else { // else, prompt to complete turn
 					getGame(gid).getPlayer(charName).state = PLAYER_STATE_COMPLETE_TURN;
-					
+
 					// update game eventMessage
 					getGame(gid).eventMessage = getGame(gid).getPlayer(charName).playerName
 							+ " moved " + charName + " to a " + LOCATION_MAP.get(locName).type;
 				}
-				
+
 				return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 			}
 		}
@@ -198,7 +202,7 @@ class GameService extends GameDataManager {
 	}
 
 	/**
-	 * Processes the player's accusation provided
+	 * Processes the player's suggestion provided
 	 * @param gid
 	 * @param charName
 	 * @return gameAsJson
@@ -210,8 +214,58 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String weapon,
 			@RequestParam(required = true) String room,
 			@RequestParam(required = true) String suspect) {
-
-		// TODO: (ZACH) fill with logic
+		
+		Game game = getGame(gid);
+		Player suggester = game.getPlayer(charName);
+		Character suspectChar = game.getCharacter(suspect);
+		
+		// check that player is either in ('suggest' state) OR ('move' state AND wasMovedToRoom)
+		if (!((suggester.state != PLAYER_STATE_SUGGEST) 
+				|| ((suggester.state != PLAYER_STATE_MOVE) && suggester.wasMovedToRoom))) {
+			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.BAD_REQUEST);
+		} else {
+			
+			// validate room is player's currLocation
+			if (suggester.getCurrLocation().equals(LOCATION_MAP.get(room))) {
+				
+				// set suggester player state to await_reveal
+				suggester.state = PLAYER_STATE_AWAIT_REVEAL;
+				
+				// set suggester player wasMovedToRoom to false (in case it was prevously true)
+				suggester.setMovedToRoom(false);
+				
+				// set suspect's current location to the provided room
+				suspectChar.setCurrLocation(LOCATION_MAP.get(room));
+				
+				// set suspect's wasMovedToRoom to true
+				suspectChar.setMovedToRoom(true);
+				
+				// determine who has clue
+				List<Card> suggestion = new ArrayList<Card>();
+				suggestion.add(CARD_MAP.get(weapon));
+				suggestion.add(CARD_MAP.get(room));
+				suggestion.add(CARD_MAP.get(suspect));
+				
+				Player playerWithClue = game.whoHasClue(suggestion);
+				
+				// TODO: verify this logic is sound
+				if (Objects.isNull(playerWithClue)) { // if null, no one has clue -- set suggester to complete_turn
+					
+					game.eventMessage = suggester.playerName + " made a suggestion that no one has a clue for ";
+					suggester.setEventMessage("No one had a clue for your suggestion. Please complete your turn or make an accusation.");
+					suggester.state = PLAYER_STATE_COMPLETE_TURN;
+					
+				} else { // else, playerWithClue should be set to reveal
+					
+					game.eventMessage = suggester.playerName + " made a suggestion that " + playerWithClue.playerName + " must reveal a clue for.";
+					playerWithClue.setEventMessage("Please reveal a clue for the provided suggestion.");
+					playerWithClue.state = PLAYER_STATE_REVEAL;
+				}
+				
+			} else { // return 400 (BAD_REQUEST)
+				return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.BAD_REQUEST);
+			}
+		}
 
 		// TODO: (low-priority) update game eventMessage
 
