@@ -23,13 +23,13 @@ public class Character implements ClueInterface {
 		this.active = false; // always inactive until player is created
 	}
 
-	public Character(String charName) {
-		this.characterName = charName;
-		this.characterHome = getCharacterHome(charName);
-		this.currLocation = getCharacterHome(charName); // always starts at home
-		this.wasMovedToRoom = false; // always starts at home (not moved to room)
-		this.active = false; // always inactive until player is created
-	}
+//	public Character(String charName) {
+//		this.characterName = charName;
+//		this.characterHome = getCharacterHome(charName);
+//		this.currLocation = getCharacterHome(charName); // always starts at home
+//		this.wasMovedToRoom = false; // always starts at home (not moved to room)
+//		this.active = false; // always inactive until player is created
+//	}
 
 	/**
 	 * Returns the current location for this character
