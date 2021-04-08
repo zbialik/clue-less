@@ -141,11 +141,17 @@ class GameService extends GameDataManager {
 	@PostMapping(value = "/{gid}/players/location", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> updatePlayerLocationHTTP(
 			@PathVariable int gid,
-			@RequestParam(required = true) String charName) {
+			@RequestParam(required = true) String charName,
+			@RequestParam(required = true) String locName) {
 		
 		// TODO: (ZACH) fill with logic
+		if (getGame(gid).isLocationOccupied(locName)) { // if location occupied return 409 (CONFLICT)
+			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.CONFLICT);
+		} else {
+			
+		}
 		
-		// TODO: (low-priority) update game eventMessage
+		// update game eventMessage
 
 		return null;
 	}
