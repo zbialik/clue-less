@@ -104,13 +104,19 @@ public class Game implements ClueInterface {
 	}
 
 	/**
-	 * Helper method for determining if a location is occupied in this game
+	 * Helper method for determining if a location is occupied in this game 
+	 * returns true if location is occupied, false otherwise
+	 * @param location
+	 * @return occupied
 	 */
-	public boolean isLocationOccupied() {
+	public boolean isLocationOccupied(Location location) {
 		boolean occupied = false;
 
-		// TODO: (ALEX) complete logic
-
+		// TODO: (ALEX) complete logic below
+		
+		// loop through each character in characterMap and see if their currLocation is location
+		// 	(use the location.equals() method to determine)
+		
 		return occupied;
 	}
 
