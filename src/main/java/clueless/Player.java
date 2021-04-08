@@ -15,9 +15,10 @@ import org.json.JSONObject;
 public class Player extends Character implements Serializable {
 
 	public String playerName;
-	public String state;
+	public static String state;
 	public boolean vip = false;
-	private List<Card> handCards = new ArrayList<Card>();
+	
+	private static List<Card> handCards = new ArrayList<Card>();
 	private List<Card> knownCards = new ArrayList<Card>();
 	private Card revealedClueCard = null;
 	private List<Location> possibleMoves = new ArrayList<Location>();
@@ -50,12 +51,13 @@ public class Player extends Character implements Serializable {
 	 * Returns true if this player's hand has a card in the provided suggestion
 	 * @return
 	 */
-	public boolean hasClue(List<Card> suggestion) {
+	public static boolean hasClue(List<Card> suggestion) {
 		
 		boolean hasClue = false;
 		
+		//needs to  be static?
 		for (Card suggestedCard : suggestion) { 
-			for (Card handCard : this.handCards) { 
+			for (Card handCard : handCards) { 
 				if (suggestedCard.equals(handCard)) {
 					return true;
 				}
