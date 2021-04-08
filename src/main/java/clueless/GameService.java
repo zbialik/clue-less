@@ -74,19 +74,21 @@ class GameService extends GameDataManager {
 			@PathVariable int gid, 
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) Boolean startGame) {
-
-		// TODO: (ZACH) (low-priority) verify player is VIP to allow startGame action, return 409/CONFLICT if not VIP
 		
-		if (startGame) {
-			getGame(gid).startGame(); // add player to game
-			LOGGER.info("Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName);
-			// TODO: (low-priority) update game eventMessage
-		} else {
-			LOGGER.info("Game " + gid + " was stopped by " + getGame(gid).getPlayer(charName).playerName);
-			// TODO: (low-priority) update game eventMessage
+		// return 400 (BAD_REQUEST) if not VIP
+		if (!(getGame(gid).getPlayer(charName).vip)) { 
+			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.BAD_REQUEST);
+		} else { 
+			// check if startName is true
+			if (startGame) {
+				getGame(gid).startGame(); // initiate game's start game sequence
+				LOGGER.info("Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName);
+				getGame(gid).eventMessage = "Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName;
+			} else {
+				LOGGER.info(getGame(gid).getPlayer(charName).playerName + " send startGame but equal to true.");
+			}
+			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 		}
-		
-		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
 
 	/**
