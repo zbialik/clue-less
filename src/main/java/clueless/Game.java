@@ -28,14 +28,14 @@ public class Game implements ClueInterface {
 
 	public String eventMessage; 
 
-	public Game(int id) { // custom constructor
+	public Game(int id, Map<String, Character> initMap) { // custom constructor
 		this.gameId = id;
 		this.mysteryCards = new ArrayList<Card>();
 		this.hasStarted = false;
 		this.eventMessage = new String();
 
 		// copy character map from interface to this game
-		this.characterMap.putAll(INIT_CHARACTER_MAP);
+		this.characterMap.putAll(initMap);
 	}
 
 	/**
@@ -132,13 +132,13 @@ public class Game implements ClueInterface {
 	 * players being added at same time and one overwriting the other.
 	 * @param newPlayer
 	 */
-	public synchronized Game addPlayer(String charName, String name) {
+	public synchronized Game addPlayer(String charName, String name, Location homeLocation) {
 		Player newPlayer;
 		
 		if (this.hasPlayer()) { // the Game has a Player already (this player not VIP)
-			newPlayer = new Player(charName, name);
+			newPlayer = new Player(charName, name, homeLocation);
 		} else { // this is VIP player
-			newPlayer = new Player(charName, name, true);
+			newPlayer = new Player(charName, name, true, homeLocation);
 		}
 		// update character map with new player
 		this.characterMap.put(newPlayer.characterName, newPlayer);

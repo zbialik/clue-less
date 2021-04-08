@@ -38,6 +38,7 @@ class GameService extends GameDataManager {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getAllGamesHTTP() {
 		LOGGER.info("All games returned.");
+		
 		return new ResponseEntity<String>(jsonToString(getAllGamesJSON()), HttpStatus.OK);
 	}
 
@@ -79,19 +80,22 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) Boolean startGame) {
 
+		Game game = getGame(gid);
+		Player player = game.getPlayer(charName);
+		
 		// return 400 (BAD_REQUEST) if not VIP
-		if (!(getGame(gid).getPlayer(charName).vip)) { 
-			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.BAD_REQUEST);
+		if (!(player.vip)) { 
+			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.BAD_REQUEST);
 		} else { 
 			// check if startName is true
 			if (startGame) {
-				getGame(gid).startGame(); // initiate game's start game sequence
-				LOGGER.info("Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName);
-				getGame(gid).eventMessage = "Game " + gid + " was started by " + getGame(gid).getPlayer(charName).playerName;
+				game.startGame(); // initiate game's start game sequence
+				LOGGER.info("Game " + gid + " was started by " + player.playerName);
+				game.eventMessage = "Game " + gid + " was started by " + player.playerName;
 			} else {
-				LOGGER.info(getGame(gid).getPlayer(charName).playerName + " send startGame but equal to true.");
+				LOGGER.info(player.playerName + " send startGame but equal to true.");
 			}
-			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
+			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 		}
 	}
 
@@ -117,22 +121,24 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String charName, 
 			@RequestParam(required = true) String name) {
 
+		Game game = getGame(gid);
+		Character character = game.getCharacter(charName);
+		
 		// check if character is already a Player object, return 409 status if so
-		if (getGame(gid).getCharacter(charName) instanceof Player) {
+		if (character instanceof Player) {
 
 			LOGGER.error("The character named " + charName + " is already mapped to a player named "
-					+ getGame(gid).getPlayer(charName).playerName + ".");
+					+ game.getPlayer(charName).playerName + ".");
 
-			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.CONFLICT);
 
 		} else { // update character map with new player
 
-			getGame(gid).addPlayer(charName, name); // add player to game
-			LOGGER.info("Player named " + name + " added to game " + gid + ".");
+			game.addPlayer(charName, name, INIT_CHARACTER_MAP.get(charName).characterHome); // add player to game
+			LOGGER.info("Player named " + name + " added to game " + gid + " as "+ charName + ".");
+			game.eventMessage = "Player named " + name + " added to the game as " + charName + ".";
 
-			// TODO: (low-priority) update game eventMessage
-
-			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
+			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 		}
 	}
 
@@ -148,34 +154,36 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) String locName) {
 
+		Game game = getGame(gid);
+		Player player = game.getPlayer(charName);
+		Location location = LOCATION_MAP.get(locName);
+		
 		// validate character is in 'move' state
-		if (getGame(gid).getPlayer(charName).state != PLAYER_STATE_MOVE) {
-			return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.BAD_REQUEST);
+		if (player.state != PLAYER_STATE_MOVE) {
+			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.BAD_REQUEST);
 		} else {
 			// if hallway and location occupied return 409 (CONFLICT)
-			if (LOCATION_MAP.get(locName).isHallway() && getGame(gid).isLocationOccupied(LOCATION_MAP.get(locName))) {
-				return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.CONFLICT);
+			if (location.isHallway() && game.isLocationOccupied(location)) {
+				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.CONFLICT);
 			} else {
 
 				// update character's current location
-				getGame(gid).getCharacter(charName).setCurrLocation(LOCATION_MAP.get(locName));
+				player.setCurrLocation(location);
 
-				if (LOCATION_MAP.get(locName).isRoom()) { // if room, prompt to make suggestion
-					getGame(gid).getPlayer(charName).state = PLAYER_STATE_SUGGEST;
+				if (location.isRoom()) { // if room, prompt to make suggestion
+					player.state = PLAYER_STATE_SUGGEST;
 
 					// update game eventMessage
-					getGame(gid).eventMessage = getGame(gid).getPlayer(charName).playerName
-							+ " moved " + charName + " to the " + locName;
+					game.eventMessage = player.playerName + " moved " + charName + " to the " + locName;
 
 				} else { // else, prompt to complete turn
-					getGame(gid).getPlayer(charName).state = PLAYER_STATE_COMPLETE_TURN;
+					player.state = PLAYER_STATE_COMPLETE_TURN;
 
 					// update game eventMessage
-					getGame(gid).eventMessage = getGame(gid).getPlayer(charName).playerName
-							+ " moved " + charName + " to a " + LOCATION_MAP.get(locName).type;
+					game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type;
 				}
 
-				return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
+				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 			}
 		}
 	}
@@ -218,6 +226,7 @@ class GameService extends GameDataManager {
 		Game game = getGame(gid);
 		Player suggester = game.getPlayer(charName);
 		Character suspectChar = game.getCharacter(suspect);
+		Location suggestedLocation = LOCATION_MAP.get(room);
 		
 		// check that player is either in ('suggest' state) OR ('move' state AND wasMovedToRoom)
 		if (!((suggester.state != PLAYER_STATE_SUGGEST) 
@@ -226,7 +235,7 @@ class GameService extends GameDataManager {
 		} else {
 			
 			// validate room is player's currLocation
-			if (suggester.getCurrLocation().equals(LOCATION_MAP.get(room))) {
+			if (suggester.getCurrLocation().equals(suggestedLocation)) {
 				
 				// set suggester player state to await_reveal
 				suggester.state = PLAYER_STATE_AWAIT_REVEAL;
@@ -235,7 +244,7 @@ class GameService extends GameDataManager {
 				suggester.setMovedToRoom(false);
 				
 				// set suspect's current location to the provided room
-				suspectChar.setCurrLocation(LOCATION_MAP.get(room));
+				suspectChar.setCurrLocation(suggestedLocation);
 				
 				// set suspect's wasMovedToRoom to true
 				suspectChar.setMovedToRoom(true);

@@ -134,26 +134,27 @@ public interface ClueInterface extends ClueConstants {
 
 	public static Map<String, Character> initCharacterMap() { 
 		Map<String, Character> map = new HashMap<String, Character>();
+		Map<String, Location>  locMap = initLocationMap();
 		
 		// add characters
 		map.put(CHARACTER_NAME_MRS_WHITE,
 				new Character(CHARACTER_NAME_MRS_WHITE, 
-						LOCATION_MAP.get(LOCATION_NAME_MRS_WHITE_HOME)));
+						locMap.get(LOCATION_NAME_MRS_WHITE_HOME)));
 		map.put(CHARACTER_NAME_MR_GREEN, 
 				new Character(CHARACTER_NAME_MR_GREEN, 
-						LOCATION_MAP.get(LOCATION_NAME_MR_GREEN_HOME)));
+						locMap.get(LOCATION_NAME_MR_GREEN_HOME)));
 		map.put(CHARACTER_NAME_MRS_PEACOCK, 
 				new Character(CHARACTER_NAME_MRS_PEACOCK, 
-						LOCATION_MAP.get(LOCATION_NAME_MRS_PEACOCK_HOME)));
+						locMap.get(LOCATION_NAME_MRS_PEACOCK_HOME)));
 		map.put(CHARACTER_NAME_PROF_PLUM, 
 				new Character(CHARACTER_NAME_PROF_PLUM, 
-						LOCATION_MAP.get(LOCATION_NAME_PROF_PLUM_HOME)));
+						locMap.get(LOCATION_NAME_PROF_PLUM_HOME)));
 		map.put(CHARACTER_NAME_MISS_SCARLET, 
 				new Character(CHARACTER_NAME_MISS_SCARLET, 
-						LOCATION_MAP.get(LOCATION_NAME_MISS_SCARLET_HOME)));
+						locMap.get(LOCATION_NAME_MISS_SCARLET_HOME)));
 		map.put(CHARACTER_NAME_COLONEL_MUSTARD, 
 				new Character(CHARACTER_NAME_COLONEL_MUSTARD, 
-						LOCATION_MAP.get(LOCATION_NAME_COLONEL_MUSTARD_HOME)));
+						locMap.get(LOCATION_NAME_COLONEL_MUSTARD_HOME)));
 		
 		return map;
 	}
