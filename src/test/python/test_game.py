@@ -40,15 +40,27 @@ if __name__ == "__main__":
     # create game
     game_id = http_request('', {'name': "Zach", 'charName': "mr. green"}, 'post').json()['gameId']
 
+    # initialize all contexts
+    context_game = "/{}".format(game_id)
+    context_players = context_game + "/players"
+    context_update_location = context_game + "/players/location"
+    context_make_accusation = context_game + "/players/accusation/accuse"
+    context_make_suggestion = context_game + "/players/suggestion/suggest"
+    context_cancel_accusation = context_game + "/players/accusation/cancel"
+    context_cancel_suggestion = context_game + "/players/suggestion/cancel"
+    context_reveal_suggestion = context_game + "/players/suggestion/reveal"
+    context_reveal_suggestion = context_game + "/players/suggestion/accept"
+    context_reveal_suggestion = context_game + "/players/complete-turn"
+
     # add players
-    http_request('/' + str(game_id) + '/players', {'name': "Megan", 'charName': "mrs. peacock"}, 'post').json()
-    http_request('/' + str(game_id) + '/players', {'name': "Alex", 'charName': "professor plum"}, 'post').json()
+    http_request(context_players, {'name': "Megan", 'charName': "mrs. peacock"}, 'post').json()
+    http_request(context_players, {'name': "Alex", 'charName': "professor plum"}, 'post').json()
 
     # start game
-    game_data = http_request('/' + str(game_id), {'startGame': True, 'charName': "mr. green"}, 'post').json()
-    print(json.dumps(game_data, indent=4))
+    game_data = http_request(context_game, {'startGame': True, 'charName': "mr. green"}, 'post').json()
 
     # make first moves for all players
+    # game_data = http_request(context_update_location, {'locName': , 'charName': "mr. green"}, 'post').json()
 
     # make move for first player
     # make suggestion for first player
@@ -64,5 +76,5 @@ if __name__ == "__main__":
     # make move for first player
     # make correct accusation for first player
 
-    
+
 

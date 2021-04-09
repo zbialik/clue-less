@@ -24,6 +24,7 @@ public class Game implements ClueInterface {
 
 	public boolean hasStarted;
 	public List<Card> mysteryCards;
+	public List<Card> suggestionCards;
 	public Map<String, Character> characterMap = new HashMap<String, Character>();
 
 	public String eventMessage; 
@@ -31,6 +32,7 @@ public class Game implements ClueInterface {
 	public Game(int id, Map<String, Character> initMap) { // custom constructor
 		this.gameId = id;
 		this.mysteryCards = new ArrayList<Card>();
+		this.suggestionCards = new ArrayList<Card>();
 		this.hasStarted = false;
 		this.eventMessage = new String();
 
