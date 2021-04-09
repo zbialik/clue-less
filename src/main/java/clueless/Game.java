@@ -70,7 +70,8 @@ public class Game implements ClueInterface {
 		
 		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) 
 		{
-			if ((this.characterMap.get(CHARACTER_TURN_ORDER[i]) instanceof Player) && (Player.state != PLAYER_STATE_WAIT))					
+			if ((this.characterMap.get(CHARACTER_TURN_ORDER[i]) instanceof Player) && 
+					(((Player) this.characterMap.get(CHARACTER_TURN_ORDER[i])).state == PLAYER_STATE_WAIT))				
 				 {
 					return ((Player) this.characterMap.get(CHARACTER_TURN_ORDER[i]));
 				 }
@@ -215,8 +216,8 @@ public class Game implements ClueInterface {
 		{
 			for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) 
 			{
-				if (this.characterMap.get(CHARACTER_TURN_ORDER[i]) instanceof Player 
-						&& Player.hasClue(suggestion)) 
+				if ((this.characterMap.get(CHARACTER_TURN_ORDER[i]) instanceof Player) && 
+						(((Player) this.characterMap.get(CHARACTER_TURN_ORDER[i])).hasClue(suggestion)))
 					{
 						pl = (Player) this.characterMap.get(CHARACTER_TURN_ORDER[i]);
 					}
