@@ -15,7 +15,8 @@ import org.json.JSONObject;
 public class Player extends Character implements Serializable {
 
 	public String playerName;
-	public static String state;
+	public String state;
+	public boolean isTurn = false;
 	public boolean vip = false;
 	
 	private static List<Card> handCards = new ArrayList<Card>();

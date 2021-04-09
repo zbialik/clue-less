@@ -46,10 +46,12 @@ public class Game implements ClueInterface {
 
 		// deal player's cards
 		dealCards(this);
-		
+
 		// set the starting player's turn
-		this.startingPlayer().state = PLAYER_STATE_WAIT;
-		
+		Player startingPlayer = this.startingPlayer();
+		startingPlayer.state = PLAYER_STATE_WAIT;
+		startingPlayer.isTurn = true;
+
 		this.hasStarted = true;
 	}
 
@@ -58,8 +60,31 @@ public class Game implements ClueInterface {
 	 */
 	public void changeTurn() {
 		// TODO: (MEGAN) complete logic
-		
+
 		// NOTE: determine the next player using the this.nextPlayer()
+	}
+
+	/**
+	 * Returns the player whose turn it currently is
+	 * NOTE: There should only be one player with isTurn set to true 
+	 * 		 at any moment during the game
+	 * 
+	 * @return currentPlayer
+	 */
+	public Player getCurrentPlayer() {
+
+		Player currPlayer;
+
+		for (Character character : this.characterMap.values()) {
+			if (character instanceof Player) {
+				currPlayer = (Player) character;
+				if (currPlayer.isTurn) {
+					return currPlayer;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -79,19 +104,13 @@ public class Game implements ClueInterface {
 
 		return null; //return null if no player without wait state is found
 	}
-	
+
 	/**
 	 * Returns the player whose turn it is when starting the game
 	 * @return startingPlayer
 	 */
 	public Player startingPlayer() {
-		
-		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) {
-			if (this.characterMap.get(CHARACTER_TURN_ORDER[i]) instanceof Player) {
-				return ((Player) this.characterMap.get(CHARACTER_TURN_ORDER[i]));
-			}
-		}
-		
+
 		return null; // return null if couldn't find a player
 	}
 
@@ -105,10 +124,10 @@ public class Game implements ClueInterface {
 		boolean occupied = false;
 
 		// TODO: (ALEX) complete logic below
-		
+
 		// loop through each character in characterMap and see if their currLocation is location
 		// 	(use the location.equals() method to determine)
-		
+
 		return occupied;
 	}
 
@@ -126,7 +145,7 @@ public class Game implements ClueInterface {
 	 */
 	public synchronized Game addPlayer(String charName, String name, Location homeLocation) {
 		Player newPlayer;
-		
+
 		if (this.hasPlayer()) { // the Game has a Player already (this player not VIP)
 			newPlayer = new Player(charName, name, homeLocation);
 		} else { // this is VIP player
@@ -134,7 +153,7 @@ public class Game implements ClueInterface {
 		}
 		// update character map with new player
 		this.characterMap.put(newPlayer.characterName, newPlayer);
-		
+
 		return this;
 	}
 
@@ -193,7 +212,7 @@ public class Game implements ClueInterface {
 	public boolean hasPlayer() {
 
 		boolean playerExists = false;
-		
+
 		for ( Character character : characterMap.values() ) {
 			if (character instanceof Player) {
 				playerExists = true;
@@ -227,10 +246,6 @@ public class Game implements ClueInterface {
 	   return pl;
 	}
 	
-	public void setPlayerToCharacter(Player player) {
-		// TODO Auto-generated method stub
-		
-	}
 	/**
 	 * Returns JSONObject representation for this game
 	 */
