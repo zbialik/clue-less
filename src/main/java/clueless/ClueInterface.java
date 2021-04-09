@@ -14,6 +14,9 @@ import org.json.JSONObject;
 public interface ClueInterface extends ClueConstants {
 	
 	public static final Map<String, Character> INIT_CHARACTER_MAP = initCharacterMap();
+	
+	public static final Map<String, Location> LOCATION_MAP = initLocationMap();
+	public static final Map<String, Card> CARD_MAP = initCardMap();
 	public static final String[] CHARACTER_TURN_ORDER = { // use this to determine order of turns
 			CHARACTER_NAME_MISS_SCARLET,
 			CHARACTER_NAME_COLONEL_MUSTARD,
@@ -131,7 +134,7 @@ public interface ClueInterface extends ClueConstants {
 
 	public static Map<String, Character> initCharacterMap() { 
 		Map<String, Character> map = new HashMap<String, Character>();
-		Map<String, Location> locMap = initLocationMap();
+		Map<String, Location>  locMap = initLocationMap();
 		
 		// add characters
 		map.put(CHARACTER_NAME_MRS_WHITE,
@@ -172,14 +175,13 @@ public interface ClueInterface extends ClueConstants {
 		
 		List<Card> cardDeck = new ArrayList<Card>();
 
-		for (Card card : initCardMap().values()) {
+		for (Card card : CARD_MAP.values()) {
             cardDeck.add(card);
 		}
 		
 		Collections.shuffle(cardDeck); // shuffle deck and return
 		
 		return cardDeck;
-		
 	}
 	
 	/**
