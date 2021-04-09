@@ -76,7 +76,7 @@ public class Game implements ClueInterface {
 		Player currPlayer;
 
 		for (Character character : this.characterMap.values()) {
-			if (character instanceof Player) {
+			if (this.isPlayer(character)) {
 				currPlayer = (Player) character;
 				if (currPlayer.isTurn) {
 					return currPlayer;
@@ -93,32 +93,77 @@ public class Game implements ClueInterface {
 	 */
 	public Player nextPlayer() {
 
-		// TODO: (MEGAN) complete logic
-
-		/*
-		 * Normal Workflow:
-		 * 	1. find the Player in this.characterMap that does NOT have a 'wait' state
-		 * 			- you will want to use ' instanceof Player' logic to skip characters 
-		 * 			  that aren't Players
-		 * 			- you may assume only one player is NOT in 'wait' state when this method is called 
-		 * 			  during normal game runtime
-		 * 
-		 * 	2. determine what index this Player is at using the constant ordered array CHARACTER_TURN_ORDER (from ClueInterface)
-		 * 	3. grab the next player's name from CHARACTER_TURN_ORDER
-		 * 	4. use the grabbed player's name to return this.characterMap.get(<the player's name you grabbed>)
-		 * 
-		 * NOTE: you can see startingPlayer() for some guidance on looping over the ordered CHARACTER_TURN_ORDER array
-		 */
+		String currCharacterName = this.getCurrentPlayer().characterName;
+		
+		// find index of currCharacterName in CHARACTER_TURN_ORDER
+		int currIndex = getCharacterIndexInTurnOrder(currCharacterName);
+		
+		// get index of next character in CHARACTER_TURN_ORDER (to start loop)
+		int index = currIndex + 1;
+		if (index >= CHARACTER_TURN_ORDER.length) { // repoint index if currIndex is last character
+			index = 0;
+		}
+		
+		// loop through CHARACTER_TURN_ORDER and find next player that isActive()
+		int count = 0;
+		while (count < CHARACTER_TURN_ORDER.length) {
+			
+			if (this.isPlayer(CHARACTER_TURN_ORDER[index]) 
+					&& this.getPlayer(CHARACTER_TURN_ORDER[index]).isActive()) {
+				return this.getPlayer(CHARACTER_TURN_ORDER[index]);
+			} else {
+				index++;
+				count++;
+				
+				if (index >= CHARACTER_TURN_ORDER.length) { // restart index if reached last character
+					index = 0;
+				}
+			}
+		}
 
 		return null;
 	}
-
+	
+	/**
+	 * Returns true if the provided name of a Character is a player
+	 * @param charName (String)
+	 * @return isPlayer
+	 */
+	public boolean isPlayer(String charName) {
+		
+		if (this.getCharacter(charName) instanceof Player) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns true of the provided Character is a player
+	 * @param character (Character)
+	 * @return isPlayer
+	 */
+	public boolean isPlayer(Character character) {
+		
+		if (character instanceof Player) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	/**
 	 * Returns the player whose turn it is when starting the game
 	 * @return startingPlayer
 	 */
 	public Player startingPlayer() {
-
+		
+		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) {
+			if (this.isPlayer(CHARACTER_TURN_ORDER[i])) {
+				return ((Player) this.characterMap.get(CHARACTER_TURN_ORDER[i]));
+			}
+		}
+		
 		return null; // return null if couldn't find a player
 	}
 
@@ -201,9 +246,8 @@ public class Game implements ClueInterface {
 	public Player getPlayer(String charName) {
 
 		try {
-			Character character = this.characterMap.get(charName);
-			if (character instanceof Player) {
-				return (Player) character;
+			if (this.isPlayer(charName)) {
+				return (Player) this.getPlayer(charName);
 			} else {
 				LOGGER.error("getPlayer( " + charName +  " ) could not cast to Character to Player");
 				return null;
@@ -222,11 +266,11 @@ public class Game implements ClueInterface {
 		boolean playerExists = false;
 
 		for ( Character character : characterMap.values() ) {
-			if (character instanceof Player) {
+			if (this.isPlayer(character)) {
 				playerExists = true;
 			}
 		}
-
+		
 		return playerExists;
 
 	}

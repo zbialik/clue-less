@@ -69,5 +69,4 @@ public interface ClueConstants {
 	public static final String PLAYER_STATE_WIN = "win";
 	public static final String PLAYER_STATE_LOSE = "lose";
 	
-	
 }
