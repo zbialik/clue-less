@@ -56,7 +56,7 @@ public class GameDataManager implements ClueInterface {
 
 		Game newGame = new Game(this.gameIdCounter, INIT_CHARACTER_MAP);
 		
-		newGame.addPlayer(charName, name, INIT_CHARACTER_MAP.get(charName).characterHome); // include player in initialized game
+		newGame.addPlayer(charName, name, getCharacterHome(charName)); // include player in initialized game
 		
 		LOGGER.info(name + " initialized Game " + this.gameIdCounter + ".");
 		gamesHashMap.put(this.gameIdCounter, newGame); // initialize new game

@@ -168,6 +168,21 @@ public interface ClueInterface extends ClueConstants {
 	}
 	
 	/**
+	 * Returns the index in CHARACTER_TURN_ORDER that a character is in
+	 * @return characterHome
+	 */
+	public default int getCharacterIndexInTurnOrder(String charName) {
+		
+		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) {
+			if (CHARACTER_TURN_ORDER[i] == charName) {
+				return i;
+			}
+		}
+		
+		return CHARACTER_TURN_ORDER.length; // return out of range integer
+	}
+	
+	/**
 	 * Returns a list of card objects in random order
 	 * @return cardDeck
 	 */

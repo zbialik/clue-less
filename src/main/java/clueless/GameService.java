@@ -134,7 +134,7 @@ class GameService extends GameDataManager {
 
 		} else { // update character map with new player
 
-			game.addPlayer(charName, name, INIT_CHARACTER_MAP.get(charName).characterHome); // add player to game
+			game.addPlayer(charName, name, getCharacterHome(charName)); // add player to game
 			LOGGER.info("Player named " + name + " added to game " + gid + " as "+ charName + ".");
 			game.eventMessage = "Player named " + name + " added to the game as " + charName + ".";
 
@@ -328,6 +328,8 @@ class GameService extends GameDataManager {
 		// TODO: (ZACH) fill with logic
 
 		// TODO: (low-priority) update game eventMessage
+		
+		
 
 		return null;
 	}
@@ -363,6 +365,8 @@ class GameService extends GameDataManager {
 		// TODO: (ALEX) fill with logic
 
 		// TODO: (low-priority) update game eventMessage
+		
+		// TODO: make sure to update isTurn for the player and nextPlayer() 
 
 		return null;
 	}
