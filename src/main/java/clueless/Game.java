@@ -247,7 +247,7 @@ public class Game implements ClueInterface {
 
 		try {
 			if (this.isPlayer(charName)) {
-				return (Player) this.getPlayer(charName);
+				return (Player) this.getCharacter(charName);
 			} else {
 				LOGGER.error("getPlayer( " + charName +  " ) could not cast to Character to Player");
 				return null;
