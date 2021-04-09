@@ -52,12 +52,17 @@ if __name__ == "__main__":
 
     # make move for first player
     # make suggestion for first player
-    
-    # reveal clue for one player
-
+    # have another player reveal clue
     # complete turn for first player
 
-    # make wrong accusation for next player
+    # make move for second player
+    # make suggestion for second player (suggest cards that match mysterCards to test use-case)
+    # complete_turn for second player
 
-    # make correct accusation for next player
+    # make wrong accusation for third player
+
+    # make move for first player
+    # make correct accusation for first player
+
+    
 
