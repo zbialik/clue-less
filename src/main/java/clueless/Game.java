@@ -94,27 +94,27 @@ public class Game implements ClueInterface {
 	public Player nextPlayer() {
 
 		String currCharacterName = this.getCurrentPlayer().characterName;
-		
+
 		// find index of currCharacterName in CHARACTER_TURN_ORDER
 		int currIndex = getCharacterIndexInTurnOrder(currCharacterName);
-		
+
 		// get index of next character in CHARACTER_TURN_ORDER (to start loop)
 		int index = currIndex + 1;
 		if (index >= CHARACTER_TURN_ORDER.length) { // repoint index if currIndex is last character
 			index = 0;
 		}
-		
+
 		// loop through CHARACTER_TURN_ORDER and find next player that isActive()
 		int count = 0;
 		while (count < CHARACTER_TURN_ORDER.length) {
-			
+
 			if (this.isPlayer(CHARACTER_TURN_ORDER[index]) 
 					&& this.getPlayer(CHARACTER_TURN_ORDER[index]).isActive()) {
 				return this.getPlayer(CHARACTER_TURN_ORDER[index]);
 			} else {
 				index++;
 				count++;
-				
+
 				if (index >= CHARACTER_TURN_ORDER.length) { // restart index if reached last character
 					index = 0;
 				}
@@ -123,47 +123,47 @@ public class Game implements ClueInterface {
 
 		return null;
 	}
-	
+
 	/**
 	 * Returns true if the provided name of a Character is a player
 	 * @param charName (String)
 	 * @return isPlayer
 	 */
 	public boolean isPlayer(String charName) {
-		
+
 		if (this.getCharacter(charName) instanceof Player) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Returns true of the provided Character is a player
 	 * @param character (Character)
 	 * @return isPlayer
 	 */
 	public boolean isPlayer(Character character) {
-		
+
 		if (character instanceof Player) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Returns the player whose turn it is when starting the game
 	 * @return startingPlayer
 	 */
 	public Player startingPlayer() {
-		
+
 		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) {
 			if (this.isPlayer(CHARACTER_TURN_ORDER[i])) {
 				return ((Player) this.characterMap.get(CHARACTER_TURN_ORDER[i]));
 			}
 		}
-		
+
 		return null; // return null if couldn't find a player
 	}
 
@@ -230,10 +230,10 @@ public class Game implements ClueInterface {
 	 */
 	public Character getCharacter(String charName) {
 
-		try {
+		if (this.characterMap.containsKey(charName)) {
 			return this.characterMap.get(charName);
-		} catch (Exception e) {
-			throw new PlayerNotFoundException(charName); // if not found, throw exception
+		} else {
+			throw new CharacterNotFoundException(charName); // if not found, throw exception
 		}
 
 	}
@@ -245,15 +245,11 @@ public class Game implements ClueInterface {
 	 */
 	public Player getPlayer(String charName) {
 
-		try {
-			if (this.isPlayer(charName)) {
-				return (Player) this.getCharacter(charName);
-			} else {
-				LOGGER.error("getPlayer( " + charName +  " ) could not cast to Character to Player");
-				return null;
-			}
-		} catch (Exception e) {
-			throw new PlayerNotFoundException(charName); // if not found, throw exception
+		if (this.isPlayer(charName)) {
+			return (Player) this.getCharacter(charName);
+		} else {
+			LOGGER.error("getPlayer( " + charName +  " ) could not cast Character to Player");
+			return null;
 		}
 	}
 
@@ -270,7 +266,7 @@ public class Game implements ClueInterface {
 				playerExists = true;
 			}
 		}
-		
+
 		return playerExists;
 
 	}
@@ -285,9 +281,9 @@ public class Game implements ClueInterface {
 		boolean playerHasClue = false;
 
 		int i = 0;
-//		while ((!playerHasClue) && i < this.characterMap.size()) {
-//			
-//		}
+		//		while ((!playerHasClue) && i < this.characterMap.size()) {
+		//			
+		//		}
 
 		return null;
 	}
