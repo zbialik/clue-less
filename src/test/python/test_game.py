@@ -7,6 +7,7 @@ from __future__ import print_function
 import sys
 import argparse
 import requests
+import json
 
 # helper function for sending http requests to backend
 def http_request(context = '', p = {}, type = 'get'):
@@ -37,11 +38,26 @@ if __name__ == "__main__":
     global_args()
 
     # create game
-    game_data = http_request('', {'name': "Zach", 'charName': "mr. green"}, 'post').json()
-    game_id = game_data['gameId']
+    game_id = http_request('', {'name': "Zach", 'charName': "mr. green"}, 'post').json()['gameId']
 
     # add players
-    game_data = http_request('/' + str(game_id) + '/players', {'name': "Megan", 'charName': "mrs. peacock"}, 'post').json()
-    game_data = http_request('/' + str(game_id) + '/players', {'name': "Alex", 'charName': "mr. white"}, 'post').json()
+    http_request('/' + str(game_id) + '/players', {'name': "Megan", 'charName': "mrs. peacock"}, 'post').json()
+    http_request('/' + str(game_id) + '/players', {'name': "Alex", 'charName': "professor plum"}, 'post').json()
 
     # start game
+    game_data = http_request('/' + str(game_id), {'startGame': True, 'charName': "mr. green"}, 'post').json()
+    print(json.dumps(game_data, indent=4))
+
+    # make first moves for all players
+
+    # make move for first player
+    # make suggestion for first player
+    
+    # reveal clue for one player
+
+    # complete turn for first player
+
+    # make wrong accusation for next player
+
+    # make correct accusation for next player
+
