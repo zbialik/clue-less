@@ -18,11 +18,11 @@ public class Player extends Character implements Serializable {
 	public String state;
 	public boolean isTurn = false;
 	public boolean vip = false;
+	public String eventMessage = new String();
 	private List<Card> handCards = new ArrayList<Card>();
 	private List<Card> knownCards = new ArrayList<Card>();
 	private Card revealedClueCard = null;
 	private List<Location> possibleMoves = new ArrayList<Location>();
-	private String eventMessage = new String();
 
 	public Player(String charName, String name, Location location) { // unique constructor
 		super(charName, location); 
@@ -114,23 +114,6 @@ public class Player extends Character implements Serializable {
 	 */
 	public List<Location> getPossibleMoves() {
 		return this.possibleMoves;
-	}
-	
-	/**
-	 * Sets this player's event message
-	 * param l
-	 * @return
-	 */
-	public void setEventMessage(String event) {
-		this.eventMessage = event;
-	}
-	
-	/**
-	 * Gets this player's event message
-	 * @return
-	 */
-	public String getEventMessage() {
-		return this.eventMessage;
 	}
 	
 	/**

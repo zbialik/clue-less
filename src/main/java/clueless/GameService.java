@@ -85,7 +85,7 @@ class GameService extends GameDataManager {
 		
 		// return 400 (BAD_REQUEST) if not VIP
 		if (!(player.vip)) { 
-			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(printJsonError("player not vip"), HttpStatus.BAD_REQUEST);
 		} else { 
 			// check if startName is true
 			if (startGame) {
@@ -130,7 +130,7 @@ class GameService extends GameDataManager {
 			LOGGER.error("The character named " + charName + " is already mapped to a player named "
 					+ game.getPlayer(charName).playerName + ".");
 
-			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.CONFLICT);
+			return new ResponseEntity<String>(printJsonError("character was already chosen"), HttpStatus.CONFLICT);
 
 		} else { // update character map with new player
 
@@ -160,11 +160,11 @@ class GameService extends GameDataManager {
 		
 		// validate character is in 'move' state
 		if (player.state != PLAYER_STATE_MOVE) {
-			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(printJsonError("player not in move state"), HttpStatus.BAD_REQUEST);
 		} else {
 			// if hallway and location occupied return 409 (CONFLICT)
 			if (location.isHallway() && game.isLocationOccupied(location)) {
-				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.CONFLICT);
+				return new ResponseEntity<String>(printJsonError("hallway is occupied"), HttpStatus.CONFLICT);
 			} else {
 
 				// update character's current location
@@ -231,7 +231,7 @@ class GameService extends GameDataManager {
 		// check that player is either in ('suggest' state) OR ('move' state AND wasMovedToRoom)
 		if (!((suggester.state != PLAYER_STATE_SUGGEST) 
 				|| ((suggester.state != PLAYER_STATE_MOVE) && suggester.wasMovedToRoom))) {
-			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(printJsonError("player not in valid state to make suggestion"), HttpStatus.BAD_REQUEST);
 		} else {
 			
 			// validate room is player's currLocation
@@ -255,30 +255,31 @@ class GameService extends GameDataManager {
 				suggestion.add(CARD_MAP.get(room));
 				suggestion.add(CARD_MAP.get(suspect));
 				
+				game.suggestionCards.clear();
+				game.suggestionCards.addAll(suggestion); // update game suggestion cards
+				
 				Player playerWithClue = game.whoHasClue(suggestion);
 				
 				// TODO: verify this logic is sound
 				if (Objects.isNull(playerWithClue)) { // if null, no one has clue -- set suggester to complete_turn
 					
-					game.eventMessage = suggester.playerName + " made a suggestion that no one has a clue for ";
-					suggester.setEventMessage("No one had a clue for your suggestion. Please complete your turn or make an accusation.");
+					game.eventMessage = suggester.playerName + " made a suggestion that no one has a clue for.";
+					suggester.eventMessage = "No one had a clue for your suggestion. Please complete your turn or make an accusation.";
 					suggester.state = PLAYER_STATE_COMPLETE_TURN;
 					
 				} else { // else, playerWithClue should be set to reveal
 					
 					game.eventMessage = suggester.playerName + " made a suggestion that " + playerWithClue.playerName + " must reveal a clue for.";
-					playerWithClue.setEventMessage("Please reveal a clue for the provided suggestion.");
+					playerWithClue.eventMessage = "Please reveal a clue for the provided suggestion.";
 					playerWithClue.state = PLAYER_STATE_REVEAL;
 				}
 				
+				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.BAD_REQUEST);
+				
 			} else { // return 400 (BAD_REQUEST)
-				return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>(printJsonError("player not in room provided in suggestion"), HttpStatus.BAD_REQUEST);
 			}
 		}
-
-		// TODO: (low-priority) update game eventMessage
-
-		return null;
 	}
 
 	/**
@@ -325,13 +326,43 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) String cardName) {
 
-		// TODO: (ZACH) fill with logic
-
-		// TODO: (low-priority) update game eventMessage
+		Game game = getGame(gid);
+		Player revealer = game.getPlayer(charName);
+		Player suggester = game.getCurrentPlayer();
+		Card revealedCard = CARD_MAP.get(cardName);
 		
-		
-
-		return null;
+		// if revealer is in 'reveal' state
+		// if revealer has cardName
+		// if cardName is in game's current suggestion
+		if (revealer.state == PLAYER_STATE_REVEAL) {
+			if (revealer.hasClue(game.suggestionCards)) {
+				if (game.suggestionCards.contains(revealedCard)) {
+					
+					// update revealer's state to 'wait'
+					// update suggester's revealedClueCard
+					// update suggester to have state 'accept_reveal'
+					revealer.state = PLAYER_STATE_WAIT;
+					suggester.setRevealedClueCard(revealedCard);
+					suggester.state = PLAYER_STATE_REVEAL;
+					
+					// update player and game eventMessages
+					game.eventMessage = revealer.playerName + " revealed a clue to " + suggester.playerName + ".";
+					suggester.eventMessage = revealer.playerName + " revealed a clue to you.";
+					
+					// clear game's suggestion cards
+					game.suggestionCards.clear();
+					
+					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
+					
+				} else {
+					return new ResponseEntity<String>(printJsonError("player does not have clue in suggestion"), HttpStatus.BAD_REQUEST);
+				}
+			} else {
+				return new ResponseEntity<String>(printJsonError("player does not have the clue card provided"), HttpStatus.BAD_REQUEST);
+			}
+		} else {
+			return new ResponseEntity<String>(printJsonError("player not in reveal state"), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -361,14 +392,35 @@ class GameService extends GameDataManager {
 	@PostMapping(value = "/{gid}/players/complete-turn", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> completeTurnHTTP(@PathVariable int gid,
 			@RequestParam(required = true) String charName) {
+		
+		Game game = getGame(gid);
 
+		
 		// TODO: (ALEX) fill with logic
 
 		// TODO: (low-priority) update game eventMessage
 		
 		// TODO: make sure to update isTurn for the player and nextPlayer() 
+		
+		
+		
+		// clear the suggestion cards for this game
+		game.suggestionCards.clear();
 
 		return null;
+	}
+	
+	/**
+	 * Returns string representing json form for error messages to frontend
+	 * @return
+	 */
+	String printJsonError(String errorMessage) {
+		JSONObject errorJson = new JSONObject();
+		
+		errorJson.append("error", errorMessage);
+		
+		return jsonToString(errorJson);
+		
 	}
 
 	/**
