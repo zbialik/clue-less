@@ -61,9 +61,16 @@ public class Game implements ClueInterface {
 	 * Changes turns for the game
 	 */
 	public void changeTurn() {
-		// TODO: (MEGAN) complete logic
-
-		// NOTE: determine the next player using the this.nextPlayer()
+		
+		Player currPlayer = this.getCurrentPlayer();
+		Player nextPlayer = this.nextPlayer();
+		
+		// TODO: (MEGAN) complete logic below
+		
+		// change currPlayer state to wait
+		// change currPlayer isTurn to false
+		// change nextPlayer state to 'move'
+		// change nextPlayer isTurn to true
 	}
 
 	/**
@@ -298,6 +305,8 @@ public class Game implements ClueInterface {
 		JSONObject gameJson = new JSONObject();
 		gameJson.put("gameId", this.gameId);
 		gameJson.put("hasStarted", this.hasStarted);
+		gameJson.put("suggestionCards", cardsToJsonArray(this.suggestionCards)); 
+		gameJson.put("mysteryCards", cardsToJsonArray(this.mysteryCards)); // TODO: obviously remove this later
 		gameJson.put("eventMessage", this.eventMessage); 
 		gameJson.put("characterMap", charMapToJsonObject(this.characterMap));
 
