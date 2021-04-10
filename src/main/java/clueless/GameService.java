@@ -181,8 +181,13 @@ class GameService extends GameDataManager {
 			LOGGER.error(playerName + " was denied complete-turn action because " + charName + " is assigned to player: " + player.playerName);
 			return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
 		} else {
-			if (!player.state.equals(PLAYER_STATE_COMPLETE_TURN)) {
-				return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
+			if (player.state.equals(PLAYER_STATE_SUGGEST)) {
+				player.eventMessage = "You must make a suggestion before completing your turn.";
+				LOGGER.error(player.playerName + " must make a suggestion before completing their turn.");
+				return new ResponseEntity<String>(printJsonError(player.playerName + " must make a suggestion before completing their turn."), HttpStatus.BAD_REQUEST);
+			} else if (!player.state.equals(PLAYER_STATE_COMPLETE_TURN)) {
+				LOGGER.error(playerName + " was denied complete-turn action because they are not in complete_turn state.");
+				return new ResponseEntity<String>(printJsonError("player may not complete turn as they're not in complete_turn state."), HttpStatus.BAD_REQUEST);
 			} else {
 
 				// update game event message
