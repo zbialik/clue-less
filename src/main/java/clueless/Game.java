@@ -69,8 +69,16 @@ public class Game implements ClueInterface {
 		
 		// change currPlayer state to wait
 		// change currPlayer isTurn to false
+		
 		// change nextPlayer state to 'move'
 		// change nextPlayer isTurn to true
+		
+		
+		
+		
+		// clear the suggestion cards for this game
+		this.suggestionCards.clear();
+		
 	}
 
 	/**
