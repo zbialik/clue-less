@@ -164,9 +164,10 @@ class GameService extends GameDataManager {
 				return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
 			} else {
 				
-				// clear the suggestion cards for this game
-				game.suggestionCards.clear();
+				// update game event message
 				game.eventMessage = player.playerName + " completed their turn. " + game.nextPlayer().playerName + " is next to make move.";
+				
+				// change turns
 				game.changeTurn();
 				
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
@@ -339,9 +340,6 @@ class GameService extends GameDataManager {
 					// update player and game eventMessages
 					game.eventMessage = revealer.playerName + " revealed a clue to " + suggester.playerName + ".";
 					suggester.eventMessage = revealer.playerName + " revealed a clue to you.";
-
-					// clear game's suggestion cards
-					game.suggestionCards.clear();
 
 					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 

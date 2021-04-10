@@ -44,12 +44,17 @@ public class Location implements ClueInterface {
 	
 	/**
 	 * Return true if location provided his adjacent to this room
-	 * @param l
-	 * @return
+	 * @param loc
+	 * @return isAdjacent
 	 */
-	public boolean isAdjacent(Location l) {
-		// TODO: (MEGAN) determine if adjacent based on location coordinates
-		return false;
+	public boolean isAdjacent(Location loc) {
+		
+		if ((this.x_coordinate == loc.x_coordinate) || (this.y_coordinate == loc.y_coordinate)) {
+			return true;
+		} else {
+			return false;
+		}
+		
 	}
 	
 	/**
