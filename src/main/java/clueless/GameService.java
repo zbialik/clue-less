@@ -43,9 +43,30 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) String playerName) {
 
-		// TODO: (MEGAN) fill with logic
+		Game game = getGame(gid);
+		Player player = game.getPlayer(charName);
 
-		// TODO: (low-priority) update game eventMessage
+		// validate 
+		if (!playerName.equals(player.playerName)) {
+			LOGGER.error(playerName + " was denied requested action because " + charName + " is assigned to player: " + player.playerName);
+			return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
+		} else {
+			// validate player is in accept_reveal state
+			if (!player.state.equals(PLAYER_STATE_ACCEPT_REVEAL)) {
+				LOGGER.error(player.playerName + " may not accept reveal because they have state: " 
+						+ player.state + " (not " + PLAYER_STATE_ACCEPT_REVEAL + ").");
+				return new ResponseEntity<String>(printJsonError("player not in correct state to make desired action"), HttpStatus.BAD_REQUEST);
+			} else {
+				
+				// change player's state to complete_turn
+				// clear player's revealedClueCard
+				// update gameEventMessage
+				player.state = PLAYER_STATE_COMPLETE_TURN;
+				player.clearRevealedClueCard();
+				logInfoEvent(game, player.playerName + " has accepted the revealed clue card");
+				
+			}
+		}
 
 		return null;
 	}
@@ -163,13 +184,13 @@ class GameService extends GameDataManager {
 			if (!player.state.equals(PLAYER_STATE_COMPLETE_TURN)) {
 				return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
 			} else {
-				
+
 				// update game event message
 				logInfoEvent(game, player.playerName + " completed their turn. " + game.nextPlayer().playerName + " is next to make move.");
-				
+
 				// change turns
 				game.changeTurn();
-				
+
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 			}
 		}
@@ -281,7 +302,7 @@ class GameService extends GameDataManager {
 				game.suggestionCards.addAll(suggestion); // update game suggestion cards
 
 				Player playerWithClue = game.whoHasClue(suggestion);
-				
+
 				if (Objects.isNull(playerWithClue)) { // if null, no one has clue -- set suggester to complete_turn
 
 					logInfoEvent(game, suggester.playerName + " made a suggestion that no one has a clue for.");
@@ -334,7 +355,7 @@ class GameService extends GameDataManager {
 					// update suggester to have state 'accept_reveal'
 					revealer.state = PLAYER_STATE_WAIT;
 					suggester.setRevealedClueCard(revealedCard);
-					suggester.state = PLAYER_STATE_REVEAL;
+					suggester.state = PLAYER_STATE_ACCEPT_REVEAL;
 
 					// update player and game eventMessages
 					logInfoEvent(game, revealer.playerName + " revealed a clue to " + suggester.playerName + ".");
@@ -432,7 +453,7 @@ class GameService extends GameDataManager {
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
 						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
 					}
-					
+
 					LOGGER.info(player.playerName + " moved " + charName + " to the " + locName);
 					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 				}
@@ -473,7 +494,7 @@ class GameService extends GameDataManager {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Updates game's eventMessage and log's the statement
 	 * @return
