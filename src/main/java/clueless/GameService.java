@@ -272,10 +272,13 @@ class GameService extends GameDataManager {
 					
 					// win or lose game
 					if (game.isAccusationCorrect(accusationCards)) {
-						game.winGame(player);
+						game.winGame(player.characterName);
 						logInfoEvent(game, player.playerName + " won the game with their provided accusation!");
+						
+						// TODO: handle game cleanup in database
+						
 					} else {
-						game.loseGame(player);
+						game.loseGame(player.characterName);
 						logInfoEvent(game, player.playerName + " lost the game with their provided accusation!");
 					}
 					

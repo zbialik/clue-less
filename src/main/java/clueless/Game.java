@@ -70,7 +70,9 @@ public class Game implements ClueInterface {
 		
 		// change currPlayer state to wait
 		// change currPlayer isTurn to false
-		currPlayer.state = PLAYER_STATE_WAIT;
+		if (currPlayer.isActive()) { // handle only if player is active (if in 'lose' state just leave them their)
+			currPlayer.state = PLAYER_STATE_WAIT;
+		}
 		currPlayer.isTurn = false;
 
 		// change nextPlayer state to 'move'
@@ -361,19 +363,28 @@ public class Game implements ClueInterface {
 	
 	/**
 	 * Updates the game given the provided winning player
-	 * @param winner
+	 * @param charName
 	 */
-	public void winGame(Player winner) {
+	public void winGame(String charName) {
 		// TODO: complete with logic
 		
 	}
 	
 	/**
 	 * Updates the game given the provided losing player
-	 * @param loser
+	 * @param charName
 	 */
-	public void loseGame(Player loser) {
-		// TODO: complete with logic
+	public void loseGame(String charName) {
+		Player loser = this.getPlayer(charName);
+		
+		// deactivate player
+		loser.deactivate();
+		
+		// set player to 'lose' state
+		loser.state = PLAYER_STATE_LOSE;
+
+		// changeTurn()
+		this.changeTurn();
 		
 	}
 
