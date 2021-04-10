@@ -300,12 +300,15 @@ public class Game implements ClueInterface {
 	 * @return correct
 	 */
 	public boolean isAccusationCorrect(List<Card> accusation) {
-		boolean correct = false;
+		
+		// return false if any card is not in the mysterCards
+		for (Card card : accusation) {
+			if (!this.mysteryCards.contains(card)) {
+				return false;
+			}
+		}
 
-		// TODO: (ALEX) complete logic
-		// use Card helper isWinner() for checking if a card is a winner (only return true if all cards are winners)
-
-		return correct;
+		return true; // return true if all cards are winners
 	}
 
 	/**
