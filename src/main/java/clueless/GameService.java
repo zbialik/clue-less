@@ -119,8 +119,7 @@ class GameService extends GameDataManager {
 		} else { // update character map with new player
 
 			game.addPlayer(charName, playerName, getCharacterHome(charName)); // add player to game
-			LOGGER.info("Player named " + playerName + " added to game " + gid + " as "+ charName + ".");
-			game.eventMessage = "Player named " + playerName + " added to the game as " + charName + ".";
+			logInfoEvent(game, "Player named " + playerName + " added to game " + gid + " as "+ charName + ".");
 
 			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 		}
@@ -147,7 +146,7 @@ class GameService extends GameDataManager {
 	 * @param charName
 	 * @return gameAsJson
 	 */
-	@PostMapping(value = "/{gid}/players/complete-turn", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/{gid}/complete-turn", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> completeTurnHTTP(@PathVariable int gid,
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) String playerName) {
@@ -157,15 +156,16 @@ class GameService extends GameDataManager {
 
 		// validate playerName is charName
 		// validate charName has state of complete-turn
-		if (playerName != player.playerName) {
+		if (!playerName.equals(player.playerName)) {
+			LOGGER.error(playerName + " was denied complete-turn action because " + charName + " is assigned to player: " + player.playerName);
 			return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
 		} else {
-			if (player.state != PLAYER_STATE_COMPLETE_TURN) {
+			if (!player.state.equals(PLAYER_STATE_COMPLETE_TURN)) {
 				return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
 			} else {
 				
 				// update game event message
-				game.eventMessage = player.playerName + " completed their turn. " + game.nextPlayer().playerName + " is next to make move.";
+				logInfoEvent(game, player.playerName + " completed their turn. " + game.nextPlayer().playerName + " is next to make move.");
 				
 				// change turns
 				game.changeTurn();
@@ -251,13 +251,13 @@ class GameService extends GameDataManager {
 		Location suggestedLocation = LOCATION_MAP.get(room);
 
 		// check that player is either in ('suggest' state) OR ('move' state AND wasMovedToRoom)
-		if (!((suggester.state != PLAYER_STATE_SUGGEST) 
-				|| ((suggester.state != PLAYER_STATE_MOVE) && suggester.wasMovedToRoom))) {
+		if (!((!suggester.state.equals(PLAYER_STATE_SUGGEST)) 
+				|| (((!suggester.state.equals(PLAYER_STATE_MOVE))) && suggester.wasMovedToRoom))) {
 			return new ResponseEntity<String>(printJsonError("player not in valid state to make suggestion"), HttpStatus.BAD_REQUEST);
 		} else {
 
 			// validate room is player's currLocation
-			if (suggester.getCurrLocation().equals(suggestedLocation)) {
+			if (suggester.currLocation.equals(suggestedLocation)) {
 
 				// set suggester player state to await_reveal
 				suggester.state = PLAYER_STATE_AWAIT_REVEAL;
@@ -266,7 +266,7 @@ class GameService extends GameDataManager {
 				suggester.setMovedToRoom(false);
 
 				// set suspect's current location to the provided room
-				suspectChar.setCurrLocation(suggestedLocation);
+				suspectChar.currLocation = suggestedLocation;
 
 				// set suspect's wasMovedToRoom to true
 				suspectChar.setMovedToRoom(true);
@@ -281,17 +281,16 @@ class GameService extends GameDataManager {
 				game.suggestionCards.addAll(suggestion); // update game suggestion cards
 
 				Player playerWithClue = game.whoHasClue(suggestion);
-
-				// TODO: verify this logic is sound
+				
 				if (Objects.isNull(playerWithClue)) { // if null, no one has clue -- set suggester to complete_turn
 
-					game.eventMessage = suggester.playerName + " made a suggestion that no one has a clue for.";
+					logInfoEvent(game, suggester.playerName + " made a suggestion that no one has a clue for.");
 					suggester.eventMessage = "No one had a clue for your suggestion. Please complete your turn or make an accusation.";
 					suggester.state = PLAYER_STATE_COMPLETE_TURN;
 
 				} else { // else, playerWithClue should be set to reveal
 
-					game.eventMessage = suggester.playerName + " made a suggestion that " + playerWithClue.playerName + " must reveal a clue for.";
+					logInfoEvent(game, suggester.playerName + " made a suggestion that " + playerWithClue.playerName + " must reveal a clue for.");
 					playerWithClue.eventMessage = "Please reveal a clue for the provided suggestion.";
 					playerWithClue.state = PLAYER_STATE_REVEAL;
 				}
@@ -338,7 +337,7 @@ class GameService extends GameDataManager {
 					suggester.state = PLAYER_STATE_REVEAL;
 
 					// update player and game eventMessages
-					game.eventMessage = revealer.playerName + " revealed a clue to " + suggester.playerName + ".";
+					logInfoEvent(game, revealer.playerName + " revealed a clue to " + suggester.playerName + ".");
 					suggester.eventMessage = revealer.playerName + " revealed a clue to you.";
 
 					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
@@ -377,8 +376,7 @@ class GameService extends GameDataManager {
 			// check if startName is true
 			if (startGame) {
 				game.startGame(); // initiate game's start game sequence
-				LOGGER.info("Game " + gid + " was started by " + player.playerName);
-				game.eventMessage = "Game " + gid + " was started by " + player.playerName;
+				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName);
 			} else {
 				LOGGER.info(player.playerName + " send startGame but equal to true.");
 			}
@@ -403,20 +401,24 @@ class GameService extends GameDataManager {
 		Player player = game.getPlayer(charName);
 		Location location = LOCATION_MAP.get(locName);
 
-		if (playerName != player.playerName) {
+		if (!playerName.equals(player.playerName)) {
+			LOGGER.error(playerName + " was denied move to " + locName + " because " + charName + " is assigned to player: " + player.playerName);
 			return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
 		} else {
 			// validate character is in 'move' state
-			if (player.state != PLAYER_STATE_MOVE) {
+			if (!player.state.equals(PLAYER_STATE_MOVE)) {
+				LOGGER.error(player.playerName + " was denied move to " + locName + " because their state is: " + player.state + " (not "
+						+ PLAYER_STATE_MOVE + ").");
 				return new ResponseEntity<String>(printJsonError("player not in move state"), HttpStatus.BAD_REQUEST);
 			} else {
 				// if hallway and location occupied return 409 (CONFLICT)
 				if (location.isHallway() && game.isLocationOccupied(location)) {
+					LOGGER.error(player.playerName + " was denied move to " + locName + " because it's occupied.");
 					return new ResponseEntity<String>(printJsonError("hallway is occupied"), HttpStatus.CONFLICT);
 				} else {
 
 					// update character's current location
-					player.setCurrLocation(location);
+					player.currLocation = location;
 
 					if (location.isRoom()) { // if room, prompt to make suggestion
 						player.state = PLAYER_STATE_SUGGEST;
@@ -427,10 +429,11 @@ class GameService extends GameDataManager {
 					} else { // else, prompt to complete turn
 						player.state = PLAYER_STATE_COMPLETE_TURN;
 
-						// update game eventMessage
-						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type;
+						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
+						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
 					}
-
+					
+					LOGGER.info(player.playerName + " moved " + charName + " to the " + locName);
 					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 				}
 			}
@@ -445,7 +448,7 @@ class GameService extends GameDataManager {
 	String printJsonError(String errorMessage) {
 		JSONObject errorJson = new JSONObject();
 
-		errorJson.append("error", errorMessage);
+		errorJson.put("error", errorMessage);
 
 		return jsonToString(errorJson);
 
@@ -469,5 +472,14 @@ class GameService extends GameDataManager {
 		} else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Updates game's eventMessage and log's the statement
+	 * @return
+	 */
+	void logInfoEvent(Game game, String message) {
+		game.eventMessage = message;
+		LOGGER.info(message);
 	}
 }

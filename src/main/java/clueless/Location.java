@@ -94,6 +94,18 @@ public class Location implements ClueInterface {
 	}
 	
 	/**
+	 * Return true if location has a secretPassage
+	 * @return
+	 */
+	public boolean hasSecretPassage() {
+		if (Objects.isNull(this.secretPassage)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	/**
 	 * Returns JSONObject representation for this location
 	 */
 	public JSONObject toJson() {
