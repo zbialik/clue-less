@@ -1,6 +1,7 @@
 package clueless;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -383,15 +384,38 @@ public class Game implements ClueInterface {
 	 * @return
 	 */
 	public Player whoHasClue(List<Card> suggestion) {
-		Player pl;
+		Player pl = null;
 		boolean playerHasClue = false;
-
+		String getPlayerChar = this.getCurrentPlayer().characterName;
+		int currIndex = getCharacterIndexInTurnOrder(getPlayerChar);		
+		int nextPlayerindex = currIndex + 1;
 		int i = 0;
-		//		while ((!playerHasClue) && i < this.characterMap.size()) {
-		//			
-		//		}
+		
+			if (nextPlayerindex >= CHARACTER_TURN_ORDER.length) 
+				{ // repoint index if currIndex is last character
+					nextPlayerindex = 0;
+				}
+			
+			while ((!playerHasClue) && i < this.characterMap.size())
+			{
+				
+				int count = 0;
+				while (count < CHARACTER_TURN_ORDER.length && nextPlayerindex != currIndex) {
 
-		return null;
+					if (this.isPlayer(CHARACTER_TURN_ORDER[nextPlayerindex]) 
+							&& this.getPlayer(CHARACTER_TURN_ORDER[nextPlayerindex]).hasClue(suggestion)) {
+						pl = this.getPlayer(CHARACTER_TURN_ORDER[nextPlayerindex]);
+						playerHasClue = true;
+						
+						return pl;
+					} else {
+						nextPlayerindex++;
+						count++;
+					}
+			}
+		}
+			return pl;
+		
 	}
 
 	/**
