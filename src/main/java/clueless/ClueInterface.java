@@ -160,6 +160,23 @@ public interface ClueInterface extends ClueConstants {
 	}
 	
 	/**
+	 * Returns a list of locations that are adjacent to the provided location
+	 * @return adjacentLocations
+	 */
+	public default List<Location> getAdjacentLocations(Location loc) {
+		
+		List<Location> adjacentLocations = new ArrayList<Location>();
+
+		for (Location locInMap : LOCATION_MAP.values()) {
+			if (loc.isAdjacent(locInMap)) {
+				adjacentLocations.add(locInMap);
+			}
+		}
+		
+		return adjacentLocations;
+	}
+	
+	/**
 	 * Returns the Location that is the provided character's home.
 	 * @return characterHome
 	 */

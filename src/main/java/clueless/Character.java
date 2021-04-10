@@ -11,7 +11,7 @@ public class Character implements ClueInterface {
 	
 	public String characterName;
 	public Location characterHome;
-	protected Location currLocation;
+	public Location currLocation;
 	protected boolean wasMovedToRoom;
 	protected boolean active;
 	
@@ -21,30 +21,6 @@ public class Character implements ClueInterface {
 		this.currLocation = home; // always starts at home
 		this.wasMovedToRoom = false; // always starts at home (not moved to room)
 		this.active = false; // always inactive until player is created
-	}
-
-//	public Character(String charName) {
-//		this.characterName = charName;
-//		this.characterHome = getCharacterHome(charName);
-//		this.currLocation = getCharacterHome(charName); // always starts at home
-//		this.wasMovedToRoom = false; // always starts at home (not moved to room)
-//		this.active = false; // always inactive until player is created
-//	}
-
-	/**
-	 * Returns the current location for this character
-	 * @return currLocation
-	 */
-	public Location getCurrLocation() {
-		return this.currLocation;
-	}
-
-	/**
-	 * Sets the current location for this character
-	 * @param location
-	 */
-	public void setCurrLocation(Location location) {
-		this.currLocation = location;
 	}
 
 	/**

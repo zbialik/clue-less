@@ -19,10 +19,10 @@ public class Player extends Character implements Serializable {
 	public boolean isTurn = false;
 	public boolean vip = false;
 	public String eventMessage = new String();
+	public List<Location> possibleMoves = new ArrayList<Location>();
 	private List<Card> handCards = new ArrayList<Card>();
 	private List<Card> knownCards = new ArrayList<Card>();
 	private Card revealedClueCard = null;
-	private List<Location> possibleMoves = new ArrayList<Location>();
 
 	public Player(String charName, String name, Location location) { // unique constructor
 		super(charName, location); 
@@ -97,23 +97,6 @@ public class Player extends Character implements Serializable {
 	 */
 	public Card getRevealedClueCard() {
 		return this.revealedClueCard;
-	}
-	
-	/**
-	 * Sets this player's possible moves list
-	 * param l
-	 * @return
-	 */
-	public void setPossibleMoves(List<Location> l) {
-		this.possibleMoves = l;
-	}
-	
-	/**
-	 * Gets this player's possible moves list
-	 * @return
-	 */
-	public List<Location> getPossibleMoves() {
-		return this.possibleMoves;
 	}
 	
 	/**

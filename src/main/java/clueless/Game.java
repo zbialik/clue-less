@@ -51,8 +51,11 @@ public class Game implements ClueInterface {
 
 		// set the starting player's turn
 		Player startingPlayer = this.startingPlayer();
-		startingPlayer.state = PLAYER_STATE_WAIT;
+		startingPlayer.state = PLAYER_STATE_MOVE;
 		startingPlayer.isTurn = true;
+		
+		// update possible moves
+		this.updatePossibleMoves();
 
 		this.hasStarted = true;
 	}
@@ -61,24 +64,25 @@ public class Game implements ClueInterface {
 	 * Changes turns for the game
 	 */
 	public void changeTurn() {
-		
+
 		Player currPlayer = this.getCurrentPlayer();
 		Player nextPlayer = this.nextPlayer();
-		
+
 		// TODO: (MEGAN) complete logic below
-		
+
 		// change currPlayer state to wait
 		// change currPlayer isTurn to false
-		
+
 		// change nextPlayer state to 'move'
 		// change nextPlayer isTurn to true
-		
-		
-		
-		
+
+
+		// update all players possible moves
+		this.updatePossibleMoves();
+
 		// clear the suggestion cards for this game
 		this.suggestionCards.clear();
-		
+
 	}
 
 	/**
@@ -202,10 +206,70 @@ public class Game implements ClueInterface {
 	}
 
 	/**
-	 * Helper method for determining if a location is occupied in this game
+	 * Loops through each Player in characterMap and update's the possible moves based on the follow criteria:
+	 * 		- if player NOT in 'move' state then the possible moves should be empty
+	 * 		- possible moves should only consist of adjacentLocations (and secret passage added later if exists)
+	 * 		- any adjacent location of type: home should not be possible move
+	 * 		- any adjacent location of type: hallway that is already occupied should not be possible move
+	 * 		- add secretLocation to possibleMoves list if currLocation has one
+	 * 
 	 */
-	public void updatePossibleMoves(Character c) {
-		// TODO: (ZACH) complete logic
+	public void updatePossibleMoves() {
+
+		Player player;
+		List<Location> listOfMoves = new ArrayList<Location>();
+		Location currentLocation;
+		Location possibleLocation;
+
+		// loop over each player in characterMap
+		for (String charName : this.characterMap.keySet()) {
+			if (this.isPlayer(charName)) {
+
+				player = this.getPlayer(charName);
+
+				// check if 'move'
+				if (player.state == PLAYER_STATE_MOVE) {
+
+					currentLocation = player.currLocation;
+
+					// get list of adjacentLocations
+					listOfMoves.clear();
+					listOfMoves = getAdjacentLocations(currentLocation);
+					
+					// remove any locations of type: home
+					// remove any locations of type: hallway that are currently occupied
+					for (int i = 0; i < listOfMoves.size(); i++) {
+						possibleLocation =  listOfMoves.get(i);
+
+						if (possibleLocation.isHome()) {
+							listOfMoves.remove(i);
+						}
+
+						if (possibleLocation.isHallway() && this.isLocationOccupied(possibleLocation)) {
+							listOfMoves.remove(i);
+						}
+					}
+					
+					// add secret passage if has one
+					if (currentLocation.hasSecretPassage()) {
+						listOfMoves.add(currentLocation);
+					}
+					
+					// clear possible moves
+					player.possibleMoves.clear();
+					
+					//dump list into possible moves if not empty
+					if (!listOfMoves.isEmpty()) { 
+						player.possibleMoves.addAll(listOfMoves); 
+					}
+
+				} else {
+					player.possibleMoves.clear();
+				}
+			}
+		}
+
+
 	}
 
 	/**
