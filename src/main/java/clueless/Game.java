@@ -407,7 +407,8 @@ public class Game implements ClueInterface {
 						pl = this.getPlayer(CHARACTER_TURN_ORDER[nextPlayerindex]);
 						playerHasClue = true;
 
-					} else {
+					} else 
+					{
 						nextPlayerindex++;
 						count++;
 					}
