@@ -41,6 +41,20 @@ public class Card {
 	}
 	
 	/**
+	 * Returns true if the card is the provided type
+	 * @param cardType
+	 * @return isType
+	 */
+	public boolean isType(String cardType) {
+		
+		if (this.type.equals(cardType)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * Returns true of the provided object is equivalent to this card
 	 */
 	public boolean equals(Object o) {

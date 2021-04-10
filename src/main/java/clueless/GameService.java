@@ -244,11 +244,49 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String room,
 			@RequestParam(required = true) String suspect) {
 
-		// TODO: (ALEX) fill with logic
-
-		// TODO: (low-priority) update game eventMessage
-
-		return null;
+		Game game = getGame(gid);
+		Player player = game.getPlayer(charName);
+		
+		// validate request
+		if (!playerName.equals(player.playerName)) {
+			LOGGER.error(playerName + " was denied requested action because " + charName + " is assigned to player: " + player.playerName);
+			return new ResponseEntity<String>(printJsonError("player name does not match provided character's"), HttpStatus.BAD_REQUEST);
+		} else {
+			
+			// validate it is this player's turn
+			if (!player.isTurn) {
+				LOGGER.error(playerName + " was denied accusation because is is not their turn.");
+				return new ResponseEntity<String>(printJsonError("accusation denied because it is not this player's turn"), HttpStatus.BAD_REQUEST);
+			} else {
+				
+				Card weaponCard = CARD_MAP.get(weapon);
+				Card roomCard = CARD_MAP.get(room);
+				Card suspectCard = CARD_MAP.get(suspect);
+				
+				// validate all card types are provided accurately
+				if (weaponCard.isType(CARD_TYPE_WEAPON) && roomCard.isType(CARD_TYPE_ROOM) && suspectCard.isType(CARD_TYPE_SUSPECT)) {
+					List<Card> accusationCards = new ArrayList<Card>();
+					accusationCards.add(weaponCard);
+					accusationCards.add(roomCard);
+					accusationCards.add(suspectCard);
+					
+					// win or lose game
+					if (game.isAccusationCorrect(accusationCards)) {
+						game.winGame(player);
+						logInfoEvent(game, player.playerName + " won the game with their provided accusation!");
+					} else {
+						game.loseGame(player);
+						logInfoEvent(game, player.playerName + " lost the game with their provided accusation!");
+					}
+					
+					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
+					
+				} else {
+					LOGGER.error("One of the cards in accusation is not the correct type.");
+					return new ResponseEntity<String>(printJsonError("One of the cards in accusation is not the correct type."), HttpStatus.BAD_REQUEST);
+				}
+			}
+		}
 	}
 
 	/**

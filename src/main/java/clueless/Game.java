@@ -303,6 +303,7 @@ public class Game implements ClueInterface {
 		boolean correct = false;
 
 		// TODO: (ALEX) complete logic
+		// use Card helper isWinner() for checking if a card is a winner (only return true if all cards are winners)
 
 		return correct;
 	}
@@ -353,6 +354,24 @@ public class Game implements ClueInterface {
 
 		return playerExists;
 
+	}
+	
+	/**
+	 * Updates the game given the provided winning player
+	 * @param winner
+	 */
+	public void winGame(Player winner) {
+		// TODO: complete with logic
+		
+	}
+	
+	/**
+	 * Updates the game given the provided losing player
+	 * @param loser
+	 */
+	public void loseGame(Player loser) {
+		// TODO: complete with logic
+		
 	}
 
 	/**
