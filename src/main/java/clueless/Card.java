@@ -13,17 +13,9 @@ public class Card {
 	
 	public String name;
 	public String type;
-	public boolean isWinner;
-	
-	Card(String n, boolean w, String tp) { // constructor
-		this.name = n;
-		this.isWinner = w;
-		this.type = tp;
-	}
 	
 	Card(String n, String tp) { // if boolean not provided, assume false
 		this.name = n;
-		this.isWinner = false;
 		this.type = tp;
 	}
 	
@@ -35,7 +27,6 @@ public class Card {
 		JSONObject cardJson = new JSONObject();
 		cardJson.put("name",this.name);
 		cardJson.put("type",this.type);
-		cardJson.put("isWinner",this.isWinner);
 		
 		return cardJson;
 	}
