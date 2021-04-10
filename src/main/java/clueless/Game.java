@@ -61,21 +61,22 @@ public class Game implements ClueInterface {
 	}
 
 	/**
-	 * Changes turns for the game
+	 * Changes the player whose turn it is in the the game (should only be executed in when player complete's their turn)
 	 */
 	public void changeTurn() {
 
 		Player currPlayer = this.getCurrentPlayer();
 		Player nextPlayer = this.nextPlayer();
-
-		// TODO: (MEGAN) complete logic below
-
+		
 		// change currPlayer state to wait
 		// change currPlayer isTurn to false
+		currPlayer.state = PLAYER_STATE_WAIT;
+		currPlayer.isTurn = false;
 
 		// change nextPlayer state to 'move'
 		// change nextPlayer isTurn to true
-
+		nextPlayer.state = PLAYER_STATE_MOVE;
+		nextPlayer.isTurn = true;
 
 		// update all players possible moves
 		this.updatePossibleMoves();
