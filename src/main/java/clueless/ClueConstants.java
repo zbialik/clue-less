@@ -61,7 +61,6 @@ public interface ClueConstants {
 	public static final String PLAYER_STATE_WAIT = "wait";
 	public static final String PLAYER_STATE_MOVE = "move";
 	public static final String PLAYER_STATE_SUGGEST = "suggest";
-	public static final String PLAYER_STATE_ACCUSE = "accuse";
 	public static final String PLAYER_STATE_REVEAL = "reveal";
 	public static final String PLAYER_STATE_AWAIT_REVEAL = "await_reveal";
 	public static final String PLAYER_STATE_ACCEPT_REVEAL = "accept_reveal";
