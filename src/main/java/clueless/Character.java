@@ -66,7 +66,6 @@ public class Character implements ClueInterface {
 	 */
 	public JSONObject toJson() {
 		JSONObject characterJson = new JSONObject();
-//		characterJson.put("id", this.characterId);
 		characterJson.put("characterName", this.characterName);
 		characterJson.put("home", this.characterHome.toJson()); 
 		characterJson.put("currLocation", this.currLocation.toJson()); 

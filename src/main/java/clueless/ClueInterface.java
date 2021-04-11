@@ -22,7 +22,6 @@ public interface ClueInterface extends ClueConstants {
 			CHARACTER_NAME_COLONEL_MUSTARD,
 			CHARACTER_NAME_MRS_WHITE,
 			CHARACTER_NAME_MR_GREEN,
-			CHARACTER_NAME_MRS_WHITE,
 			CHARACTER_NAME_MRS_PEACOCK,
 			CHARACTER_NAME_PROF_PLUM
 	};
@@ -191,7 +190,7 @@ public interface ClueInterface extends ClueConstants {
 	public default int getCharacterIndexInTurnOrder(String charName) {
 		
 		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) {
-			if (CHARACTER_TURN_ORDER[i] == charName) {
+			if (CHARACTER_TURN_ORDER[i].equals(charName)) {
 				return i;
 			}
 		}
@@ -356,7 +355,7 @@ public interface ClueInterface extends ClueConstants {
 		JSONObject charMapObject = new JSONObject();
 		
 		for (Character character : characterMap.values()) {
-			charMapObject.put(String.valueOf(character.characterName), character.toJson());
+			charMapObject.put(character.characterName, character.toJson());
 //			charMapObject.put(String.valueOf(character.characterId), character.toJson()); TODO: delete from testing
 		}
 		

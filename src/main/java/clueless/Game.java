@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -240,7 +241,7 @@ public class Game implements ClueInterface {
 				player = this.getPlayer(charName);
 
 				// check if 'move'
-				if (player.state == PLAYER_STATE_MOVE) {
+				if (player.state.equals(PLAYER_STATE_MOVE)) {
 
 					currentLocation = player.currLocation;
 
@@ -442,7 +443,11 @@ public class Game implements ClueInterface {
 		JSONObject gameJson = new JSONObject();
 		gameJson.put("gameId", this.gameId);
 		gameJson.put("active", this.active);
-		gameJson.put("suggestionCards", cardsToJsonArray(this.suggestionCards));
+		if (this.suggestionCards.isEmpty()) {
+			gameJson.put("suggestionCards", new JSONArray());
+		} else {
+			gameJson.put("suggestionCards", cardsToJsonArray(this.suggestionCards));
+		}
 		gameJson.put("eventMessage", this.eventMessage); 
 		gameJson.put("characterMap", charMapToJsonObject(this.characterMap));
 

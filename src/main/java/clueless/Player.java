@@ -3,6 +3,7 @@ package clueless;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.json.JSONObject;
 
@@ -127,8 +128,8 @@ public class Player extends Character implements Serializable {
 		playerJson.put("vip", this.vip);
 		playerJson.put("handCards", cardsToJsonArray(this.handCards)); 
 		playerJson.put("knownCards", cardsToJsonArray(this.knownCards)); 
-		if (this.revealedClueCard == null) {
-			playerJson.put("revealedClueCard", "null"); // just put ID of secret passage for JSON
+		if (Objects.isNull(this.revealedClueCard)) {
+			playerJson.put("revealedClueCard", new JSONObject()); // just put ID of secret passage for JSON
 		} else {
 			playerJson.put("revealedClueCard", this.revealedClueCard.toJson()); // just put ID of secret passage for JSON
 		}

@@ -49,7 +49,9 @@ public class Location implements ClueInterface {
 	 */
 	public boolean isAdjacent(Location loc) {
 		
-		if ((this.x_coordinate == loc.x_coordinate) || (this.y_coordinate == loc.y_coordinate)) {
+		if ((this.x_coordinate == loc.x_coordinate) && (Math.abs(this.y_coordinate - loc.y_coordinate) == 1)) {
+			return true;
+		} else if ((this.y_coordinate == loc.y_coordinate) && (Math.abs(this.x_coordinate - loc.x_coordinate) == 1)) {
 			return true;
 		} else {
 			return false;
@@ -114,10 +116,23 @@ public class Location implements ClueInterface {
 		locationJson.put("type", this.type);
 		
 		if (!this.hasSecretPassage()) {
-			locationJson.put("secretPassage", "null"); // just put ID of secret passage for JSON
+			locationJson.put("secretPassage", new JSONObject()); // just put ID of secret passage for JSON
 		} else {
-			locationJson.put("secretPassage", this.secretPassage.toJson()); // put in JSON of location for secret passage
+			locationJson.put("secretPassage", this.secretPassage.toJsonSecretPassage()); // put in JSON of location for secret passage
 		}
+		locationJson.put("x_coordinate", this.x_coordinate);
+		locationJson.put("y_coordinate", this.y_coordinate);
+		
+		return locationJson;
+	}
+	
+	/**
+	 * Returns JSONObject representation for this secret passage
+	 */
+	public JSONObject toJsonSecretPassage() {
+		JSONObject locationJson = new JSONObject();
+		locationJson.put("name", this.name);
+		locationJson.put("type", this.type);
 		locationJson.put("x_coordinate", this.x_coordinate);
 		locationJson.put("y_coordinate", this.y_coordinate);
 		
