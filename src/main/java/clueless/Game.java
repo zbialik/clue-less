@@ -54,7 +54,7 @@ public class Game implements ClueInterface {
 		Player startingPlayer = this.startingPlayer();
 		startingPlayer.state = PLAYER_STATE_MOVE;
 		startingPlayer.isTurn = true;
-		
+
 		// update possible moves
 		this.updatePossibleMoves();
 
@@ -67,8 +67,8 @@ public class Game implements ClueInterface {
 	public void changeTurn() {
 
 		Player currPlayer = this.getCurrentPlayer();
-		Player nextPlayer = this.nextPlayer();
-		
+		Player nextPlayer = this.getNextPlayer();
+
 		// change currPlayer state to wait
 		// change currPlayer isTurn to false
 		currPlayer.state = PLAYER_STATE_WAIT;
@@ -114,7 +114,7 @@ public class Game implements ClueInterface {
 	 * Returns the next player whose turn it is in the game
 	 * @return nextPlayer
 	 */
-	public Player nextPlayer() {
+	public Player getNextPlayer() {
 
 		String currCharacterName = this.getCurrentPlayer().characterName;
 
@@ -198,14 +198,14 @@ public class Game implements ClueInterface {
 	 * 
 	 */
 	public boolean isLocationOccupied(Location location) {
-		
+
 		// loop through each character in characterMap and see if their currLocation is location
 		for (Character character : this.characterMap.values()) {
 			if (character.currLocation.equals(location)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -239,7 +239,7 @@ public class Game implements ClueInterface {
 					// get list of adjacentLocations
 					listOfMoves.clear();
 					listOfMoves = getAdjacentLocations(currentLocation);
-					
+
 					// remove any locations of type: home
 					// remove any locations of type: hallway that are currently occupied
 					for (int i = 0; i < listOfMoves.size(); i++) {
@@ -253,15 +253,15 @@ public class Game implements ClueInterface {
 							listOfMoves.remove(i);
 						}
 					}
-					
+
 					// add secret passage if has one
 					if (currentLocation.hasSecretPassage()) {
 						listOfMoves.add(currentLocation);
 					}
-					
+
 					// clear possible moves
 					player.possibleMoves.clear();
-					
+
 					//dump list into possible moves if not empty
 					if (!listOfMoves.isEmpty()) { 
 						player.possibleMoves.addAll(listOfMoves); 
@@ -301,7 +301,7 @@ public class Game implements ClueInterface {
 	 * @return correct
 	 */
 	public boolean isAccusationCorrect(List<Card> accusation) {
-		
+
 		// return false if any card is not in the mysterCards
 		for (Card card : accusation) {
 			if (!this.mysteryCards.contains(card)) {
@@ -359,63 +359,54 @@ public class Game implements ClueInterface {
 		return playerExists;
 
 	}
-	
+
 	/**
 	 * Updates the game given the provided winning player
 	 * @param winner
 	 */
 	public void winGame(Player winner) {
 		// TODO: complete with logic
-		
+
 	}
-	
+
 	/**
 	 * Updates the game given the provided losing player
 	 * @param loser
 	 */
 	public void loseGame(Player loser) {
 		// TODO: complete with logic
-		
+
 	}
 
 	/**
 	 * Returns the next player that has a clue for the suggestion. If no one, then returns null
 	 * @param suggestion
-	 * @return
+	 * @return playerThatHasClue
 	 */
 	public Player whoHasClue(List<Card> suggestion) {
-		Player pl = null;
-		boolean playerHasClue = false;
-		String getPlayerChar = this.getCurrentPlayer().characterName;
-		int currIndex = getCharacterIndexInTurnOrder(getPlayerChar);		
-		int nextPlayerindex = currIndex + 1;
-		int i = 0;
 		
-			if (nextPlayerindex >= CHARACTER_TURN_ORDER.length) 
-				{ // repoint index if currIndex is last character
-					nextPlayerindex = 0;
+		// get next player index to start loop
+		String nextPlayerCharName = this.getNextPlayer().characterName;
+		int index = getCharacterIndexInTurnOrder(nextPlayerCharName);
+		
+		int count = 0;
+		while (count < CHARACTER_TURN_ORDER.length) { // loop over ordered players and get first player who has clue
+
+			if (this.isPlayer(CHARACTER_TURN_ORDER[index]) 
+					&& this.getPlayer(CHARACTER_TURN_ORDER[index]).hasClue(suggestion)) {
+				return this.getPlayer(CHARACTER_TURN_ORDER[index]);
+			} else {
+				index++;
+				count++;
+
+				if (index >= CHARACTER_TURN_ORDER.length) { // restart index if reached last character
+					index = 0;
 				}
-			
-			while ((!playerHasClue) && i < this.characterMap.size())
-			{
-				
-				int count = 0;
-				while (count < CHARACTER_TURN_ORDER.length && nextPlayerindex != currIndex) {
-
-					if (this.isPlayer(CHARACTER_TURN_ORDER[nextPlayerindex]) 
-							&& this.getPlayer(CHARACTER_TURN_ORDER[nextPlayerindex]).hasClue(suggestion)) {
-						pl = this.getPlayer(CHARACTER_TURN_ORDER[nextPlayerindex]);
-						playerHasClue = true;
-
-					} else 
-					{
-						nextPlayerindex++;
-						count++;
-					}
 			}
 		}
-			return pl;
-		
+
+		return null;
+
 	}
 
 	/**

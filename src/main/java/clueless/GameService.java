@@ -186,7 +186,7 @@ class GameService extends GameDataManager {
 			} else {
 
 				// update game event message
-				logInfoEvent(game, player.playerName + " completed their turn. " + game.nextPlayer().playerName + " is next to make move.");
+				logInfoEvent(game, player.playerName + " completed their turn. " + game.getNextPlayer().playerName + " is next to make move.");
 
 				// change turns
 				game.changeTurn();
