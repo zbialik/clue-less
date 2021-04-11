@@ -16,7 +16,7 @@ import org.json.JSONObject;
 public class Player extends Character implements Serializable {
 
 	public String playerName;
-	public String state;
+	public String state = PLAYER_STATE_WAIT; // start player in 'wait'
 	public boolean isTurn = false;
 	public boolean vip = false;
 	public String eventMessage = new String();
@@ -29,14 +29,12 @@ public class Player extends Character implements Serializable {
 		super(charName, location); 
 		this.activate(); // always change character to active when player is instantiated
 		this.playerName = name;
-		this.state = PLAYER_STATE_WAIT;
 	}
 	
 	public Player(String charName, String name, boolean firstPlayer, Location location) { // unique constructor
 		super(charName, location);
 		this.activate(); // always change character to active when player is instantiated
 		this.playerName = name;
-		this.state = PLAYER_STATE_WAIT;
 		this.vip = firstPlayer;
 	}
 	

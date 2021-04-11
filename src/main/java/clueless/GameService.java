@@ -139,7 +139,7 @@ class GameService extends GameDataManager {
 
 		} else { // update character map with new player
 
-			game.addPlayer(charName, playerName, getCharacterHome(charName)); // add player to game
+			game.addPlayer(charName, playerName); // add player to game
 			logInfoEvent(game, "Player named " + playerName + " added to game " + gid + " as "+ charName + ".");
 
 			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
