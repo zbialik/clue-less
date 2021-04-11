@@ -59,9 +59,11 @@ class GameService extends GameDataManager {
 			} else {
 				
 				// change player's state to complete_turn
+				// update player's knownCards
 				// clear player's revealedClueCard
 				// update gameEventMessage
 				player.state = PLAYER_STATE_COMPLETE_TURN;
+				player.addKnownCard(player.getRevealedClueCard());
 				player.clearRevealedClueCard();
 				logInfoEvent(game, player.playerName + " has accepted the revealed clue card");
 				
@@ -248,7 +250,7 @@ class GameService extends GameDataManager {
 			@RequestParam(required = true) String weapon,
 			@RequestParam(required = true) String room,
 			@RequestParam(required = true) String suspect) {
-
+		
 		Game game = getGame(gid);
 		Player player = game.getPlayer(charName);
 		
@@ -318,8 +320,9 @@ class GameService extends GameDataManager {
 		Location suggestedLocation = LOCATION_MAP.get(room);
 
 		// check that player is either in ('suggest' state) OR ('move' state AND wasMovedToRoom)
-		if (!((!suggester.state.equals(PLAYER_STATE_SUGGEST)) 
-				|| (((!suggester.state.equals(PLAYER_STATE_MOVE))) && suggester.wasMovedToRoom))) {
+		if ((!suggester.state.equals(PLAYER_STATE_SUGGEST)) 
+				&& (!(suggester.state.equals(PLAYER_STATE_MOVE) && suggester.wasMovedToRoom))) {
+			LOGGER.error(suggester.playerName + " not in valid state to make suggestion (state: " + suggester.state+ ")");
 			return new ResponseEntity<String>(printJsonError("player not in valid state to make suggestion"), HttpStatus.BAD_REQUEST);
 		} else {
 
@@ -361,10 +364,11 @@ class GameService extends GameDataManager {
 					playerWithClue.eventMessage = "Please reveal a clue for the provided suggestion.";
 					playerWithClue.state = PLAYER_STATE_REVEAL;
 				}
-
-				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.BAD_REQUEST);
+				
+				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 
 			} else { // return 400 (BAD_REQUEST)
+				LOGGER.error(suggester.playerName + " not in room provided in suggestion (room: " + suggester.currLocation + ")");
 				return new ResponseEntity<String>(printJsonError("player not in room provided in suggestion"), HttpStatus.BAD_REQUEST);
 			}
 		}
@@ -499,6 +503,9 @@ class GameService extends GameDataManager {
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
 						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
 					}
+					
+					// update possible moves (really to clear possible moves)
+					game.updatePossibleMoves();
 
 					LOGGER.info(player.playerName + " moved " + charName + " to the " + locName);
 					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
