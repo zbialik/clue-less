@@ -15,7 +15,7 @@ def global_args():
         help="endpoint for backend server")
     
     args = parser.parse_args()
-
+    
     # set global constants
     BACKEND_ENDPOINT = args.backend_endpoint
 
