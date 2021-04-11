@@ -31,22 +31,22 @@ if __name__ == "__main__":
     http_request(context_game + '/complete-turn', {'playerName': "Zach", 'charName': CHARACTER_NAME_COLONEL_MUSTARD}, 'post')
     http_request(context_game + '/location', {'locName': LOCATION_NAME_HALLWAY_52, 'playerName': "Megan", 'charName': CHARACTER_NAME_MRS_WHITE}, 'post')
     http_request(context_game + '/complete-turn', {'playerName': "Megan", 'charName': CHARACTER_NAME_MRS_WHITE}, 'post')
-    http_request(context_game + '/location', {'locName': LOCATION_NAME_HALLWAY_65, 'playerName': "Alex", 'charName': CHARACTER_NAME_MR_GREEN}, 'post')
+    http_request(context_game + '/location', {'locName': LOCATION_NAME_HALLWAY_32, 'playerName': "Alex", 'charName': CHARACTER_NAME_MR_GREEN}, 'post')
     http_request(context_game + '/complete-turn', {'playerName': "Alex", 'charName': CHARACTER_NAME_MR_GREEN}, 'post')
 
     # make move, then suggestion for first player
     game_data = http_request(context_game + '/location', {'locName': LOCATION_NAME_BALL_ROOM, 'playerName': "Zach", 'charName': CHARACTER_NAME_COLONEL_MUSTARD}, 'post').json()
-    http_request(
-        context_game + '/suggestion', 
-        {
-            'room': LOCATION_NAME_BALL_ROOM,
-            'weapon': 'dummy',
-            'suspect': 'dummy',
-            'playerName': "Zach", 
-            'charName': CHARACTER_NAME_COLONEL_MUSTARD
-        }, 
-        'post'
-    )
+    # http_request(
+    #     context_game + '/suggestion', 
+    #     {
+    #         'room': LOCATION_NAME_BALL_ROOM,
+    #         'weapon': 'dummy',
+    #         'suspect': 'dummy',
+    #         'playerName': "Zach", 
+    #         'charName': CHARACTER_NAME_COLONEL_MUSTARD
+    #     }, 
+    #     'post'
+    # )
 
     # have another player reveal clue
     # complete turn for first player

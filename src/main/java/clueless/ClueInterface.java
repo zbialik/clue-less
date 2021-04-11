@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 public interface ClueInterface extends ClueConstants {
 	
-	public static final Map<String, Character> INIT_CHARACTER_MAP = initCharacterMap();
+//	public static final Map<String, Character> INIT_CHARACTER_MAP = initCharacterMap();
 	
 	public static final Map<String, Location> LOCATION_MAP = initLocationMap();
 	public static final Map<String, Card> CARD_MAP = initCardMap();
@@ -131,7 +131,7 @@ public interface ClueInterface extends ClueConstants {
 		return map;
 	}
 
-	public static Map<String, Character> initCharacterMap() { 
+	public default Map<String, Character> initCharacterMap() { 
 		Map<String, Character> map = new HashMap<String, Character>();
 		Map<String, Location>  locMap = initLocationMap();
 		
@@ -173,14 +173,6 @@ public interface ClueInterface extends ClueConstants {
 		}
 		
 		return adjacentLocations;
-	}
-	
-	/**
-	 * Returns the Location that is the provided character's home.
-	 * @return characterHome
-	 */
-	public default Location getCharacterHome(String charName) {
-		return INIT_CHARACTER_MAP.get(charName).characterHome;
 	}
 	
 	/**

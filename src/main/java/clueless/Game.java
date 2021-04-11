@@ -95,6 +95,14 @@ public class Game implements ClueInterface {
 		this.suggestionCards.clear();
 
 	}
+	
+	/**
+	 * Returns the Location that is the provided character's home.
+	 * @return characterHome
+	 */
+	public Location getCharacterHome(String charName) {
+		return this.characterMap.get(charName).characterHome;
+	}
 
 	/**
 	 * Returns the player whose turn it currently is
@@ -290,13 +298,17 @@ public class Game implements ClueInterface {
 	 * players being added at same time and one overwriting the other.
 	 * @param newPlayer
 	 */
-	public synchronized Game addPlayer(String charName, String name, Location homeLocation) {
+	public synchronized Game addPlayer(String charName, String name) {
 		Player newPlayer;
 
 		if (this.hasPlayer()) { // the Game has a Player already (this player not VIP)
-			newPlayer = new Player(charName, name, homeLocation);
+			
+			newPlayer = new Player(charName, name, this.getCharacterHome(charName));
+			
 		} else { // this is VIP player
-			newPlayer = new Player(charName, name, true, homeLocation);
+			
+			newPlayer = new Player(charName, name, true, this.getCharacterHome(charName));
+			
 		}
 		// update character map with new player
 		this.characterMap.put(newPlayer.characterName, newPlayer);
