@@ -372,7 +372,7 @@ public class Game implements ClueInterface {
 		// set player to ‘win’ state
 		winner.state = PLAYER_STATE_WIN;
 
-		game.winGame(player.characterName)
+		
 	}
 	
 	/**
