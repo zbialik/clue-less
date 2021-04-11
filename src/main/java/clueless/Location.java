@@ -113,7 +113,7 @@ public class Location implements ClueInterface {
 		locationJson.put("name", this.name);
 		locationJson.put("type", this.type);
 		
-		if (this.hasSecretPassage()) {
+		if (!this.hasSecretPassage()) {
 			locationJson.put("secretPassage", "null"); // just put ID of secret passage for JSON
 		} else {
 			locationJson.put("secretPassage", this.secretPassage.toJson()); // put in JSON of location for secret passage

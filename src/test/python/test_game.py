@@ -24,7 +24,7 @@ if __name__ == "__main__":
     http_request(context_game + '/players', {'playerName': "Alex", 'charName': CHARACTER_NAME_MR_GREEN}, 'post')
 
     # start game
-    http_request(context_game, {'startGame': True, 'charName': CHARACTER_NAME_COLONEL_MUSTARD, 'playerName': "Zach"}, 'post')
+    http_request(context_game, {'activate': True, 'charName': CHARACTER_NAME_COLONEL_MUSTARD, 'playerName': "Zach"}, 'post')
 
     # make first moves for all players
     http_request(context_game + '/location', {'locName': LOCATION_NAME_HALLWAY_65, 'playerName': "Zach", 'charName': CHARACTER_NAME_COLONEL_MUSTARD}, 'post')
@@ -40,8 +40,8 @@ if __name__ == "__main__":
         context_game + '/suggestion', 
         {
             'room': LOCATION_NAME_BALL_ROOM,
-            'weapon': ??,
-            'suspect': ??,
+            'weapon': 'dummy',
+            'suspect': 'dummy',
             'playerName': "Zach", 
             'charName': CHARACTER_NAME_COLONEL_MUSTARD
         }, 
