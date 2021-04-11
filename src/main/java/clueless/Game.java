@@ -47,8 +47,8 @@ public class Game implements ClueInterface {
 	public void startGame() {
 
 		// deal player's cards
-		dealCards(this);
-//		dealCardsTest(this); FLIP THIS FOR TEST/DEMO
+//		dealCards(this);
+		dealCardsTest(this); // FLIP THIS FOR TEST/DEMO
 
 		// set the starting player's turn
 		Player startingPlayer = this.startingPlayer();
