@@ -211,7 +211,7 @@ public interface ClueInterface extends ClueConstants {
 	 * Deals cards for the game in a specific way for testing purposes only
 	 * @return cardDeck
 	 */
-	public default void dealCards(Game game) {
+	public default void dealCardsTest(Game game) {
 		
 		// get test deck
 		Map<String, Card> testCardMap = new HashMap<String, Card>();
@@ -245,28 +245,28 @@ public interface ClueInterface extends ClueConstants {
 		
 	}
 	
-//	/**
-//	 * Deals cards for the game provided
-//	 * @return cardDeck
-//	 */
-//	public default void dealCards(Game game) {
-//		
-//		// get shuffled deck
-//		List<Card> cardDeck = getShuffledDeck();
-//		
-//		// add suspect card to mysteryCards in game
-//		addMysteryCard(game, cardDeck, CARD_TYPE_SUSPECT);
-//		
-//		// add room card to mysteryCards in game
-//		addMysteryCard(game, cardDeck, CARD_TYPE_ROOM);
-//		
-//		// add weapon card to mysteryCards in game
-//		addMysteryCard(game, cardDeck, CARD_TYPE_WEAPON);
-//		
-//		// distribute remaining cards to each player
-//		dealPlayersCards(game, cardDeck);
-//		
-//	}
+	/**
+	 * Deals cards for the game provided
+	 * @return cardDeck
+	 */
+	public default void dealCards(Game game) {
+		
+		// get shuffled deck
+		List<Card> cardDeck = getShuffledDeck();
+		
+		// add suspect card to mysteryCards in game
+		addMysteryCard(game, cardDeck, CARD_TYPE_SUSPECT);
+		
+		// add room card to mysteryCards in game
+		addMysteryCard(game, cardDeck, CARD_TYPE_ROOM);
+		
+		// add weapon card to mysteryCards in game
+		addMysteryCard(game, cardDeck, CARD_TYPE_WEAPON);
+		
+		// distribute remaining cards to each player
+		dealPlayersCards(game, cardDeck);
+		
+	}
 	
 	/**
 	 * Returns the remaining shuffled deck after updating the game's mysteryCards with one
