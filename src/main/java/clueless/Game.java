@@ -21,11 +21,10 @@ public class Game implements ClueInterface {
 	private static final Logger LOGGER = LogManager.getLogger(Game.class);
 
 	public int gameId; // game unique ID
-
-	public boolean hasStarted;
 	public List<Card> mysteryCards;
 	public List<Card> suggestionCards;
 	public Map<String, Character> characterMap = new HashMap<String, Character>();
+	private boolean active;
 
 	public String eventMessage; 
 
@@ -33,7 +32,7 @@ public class Game implements ClueInterface {
 		this.gameId = id;
 		this.mysteryCards = new ArrayList<Card>();
 		this.suggestionCards = new ArrayList<Card>();
-		this.hasStarted = false;
+		this.active = false;
 		this.eventMessage = new String();
 
 		// copy character map from interface to this game
@@ -57,9 +56,17 @@ public class Game implements ClueInterface {
 		// update possible moves
 		this.updatePossibleMoves();
 
-		this.hasStarted = true;
+		this.active = true;
 	}
 
+	/**
+	 * Ends the game by changing active to false
+	 * 
+	 */
+	public void endGame() {
+		this.active = false;
+	}
+	
 	/**
 	 * Changes the player whose turn it is in the the game (should only be executed in when player complete's their turn)
 	 */
@@ -412,7 +419,7 @@ public class Game implements ClueInterface {
 
 		JSONObject gameJson = new JSONObject();
 		gameJson.put("gameId", this.gameId);
-		gameJson.put("hasStarted", this.hasStarted);
+		gameJson.put("hasStarted", this.active);
 		gameJson.put("suggestionCards", cardsToJsonArray(this.suggestionCards)); 
 		gameJson.put("mysteryCards", cardsToJsonArray(this.mysteryCards)); // TODO: obviously remove this later
 		gameJson.put("eventMessage", this.eventMessage); 
