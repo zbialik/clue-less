@@ -374,6 +374,11 @@ public class Game implements ClueInterface {
 	 */
 	public void winGame(String charName) {
 		// TODO: complete with logic
+		Player  = this.getPlayer(charName);
+
+		// set player to ‘win’ state
+		winner.state = PLAYER_STATE_WIN;
+		this.endGame();
 		
 	}
 	
