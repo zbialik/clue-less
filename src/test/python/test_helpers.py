@@ -28,6 +28,7 @@ def trigger_http(context = '', p = {}, type = 'get'):
     gid = str(list(map(int, re.findall(r'\d+', context)))[0])
 
     # TODO: wait for user input
+    input("\nClick ENTER to make HTTP request: ")
 
     # make http call
     http_request(context, p, type)
