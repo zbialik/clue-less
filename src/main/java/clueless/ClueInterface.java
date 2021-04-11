@@ -22,7 +22,6 @@ public interface ClueInterface extends ClueConstants {
 			CHARACTER_NAME_COLONEL_MUSTARD,
 			CHARACTER_NAME_MRS_WHITE,
 			CHARACTER_NAME_MR_GREEN,
-			CHARACTER_NAME_MRS_WHITE,
 			CHARACTER_NAME_MRS_PEACOCK,
 			CHARACTER_NAME_PROF_PLUM
 	};
@@ -105,29 +104,29 @@ public interface ClueInterface extends ClueConstants {
 
 		// add hallways
 		map.put(LOCATION_NAME_HALLWAY_32, new Location(
-				LOCATION_NAME_HALLWAY_32, LOCATION_TYPE_HOME, 3, 2 ));
+				LOCATION_NAME_HALLWAY_32, LOCATION_TYPE_HALLWAY, 3, 2 ));
 		map.put(LOCATION_NAME_HALLWAY_52, new Location(
-				LOCATION_NAME_HALLWAY_52, LOCATION_TYPE_HOME, 5, 2 ));
+				LOCATION_NAME_HALLWAY_52, LOCATION_TYPE_HALLWAY, 5, 2 ));
 		map.put(LOCATION_NAME_HALLWAY_23, new Location(
-				LOCATION_NAME_HALLWAY_23, LOCATION_TYPE_HOME, 2, 3 ));
+				LOCATION_NAME_HALLWAY_23, LOCATION_TYPE_HALLWAY, 2, 3 ));
 		map.put(LOCATION_NAME_HALLWAY_43, new Location(
-				LOCATION_NAME_HALLWAY_43, LOCATION_TYPE_HOME, 4, 3 ));
+				LOCATION_NAME_HALLWAY_43, LOCATION_TYPE_HALLWAY, 4, 3 ));
 		map.put(LOCATION_NAME_HALLWAY_63, new Location(
-				LOCATION_NAME_HALLWAY_63, LOCATION_TYPE_HOME, 6, 3 ));
+				LOCATION_NAME_HALLWAY_63, LOCATION_TYPE_HALLWAY, 6, 3 ));
 		map.put(LOCATION_NAME_HALLWAY_34, new Location(
-				LOCATION_NAME_HALLWAY_34, LOCATION_TYPE_HOME, 3, 4 ));
+				LOCATION_NAME_HALLWAY_34, LOCATION_TYPE_HALLWAY, 3, 4 ));
 		map.put(LOCATION_NAME_HALLWAY_54, new Location(
-				LOCATION_NAME_HALLWAY_54, LOCATION_TYPE_HOME, 5, 4 ));
+				LOCATION_NAME_HALLWAY_54, LOCATION_TYPE_HALLWAY, 5, 4 ));
 		map.put(LOCATION_NAME_HALLWAY_25, new Location(
-				LOCATION_NAME_HALLWAY_25, LOCATION_TYPE_HOME, 2, 5 ));
+				LOCATION_NAME_HALLWAY_25, LOCATION_TYPE_HALLWAY, 2, 5 ));
 		map.put(LOCATION_NAME_HALLWAY_45, new Location(
-				LOCATION_NAME_HALLWAY_45, LOCATION_TYPE_HOME, 4, 5 ));
+				LOCATION_NAME_HALLWAY_45, LOCATION_TYPE_HALLWAY, 4, 5 ));
 		map.put(LOCATION_NAME_HALLWAY_65, new Location(
-				LOCATION_NAME_HALLWAY_65, LOCATION_TYPE_HOME, 6, 5 ));
+				LOCATION_NAME_HALLWAY_65, LOCATION_TYPE_HALLWAY, 6, 5 ));
 		map.put(LOCATION_NAME_HALLWAY_36, new Location(
-				LOCATION_NAME_HALLWAY_36, LOCATION_TYPE_HOME, 3, 6 ));
+				LOCATION_NAME_HALLWAY_36, LOCATION_TYPE_HALLWAY, 3, 6 ));
 		map.put(LOCATION_NAME_HALLWAY_56, new Location(
-				LOCATION_NAME_HALLWAY_56, LOCATION_TYPE_HOME, 5, 6 ));
+				LOCATION_NAME_HALLWAY_56, LOCATION_TYPE_HALLWAY, 5, 6 ));
 
 		return map;
 	}
@@ -191,7 +190,7 @@ public interface ClueInterface extends ClueConstants {
 	public default int getCharacterIndexInTurnOrder(String charName) {
 		
 		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) {
-			if (CHARACTER_TURN_ORDER[i] == charName) {
+			if (CHARACTER_TURN_ORDER[i].equals(charName)) {
 				return i;
 			}
 		}
@@ -356,7 +355,7 @@ public interface ClueInterface extends ClueConstants {
 		JSONObject charMapObject = new JSONObject();
 		
 		for (Character character : characterMap.values()) {
-			charMapObject.put(String.valueOf(character.characterName), character.toJson());
+			charMapObject.put(character.characterName, character.toJson());
 //			charMapObject.put(String.valueOf(character.characterId), character.toJson()); TODO: delete from testing
 		}
 		
