@@ -73,7 +73,7 @@ public class Game implements ClueInterface {
 	public void changeTurn() {
 
 		Player currPlayer = this.getCurrentPlayer();
-		Player nextPlayer = this.nextPlayer();
+		Player nextPlayer = this.getNextPlayer();
 		
 		// change currPlayer state to wait
 		// change currPlayer isTurn to false
@@ -122,7 +122,7 @@ public class Game implements ClueInterface {
 	 * Returns the next player whose turn it is in the game
 	 * @return nextPlayer
 	 */
-	public Player nextPlayer() {
+	public Player getNextPlayer() {
 
 		String currCharacterName = this.getCurrentPlayer().characterName;
 
@@ -398,18 +398,32 @@ public class Game implements ClueInterface {
 	/**
 	 * Returns the next player that has a clue for the suggestion. If no one, then returns null
 	 * @param suggestion
-	 * @return
+	 * @return playerThatHasClue
 	 */
 	public Player whoHasClue(List<Card> suggestion) {
-		Player pl;
-		boolean playerHasClue = false;
+		
+		// get next player index to start loop
+		String nextPlayerCharName = this.getNextPlayer().characterName;
+		int index = getCharacterIndexInTurnOrder(nextPlayerCharName);
+		
+		int count = 0;
+		while (count < CHARACTER_TURN_ORDER.length) { // loop over ordered players and get first player who has clue
 
-		int i = 0;
-		//		while ((!playerHasClue) && i < this.characterMap.size()) {
-		//			
-		//		}
+			if (this.isPlayer(CHARACTER_TURN_ORDER[index]) 
+					&& this.getPlayer(CHARACTER_TURN_ORDER[index]).hasClue(suggestion)) {
+				return this.getPlayer(CHARACTER_TURN_ORDER[index]);
+			} else {
+				index++;
+				count++;
+
+				if (index >= CHARACTER_TURN_ORDER.length) { // restart index if reached last character
+					index = 0;
+				}
+			}
+		}
 
 		return null;
+
 	}
 
 	/**
@@ -419,9 +433,8 @@ public class Game implements ClueInterface {
 
 		JSONObject gameJson = new JSONObject();
 		gameJson.put("gameId", this.gameId);
-		gameJson.put("hasStarted", this.active);
-		gameJson.put("suggestionCards", cardsToJsonArray(this.suggestionCards)); 
-		gameJson.put("mysteryCards", cardsToJsonArray(this.mysteryCards)); // TODO: obviously remove this later
+		gameJson.put("active", this.active);
+		gameJson.put("suggestionCards", cardsToJsonArray(this.suggestionCards));
 		gameJson.put("eventMessage", this.eventMessage); 
 		gameJson.put("characterMap", charMapToJsonObject(this.characterMap));
 
