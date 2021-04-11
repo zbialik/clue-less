@@ -35,4 +35,4 @@ the server, messages from the server to a specific client, and broadcast message
 * In fact, it would be a nice feature for a player to be able to load this set of names and graphics at the beginning of a game. This set of names and graphics should be stored in the client. Messages to and from the server should use standard identifiers of people, weapons and rooms, and the mapping from the standard names to the user selected names should be done in the client.
 
 ## Game Board ## 
-![alt text](https://github.com/zbialik/clue-less/blob/main/images/game-board.jpg?raw=true)
+![alt text](https://github.com/zbialik/clue-less/blob/main/images/game-board.png?raw=true)
