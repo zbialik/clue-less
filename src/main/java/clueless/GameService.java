@@ -431,7 +431,7 @@ class GameService extends GameDataManager {
 			@PathVariable int gid, 
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) String playerName,
-			@RequestParam(required = true) Boolean startGame) {
+			@RequestParam(required = true) Boolean activate) {
 
 		Game game = getGame(gid);
 		Player player = game.getPlayer(charName);
@@ -441,7 +441,7 @@ class GameService extends GameDataManager {
 			return new ResponseEntity<String>(printJsonError("player not vip"), HttpStatus.BAD_REQUEST);
 		} else { 
 			// check if startName is true
-			if (startGame) {
+			if (activate) {
 				game.startGame(); // initiate game's start game sequence
 				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName);
 			} else {
