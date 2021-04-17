@@ -27,20 +27,20 @@ def trigger_http(context = '', p = {}, type = 'get'):
     # grab gid from context
     gid = str(list(map(int, re.findall(r'\d+', context)))[0])
 
-    # TODO: wait for user input
+    # require user input
     input("\nClick ENTER to make HTTP request: ")
 
     # make http call
-    http_request(context, p, type)
+    return http_request(context, p, type)
 
-    # get game data
-    game_data = http_request('/' + gid)
+    # # get game data
+    # game_data = http_request('/' + gid)
 
-    # print game data
-    print(json.dumps(game_data.json(), indent=4))
+    # # print game data
+    # print(json.dumps(game_data.json(), indent=4))
 
-    # return game data
-    return game_data
+    # # return game data
+    # return game_data
 
 # helper function for sending http requests to backend
 def http_request(context = '', p = {}, type = 'get'):
