@@ -1,0 +1,10 @@
+apiVersion: v1
+name: clue
+version: v0.0.1
+appVersion: v0.0.1
+description: A Helm chart for clue
+home: https://github.com/zbialik/clue-less
+keywords:
+  - clue
+sources:
+  - https://github.com/zbialik/clue-less
