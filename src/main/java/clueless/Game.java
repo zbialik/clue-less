@@ -462,7 +462,7 @@ public class Game implements ClueInterface {
 			gameJson.put("suggestionCards", cardsToJsonArray(this.suggestionCards));
 		}
 		gameJson.put("eventMessage", this.eventMessage); 
-		gameJson.put("characterMap", charMapToJsonObject(this.characterMap));
+		gameJson.put("characters", charactersToJsonArray(this.characterMap));
 
 		return gameJson;
 	}

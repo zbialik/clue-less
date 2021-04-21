@@ -360,33 +360,32 @@ public interface ClueInterface extends ClueConstants {
 		
 	}
 	
-	/**
-	 * Returns a JSONArray representing the list of players provided
-	 * @return playersJsonArray
-	 */
-	public default JSONArray playersToJsonArray(List<Player> players) {
-		
-		JSONArray playersJsonArray = new JSONArray();
-		
-		for (Player player : players) {
-			playersJsonArray.put(player.toJson());
-		}
-		
-		return playersJsonArray;
-		
-	}
+//	/**
+//	 * Returns a JSONArray representing the list of players provided
+//	 * @return playersJsonArray
+//	 */
+//	public default JSONArray playersToJsonArray(List<Player> players) {
+//		
+//		JSONArray playersJsonArray = new JSONArray();
+//		
+//		for (Player player : players) {
+//			playersJsonArray.put(player.toJson());
+//		}
+//		
+//		return playersJsonArray;
+//		
+//	}
 	
 	/**
-	 * Returns a JSONObject representing the character map provided
+	 * Returns a JSONArray representing the character map provided
 	 * @return loationsListJson
 	 */
-	public default JSONObject charMapToJsonObject(Map<String, Character> characterMap) {
+	public default JSONArray charactersToJsonArray(Map<String, Character> characterMap) {
 		
-		JSONObject charMapObject = new JSONObject();
+		JSONArray charMapObject = new JSONArray();
 		
 		for (Character character : characterMap.values()) {
-			charMapObject.put(character.characterName, character.toJson());
-//			charMapObject.put(String.valueOf(character.characterId), character.toJson()); TODO: delete from testing
+			charMapObject.put(character.toJson());
 		}
 		
 		return charMapObject;
