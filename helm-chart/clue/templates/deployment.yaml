@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clue-backend
+  labels:
+    app: clue-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clue-backend
+  template:
+    metadata:
+      labels:
+        app: clue-backend
+    spec:
+      containers:
+      - name: clue-backend
+        image: clue-backend:latest
+        ports:
+        - containerPort: 8080

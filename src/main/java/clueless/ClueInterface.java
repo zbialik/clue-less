@@ -208,6 +208,44 @@ public interface ClueInterface extends ClueConstants {
 	}
 	
 	/**
+	 * Deals cards for the game in a specific way for testing purposes only
+	 * @return cardDeck
+	 */
+	public default void dealCardsTest(Game game) {
+		
+		// get test deck
+		Map<String, Card> testCardMap = new HashMap<String, Card>();
+		
+		testCardMap.putAll(CARD_MAP);
+		
+		// add suspect card to mysteryCards in game
+		// add room card to mysteryCards in game
+		// add weapon card to mysteryCards in game
+		game.mysteryCards.add(testCardMap.get(LOCATION_NAME_KITCHEN));
+		game.mysteryCards.add(testCardMap.get(CHARACTER_NAME_COLONEL_MUSTARD));
+		game.mysteryCards.add(testCardMap.get(WEAPON_NAME_KNIFE));
+		
+		// remove these cards
+		testCardMap.remove(LOCATION_NAME_KITCHEN);
+		testCardMap.remove(CHARACTER_NAME_COLONEL_MUSTARD);
+		testCardMap.remove(WEAPON_NAME_KNIFE);
+		
+		// distribute required cards for testing
+		game.getPlayer(CHARACTER_NAME_MRS_WHITE).addHandCard(testCardMap.get(CHARACTER_NAME_PROF_PLUM));
+		game.getPlayer(CHARACTER_NAME_MR_GREEN).addHandCard(testCardMap.get(WEAPON_NAME_REVOLVER));
+		
+		// distribute rest of cards for testing
+		List<Card> cardDeck = new ArrayList<Card>();
+
+		for (Card card : testCardMap.values()) {
+            cardDeck.add(card);
+		}
+		
+		dealPlayersCards(game, cardDeck);
+		
+	}
+	
+	/**
 	 * Deals cards for the game provided
 	 * @return cardDeck
 	 */
