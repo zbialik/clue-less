@@ -462,7 +462,7 @@ class GameService extends GameDataManager {
 	 * @return gameAsJson
 	 */
 	@PostMapping(value = "/{gid}/location", produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<String> updatePlayerLocationHTTP(
+	ResponseEntity<String> moveCharacterHTTP(
 			@PathVariable int gid,
 			@RequestParam(required = true) String charName,
 			@RequestParam(required = true) String playerName,
