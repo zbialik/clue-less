@@ -65,6 +65,7 @@ class GameService extends GameDataManager {
 				player.state = PLAYER_STATE_COMPLETE_TURN;
 				player.addKnownCard(player.getRevealedClueCard());
 				player.clearRevealedClueCard();
+				player.eventMessage = "Clue has been revealed, your turn is complete.";
 				logInfoEvent(game, player.playerName + " has accepted the revealed clue card");
 				
 			}
@@ -143,6 +144,7 @@ class GameService extends GameDataManager {
 
 			game.addPlayer(charName, playerName); // add player to game
 			logInfoEvent(game, "Player named " + playerName + " added to game " + gid + " as "+ charName + ".");
+			
 
 			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 		}
@@ -176,6 +178,7 @@ class GameService extends GameDataManager {
 
 		Game game = getGame(gid);
 		Player player = game.getPlayer(charName);
+		Player nextPlayer = game.getNextPlayer();
 
 		// validate playerName is charName
 		// validate charName has state of complete-turn
@@ -197,6 +200,7 @@ class GameService extends GameDataManager {
 
 				// change turns
 				game.changeTurn();
+				nextPlayer.eventMessage = "It is your turn, please make your move";
 
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 			}
@@ -281,12 +285,14 @@ class GameService extends GameDataManager {
 					if (game.isAccusationCorrect(accusationCards)) {
 						game.winGame(player.characterName);
 						logInfoEvent(game, player.playerName + " won the game with his/her provided accusation!");
+						player.eventMessage = "Your accusation is correct, you win!";
 						
 						// TODO: handle game cleanup in database
 						
 					} else {
 						game.loseGame(player.characterName);
 						logInfoEvent(game, player.playerName + " lost the game with his/her provided accusation!");
+						player.eventMessage = "Your accusation is incorrect, you lose.";
 					}
 					
 					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
@@ -361,6 +367,7 @@ class GameService extends GameDataManager {
 				} else { // else, playerWithClue should be set to reveal
 
 					logInfoEvent(game, suggester.playerName + " made a suggestion that " + playerWithClue.playerName + " must reveal a clue for.");
+					suggester.eventMessage = "Waiting for clue from " + playerWithClue.playerName;
 					playerWithClue.eventMessage = "Please reveal a clue for the provided suggestion.";
 					playerWithClue.state = PLAYER_STATE_REVEAL;
 				}
@@ -448,6 +455,7 @@ class GameService extends GameDataManager {
 			if (activate) {
 				game.startGame(); // initiate game's start game sequence
 				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName);
+				player.eventMessage = "You have started a new game.";
 			} else {
 				LOGGER.info(player.playerName + " send startGame but equal to true.");
 			}
@@ -480,11 +488,13 @@ class GameService extends GameDataManager {
 			if (!player.state.equals(PLAYER_STATE_MOVE)) {
 				LOGGER.error(player.playerName + " was denied move to " + locName + " because their state is: " + player.state + " (not "
 						+ PLAYER_STATE_MOVE + ").");
+				player.eventMessage = "You are not able to move yet.";
 				return new ResponseEntity<String>(printJsonError("player not in move state"), HttpStatus.BAD_REQUEST);
 			} else {
 				// if hallway and location occupied return 409 (CONFLICT)
 				if (location.isHallway() && game.isLocationOccupied(location)) {
 					LOGGER.error(player.playerName + " was denied move to " + locName + " because it's occupied.");
+					player.eventMessage = "This hallway is occupied, cannot move here.";
 					return new ResponseEntity<String>(printJsonError("hallway is occupied"), HttpStatus.CONFLICT);
 				} else {
 
@@ -496,12 +506,14 @@ class GameService extends GameDataManager {
 
 						// update game eventMessage
 						game.eventMessage = player.playerName + " moved " + charName + " to the " + locName;
+						player.eventMessage = "You have been moved to room" + locName + ", please make a suggestion";
 
 					} else { // else, prompt to complete turn
 						player.state = PLAYER_STATE_COMPLETE_TURN;
 
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
 						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
+						player.eventMessage = "You have been moved to " + locName;
 					}
 					
 					// update possible moves (really to clear possible moves)
