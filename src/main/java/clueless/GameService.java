@@ -209,7 +209,7 @@ class GameService extends GameDataManager {
 	 */
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getAllGamesHTTP() {
-		LOGGER.info("All games returned.");
+		LOGGER.debug("All games returned.");
 
 		return new ResponseEntity<String>(jsonToString(getAllGamesJSON()), HttpStatus.OK);
 	}
@@ -221,7 +221,7 @@ class GameService extends GameDataManager {
 	 */
 	@GetMapping(value = "/{gid}", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getGameHTTP(@PathVariable int gid) {
-		LOGGER.info("Game " + gid + " returned.");
+		LOGGER.debug("Game " + gid + " returned.");
 		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
 
