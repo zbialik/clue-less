@@ -506,14 +506,14 @@ class GameService extends GameDataManager {
 
 						// update game eventMessage
 						game.eventMessage = player.playerName + " moved " + charName + " to the " + locName;
-						player.eventMessage = "You have been moved to room" + locName + ", please make a suggestion";
+						player.eventMessage = "You moved to room " + locName + ", please make a suggestion";
 
 					} else { // else, prompt to complete turn
 						player.state = PLAYER_STATE_COMPLETE_TURN;
 
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
 						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
-						player.eventMessage = "You have been moved to " + locName;
+						player.eventMessage = "You moved to " + locName;
 					}
 					
 					// update possible moves (really to clear possible moves)
