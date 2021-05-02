@@ -65,7 +65,7 @@ class GameService extends GameDataManager {
 				player.state = PLAYER_STATE_COMPLETE_TURN;
 				player.addKnownCard(player.getRevealedClueCard());
 				player.clearRevealedClueCard();
-				player.eventMessage = "Clue has been revealed, your turn is complete.";
+				player.eventMessage = "You've accepted the clue. Please make an accusation or complete your turn.";
 				logInfoEvent(game, player.playerName + " has accepted the revealed clue card");
 				
 			}
@@ -299,6 +299,7 @@ class GameService extends GameDataManager {
 					
 				} else {
 					LOGGER.error("One of the cards in accusation is not the correct type.");
+					player.eventMessage = "One of your cards in the accusation is in the incorrect category, please re-try.";
 					return new ResponseEntity<String>(printJsonError("One of the cards in accusation is not the correct type."), HttpStatus.BAD_REQUEST);
 				}
 			}
@@ -376,6 +377,7 @@ class GameService extends GameDataManager {
 
 			} else { // return 400 (BAD_REQUEST)
 				LOGGER.error(suggester.playerName + " not in room provided in suggestion (room: " + suggester.currLocation + ")");
+				suggester.eventMessage = "Sorry, your suggestion must include the room you're in.";
 				return new ResponseEntity<String>(printJsonError("player not in room provided in suggestion"), HttpStatus.BAD_REQUEST);
 			}
 		}
@@ -416,7 +418,8 @@ class GameService extends GameDataManager {
 
 					// update player and game eventMessages
 					logInfoEvent(game, revealer.playerName + " revealed a clue to " + suggester.playerName + ".");
-					suggester.eventMessage = revealer.playerName + " revealed a clue to you.";
+					revealer.eventMessage = "You revealed a clue, please hold tight and await your turn.";
+					suggester.eventMessage = revealer.playerName + " revealed a clue to you, please accept the clue.";
 
 					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 
@@ -513,7 +516,7 @@ class GameService extends GameDataManager {
 
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
 						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
-						player.eventMessage = "You have been moved to " + locName;
+						player.eventMessage = "You have been moved to a hallway. Please make an accusation or complete your turn.";
 					}
 					
 					// update possible moves (really to clear possible moves)
