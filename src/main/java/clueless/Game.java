@@ -274,7 +274,7 @@ public class Game implements ClueInterface {
 					
 					// add secret passage if has one
 					if (currentLocation.hasSecretPassage()) {
-						listOfMoves.add(currentLocation);
+						listOfMoves.add(currentLocation.secretPassage);
 					}
 					
 					// clear possible moves
