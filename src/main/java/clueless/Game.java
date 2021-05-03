@@ -434,7 +434,7 @@ public class Game implements ClueInterface {
 
 			if (this.isPlayer(CHARACTER_TURN_ORDER[index]) 
 					&& this.getPlayer(CHARACTER_TURN_ORDER[index]).hasClue(suggestion) 
-					&& (this.getPlayer(CHARACTER_TURN_ORDER[index])!= currentPlayer)) {
+					&& (!this.getPlayer(CHARACTER_TURN_ORDER[index]).equals(currentPlayer))) {
 				return this.getPlayer(CHARACTER_TURN_ORDER[index]);
 			} else {
 				index++;
