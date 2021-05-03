@@ -65,7 +65,7 @@ class GameService extends GameDataManager {
 				player.state = PLAYER_STATE_COMPLETE_TURN;
 				player.addKnownCard(player.getRevealedClueCard());
 				player.clearRevealedClueCard();
-				player.eventMessage = "You've accepted the clue. Please make an accusation or complete your turn.";
+				player.eventMessage = "You have accepted the clue. Please make an accusation or complete your turn.";
 				logInfoEvent(game, player.playerName + " has accepted the revealed clue card");
 				
 			}
@@ -197,10 +197,11 @@ class GameService extends GameDataManager {
 
 				// update game event message
 				logInfoEvent(game, player.playerName + " completed their turn. " + game.getNextPlayer().playerName + " is next to make move.");
-
+				player.eventMessage = "You have completed your turn.";
+				nextPlayer.eventMessage = "It is your turn, please make your move";
 				// change turns
 				game.changeTurn();
-				nextPlayer.eventMessage = "It is your turn, please make your move";
+				
 
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 			}
@@ -267,6 +268,7 @@ class GameService extends GameDataManager {
 			// validate it is this player's turn
 			if (!player.isTurn) {
 				LOGGER.error(playerName + " was denied accusation because is is not their turn.");
+				player.eventMessage = "It is not your turn, you cannot make an accusation.";
 				return new ResponseEntity<String>(printJsonError("accusation denied because it is not this player's turn"), HttpStatus.BAD_REQUEST);
 			} else {
 				
@@ -330,6 +332,7 @@ class GameService extends GameDataManager {
 		if ((!suggester.state.equals(PLAYER_STATE_SUGGEST)) 
 				&& (!(suggester.state.equals(PLAYER_STATE_MOVE) && suggester.wasMovedToRoom))) {
 			LOGGER.error(suggester.playerName + " not in valid state to make suggestion (state: " + suggester.state+ ")");
+			//suggester.eventMessage = "You cannot make a suggestion yet.";
 			return new ResponseEntity<String>(printJsonError("player not in valid state to make suggestion"), HttpStatus.BAD_REQUEST);
 		} else {
 
@@ -509,14 +512,14 @@ class GameService extends GameDataManager {
 
 						// update game eventMessage
 						game.eventMessage = player.playerName + " moved " + charName + " to the " + locName;
-						player.eventMessage = "You have been moved to room" + locName + ", please make a suggestion";
+						player.eventMessage = "You have moved to room " + locName + ", please make a suggestion";
 
 					} else { // else, prompt to complete turn
 						player.state = PLAYER_STATE_COMPLETE_TURN;
 
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
 						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
-						player.eventMessage = "You have moved to a hallway. Please make an accusation or complete your turn.";
+						player.eventMessage = "You have  moved to a hallway. Please make an accusation or complete your turn.";
 					}
 					
 					// update possible moves (really to clear possible moves)
