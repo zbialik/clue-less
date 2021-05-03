@@ -516,7 +516,7 @@ class GameService extends GameDataManager {
 
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
 						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
-						player.eventMessage = "You have been moved to a hallway. Please make an accusation or complete your turn.";
+						player.eventMessage = "You have moved to a hallway. Please make an accusation or complete your turn.";
 					}
 					
 					// update possible moves (really to clear possible moves)
