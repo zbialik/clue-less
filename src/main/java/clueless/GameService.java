@@ -299,7 +299,7 @@ class GameService extends GameDataManager {
 					
 				} else {
 					LOGGER.error("One of the cards in accusation is not the correct type.");
-					player.eventMessage = "One of your cards in the accusation in the incorrect category, please re-try.";
+					player.eventMessage = "One of your cards in the accusation in the incorrect category, please retry.";
 					return new ResponseEntity<String>(printJsonError("One of the cards in accusation is not the correct type."), HttpStatus.BAD_REQUEST);
 				}
 			}
