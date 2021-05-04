@@ -370,6 +370,9 @@ class GameService extends GameDataManager {
 					suggester.eventMessage = "Waiting for clue from " + playerWithClue.playerName;
 					playerWithClue.eventMessage = "Please reveal a clue for the provided suggestion.";
 					playerWithClue.state = PLAYER_STATE_REVEAL;
+					
+					
+					
 				}
 				
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
