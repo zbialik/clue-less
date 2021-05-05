@@ -65,7 +65,7 @@ class GameService extends GameDataManager {
 				player.state = PLAYER_STATE_COMPLETE_TURN;
 				player.addKnownCard(player.getRevealedClueCard());
 				player.clearRevealedClueCard();
-				player.eventMessage = "Clue has been revealed, your turn is complete.";
+				player.eventMessage = "You have accepted the clue. Please make an accusation or complete your turn.";
 				logInfoEvent(game, player.playerName + " has accepted the revealed clue card");
 				
 			}
@@ -197,10 +197,11 @@ class GameService extends GameDataManager {
 
 				// update game event message
 				logInfoEvent(game, player.playerName + " completed their turn. " + game.getNextPlayer().playerName + " is next to make move.");
-
+				player.eventMessage = "You have completed your turn.";
+				nextPlayer.eventMessage = "It is your turn, please make your move";
 				// change turns
 				game.changeTurn();
-				nextPlayer.eventMessage = "It is your turn, please make your move";
+				
 
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 			}
@@ -267,6 +268,7 @@ class GameService extends GameDataManager {
 			// validate it is this player's turn
 			if (!player.isTurn) {
 				LOGGER.error(playerName + " was denied accusation because is is not their turn.");
+				player.eventMessage = "It is not your turn, you cannot make an accusation.";
 				return new ResponseEntity<String>(printJsonError("accusation denied because it is not this player's turn"), HttpStatus.BAD_REQUEST);
 			} else {
 				
@@ -299,6 +301,7 @@ class GameService extends GameDataManager {
 					
 				} else {
 					LOGGER.error("One of the cards in accusation is not the correct type.");
+					player.eventMessage = "One of your cards in the accusation in the incorrect category, please retry.";
 					return new ResponseEntity<String>(printJsonError("One of the cards in accusation is not the correct type."), HttpStatus.BAD_REQUEST);
 				}
 			}
@@ -329,6 +332,7 @@ class GameService extends GameDataManager {
 		if ((!suggester.state.equals(PLAYER_STATE_SUGGEST)) 
 				&& (!(suggester.state.equals(PLAYER_STATE_MOVE) && suggester.wasMovedToRoom))) {
 			LOGGER.error(suggester.playerName + " not in valid state to make suggestion (state: " + suggester.state+ ")");
+			//suggester.eventMessage = "You cannot make a suggestion yet.";
 			return new ResponseEntity<String>(printJsonError("player not in valid state to make suggestion"), HttpStatus.BAD_REQUEST);
 		} else {
 
@@ -376,6 +380,7 @@ class GameService extends GameDataManager {
 
 			} else { // return 400 (BAD_REQUEST)
 				LOGGER.error(suggester.playerName + " not in room provided in suggestion (room: " + suggester.currLocation + ")");
+				suggester.eventMessage = "Sorry, your suggestion must include the room you're in.";
 				return new ResponseEntity<String>(printJsonError("player not in room provided in suggestion"), HttpStatus.BAD_REQUEST);
 			}
 		}
@@ -416,7 +421,8 @@ class GameService extends GameDataManager {
 
 					// update player and game eventMessages
 					logInfoEvent(game, revealer.playerName + " revealed a clue to " + suggester.playerName + ".");
-					suggester.eventMessage = revealer.playerName + " revealed a clue to you.";
+					revealer.eventMessage = "You revealed a clue, please hold tight and await your turn.";
+					suggester.eventMessage = revealer.playerName + " revealed a clue to you, please accept the clue.";
 
 					return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 
@@ -512,8 +518,8 @@ class GameService extends GameDataManager {
 						player.state = PLAYER_STATE_COMPLETE_TURN;
 
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
-						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
-						player.eventMessage = "You moved to " + locName;
+						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type;
+						player.eventMessage = "You have moved to a hallway. Please make an accusation or complete your turn.";
 					}
 					
 					// update possible moves (really to clear possible moves)

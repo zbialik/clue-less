@@ -425,6 +425,7 @@ public class Game implements ClueInterface {
 	public Player whoHasClue(List<Card> suggestion) {
 		
 		// get next player index to start loop
+		Player currentPlayer = this.getCurrentPlayer();
 		String nextPlayerCharName = this.getNextPlayer().characterName;
 		int index = getCharacterIndexInTurnOrder(nextPlayerCharName);
 		
@@ -432,7 +433,8 @@ public class Game implements ClueInterface {
 		while (count < CHARACTER_TURN_ORDER.length) { // loop over ordered players and get first player who has clue
 
 			if (this.isPlayer(CHARACTER_TURN_ORDER[index]) 
-					&& this.getPlayer(CHARACTER_TURN_ORDER[index]).hasClue(suggestion)) {
+					&& this.getPlayer(CHARACTER_TURN_ORDER[index]).hasClue(suggestion) 
+					&& (!this.getPlayer(CHARACTER_TURN_ORDER[index]).equals(currentPlayer))) {
 				return this.getPlayer(CHARACTER_TURN_ORDER[index]);
 			} else {
 				index++;
