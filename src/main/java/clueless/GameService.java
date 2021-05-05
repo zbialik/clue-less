@@ -214,7 +214,7 @@ class GameService extends GameDataManager {
 	 */
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getAllGamesHTTP() {
-		LOGGER.info("All games returned.");
+		LOGGER.debug("All games returned.");
 
 		return new ResponseEntity<String>(jsonToString(getAllGamesJSON()), HttpStatus.OK);
 	}
@@ -226,7 +226,7 @@ class GameService extends GameDataManager {
 	 */
 	@GetMapping(value = "/{gid}", produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<String> getGameHTTP(@PathVariable int gid) {
-		LOGGER.info("Game " + gid + " returned.");
+		LOGGER.debug("Game " + gid + " returned.");
 		return new ResponseEntity<String>(jsonToString(getGame(gid).toJson()), HttpStatus.OK);
 	}
 
@@ -512,14 +512,14 @@ class GameService extends GameDataManager {
 
 						// update game eventMessage
 						game.eventMessage = player.playerName + " moved " + charName + " to the " + locName;
-						player.eventMessage = "You have moved to room " + locName + ", please make a suggestion";
+						player.eventMessage = "You moved to room " + locName + ", please make a suggestion";
 
 					} else { // else, prompt to complete turn
 						player.state = PLAYER_STATE_COMPLETE_TURN;
 
 						// update game eventMessage (for hallways the naming convention probably doesn't matter to users)
-						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type; 
-						player.eventMessage = "You have  moved to a hallway. Please make an accusation or complete your turn.";
+						game.eventMessage = player.playerName + " moved " + charName + " to a " + location.type;
+						player.eventMessage = "You have moved to a hallway. Please make an accusation or complete your turn.";
 					}
 					
 					// update possible moves (really to clear possible moves)

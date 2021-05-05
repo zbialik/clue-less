@@ -124,6 +124,7 @@ public class Player extends Character implements Serializable {
 		playerJson.put("playerName", this.playerName); 
 		playerJson.put("state", this.state); 
 		playerJson.put("vip", this.vip);
+		playerJson.put(“isTurn”, this.isTurn);
 		playerJson.put("handCards", cardsToJsonArray(this.handCards)); 
 		playerJson.put("knownCards", cardsToJsonArray(this.knownCards)); 
 		if (Objects.isNull(this.revealedClueCard)) {
