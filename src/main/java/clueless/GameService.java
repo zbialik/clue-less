@@ -461,9 +461,8 @@ class GameService extends GameDataManager {
 			// check if startName is true
 			if (activate) {
 				game.startGame(); // initiate game's start game sequence
-				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName);
+				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName + ". Starting player is " + startingPlayer.playerName);
 				player.eventMessage = "You have started a new game.";
-				game.eventMessage = "Game has started. First player to make a move is " + startingPlayer;
 			} else {
 				LOGGER.info(player.playerName + " send startGame but equal to true.");
 			}
