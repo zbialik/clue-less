@@ -65,7 +65,7 @@ class GameService extends GameDataManager {
 				player.state = PLAYER_STATE_COMPLETE_TURN;
 				player.addKnownCard(player.getRevealedClueCard());
 				player.clearRevealedClueCard();
-				player.eventMessage = "Clue has been revealed, your turn is complete.";
+				player.eventMessage = "Clue has been revealed, please complete your turn.";
 				logInfoEvent(game, player.playerName + " has accepted the revealed clue card");
 				
 			}
@@ -134,7 +134,7 @@ class GameService extends GameDataManager {
 
 		// check if character is already a Player object, return 409 status if so
 		if (character instanceof Player) {
-
+			game.eventMessage = charName + " was taken by " + playerName + " please choose a different one.";
 			LOGGER.error("The character named " + charName + " is already mapped to a player named "
 					+ game.getPlayer(charName).playerName + ".");
 
@@ -376,6 +376,7 @@ class GameService extends GameDataManager {
 
 			} else { // return 400 (BAD_REQUEST)
 				LOGGER.error(suggester.playerName + " not in room provided in suggestion (room: " + suggester.currLocation + ")");
+				suggester.eventMessage = "Please make a suggestion for the room you are in.";
 				return new ResponseEntity<String>(printJsonError("player not in room provided in suggestion"), HttpStatus.BAD_REQUEST);
 			}
 		}
@@ -446,6 +447,7 @@ class GameService extends GameDataManager {
 
 		Game game = getGame(gid);
 		Player player = game.getPlayer(charName);
+		Player startingPlayer = game.startingPlayer();
 
 		// return 400 (BAD_REQUEST) if not VIP
 		if (!(player.vip)) { 
@@ -456,6 +458,7 @@ class GameService extends GameDataManager {
 				game.startGame(); // initiate game's start game sequence
 				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName);
 				player.eventMessage = "You have started a new game.";
+				game.eventMessage = "Game has started. First player to make a move is " + startingPlayer;
 			} else {
 				LOGGER.info(player.playerName + " send startGame but equal to true.");
 			}
