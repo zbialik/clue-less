@@ -420,7 +420,7 @@ class GameService extends GameDataManager {
 					suggester.state = PLAYER_STATE_ACCEPT_REVEAL;
 
 					// update player and game eventMessages
-					logInfoEvent(game, revealer.playerName + " revealed a clue to " + suggester.playerName + "." + " Waiting for" + suggester.playerName + "to accept the revealed clue." );
+					logInfoEvent(game, revealer.playerName + " revealed a clue to " + suggester.playerName + "." + " Waiting for " + suggester.playerName + " to accept the revealed clue." );
 					
 					revealer.eventMessage = "You revealed a clue, please hold tight and await your turn.";
 					suggester.eventMessage = revealer.playerName + " revealed a clue to you, please accept the clue.";
