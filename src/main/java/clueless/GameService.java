@@ -452,6 +452,7 @@ class GameService extends GameDataManager {
 
 		Game game = getGame(gid);
 		Player player = game.getPlayer(charName);
+		Player startingPlayer = game.startingPlayer();
 
 		// return 400 (BAD_REQUEST) if not VIP
 		if (!(player.vip)) { 
@@ -462,6 +463,7 @@ class GameService extends GameDataManager {
 				game.startGame(); // initiate game's start game sequence
 				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName);
 				player.eventMessage = "You have started a new game.";
+				game.eventMessage = "Game has started. First player to make a move is " + startingPlayer;
 			} else {
 				LOGGER.info(player.playerName + " send startGame but equal to true.");
 			}
