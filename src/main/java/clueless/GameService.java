@@ -449,6 +449,7 @@ class GameService extends GameDataManager {
 		Player player = game.getPlayer(charName);
 		Player startingPlayer = game.startingPlayer();
 
+		
 		// return 400 (BAD_REQUEST) if not VIP
 		if (!(player.vip)) { 
 			return new ResponseEntity<String>(printJsonError("player not vip"), HttpStatus.BAD_REQUEST);
