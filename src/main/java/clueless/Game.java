@@ -92,6 +92,29 @@ public class Game implements ClueInterface {
 		// update all players possible moves
 		this.updatePossibleMoves();
 
+		// if nextPlayer cannot make any viable move, set their state to complete-turn
+		if ( (nextPlayer.currLocation.isRoom()) && (!nextPlayer.wasMovedToRoom) && nextPlayer.possibleMoves.isEmpty()) {
+			
+			LOGGER.info(nextPlayer.playerName + " has no valid moves. Changing their state to " + PLAYER_STATE_COMPLETE_TURN );
+			
+			nextPlayer.state = PLAYER_STATE_COMPLETE_TURN; // set player to complete-turn
+			
+			// print game message
+			this.eventMessage = currPlayer.playerName + " completed their turn. " + nextPlayer.playerName + " must complete-turn due to no valid moves.";
+			
+			// print player message
+			nextPlayer.eventMessage = "It is your turn but you cannot make a move nor make suggestion. Please complete-turn.";
+			
+			
+		} else {
+			
+			// print game message
+			this.eventMessage = currPlayer.playerName + " completed their turn. " + nextPlayer.playerName + " is next to make move.";
+			
+			// print player message
+			nextPlayer.eventMessage = "It is your turn, please make your move";
+		}
+
 		// clear the suggestion cards for this game
 		this.suggestionCards.clear();
 
@@ -239,9 +262,9 @@ public class Game implements ClueInterface {
 	public void updatePossibleMoves() {
 
 		Player player;
-		List<Location> listOfMoves = new ArrayList<Location>();
+		List<Location> adjacentLocations = new ArrayList<Location>();
+		List<Location> possibleMoves = new ArrayList<Location>();
 		Location currentLocation;
-		Location possibleLocation;
 
 		// loop over each player in characterMap
 		for (String charName : this.characterMap.keySet()) {
@@ -255,34 +278,29 @@ public class Game implements ClueInterface {
 					currentLocation = player.currLocation;
 
 					// get list of adjacentLocations
-					listOfMoves.clear();
-					listOfMoves = getAdjacentLocations(currentLocation);
+					adjacentLocations.clear();
+					adjacentLocations = this.getAdjacentLocations(currentLocation);
 					
-					// remove any locations of type: home
-					// remove any locations of type: hallway that are currently occupied
-					for (int i = 0; i < listOfMoves.size(); i++) {
-						possibleLocation =  listOfMoves.get(i);
-
-						if (possibleLocation.isHome()) {
-							listOfMoves.remove(i);
-						}
-
-						if (possibleLocation.isHallway() && this.isLocationOccupied(possibleLocation)) {
-							listOfMoves.remove(i);
+					// add adjacent location to possible moves following criteria
+					for ( Location possibleLocation : adjacentLocations ) {
+						if ( !possibleLocation.isHome() &&
+								(!(possibleLocation.isHallway() && this.isLocationOccupied(possibleLocation)))
+						) {
+							possibleMoves.add(possibleLocation);
 						}
 					}
 					
 					// add secret passage if has one
 					if (currentLocation.hasSecretPassage()) {
-						listOfMoves.add(currentLocation.secretPassage);
+						possibleMoves.add(currentLocation.secretPassage);
 					}
 					
 					// clear possible moves
 					player.possibleMoves.clear();
 					
 					//dump list into possible moves if not empty
-					if (!listOfMoves.isEmpty()) { 
-						player.possibleMoves.addAll(listOfMoves); 
+					if (!possibleMoves.isEmpty()) { 
+						player.possibleMoves.addAll(possibleMoves); 
 					}
 
 				} else {

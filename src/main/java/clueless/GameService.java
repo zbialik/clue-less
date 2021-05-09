@@ -190,20 +190,22 @@ class GameService extends GameDataManager {
 				player.eventMessage = "You must make a suggestion before completing your turn.";
 				LOGGER.error(player.playerName + " must make a suggestion before completing their turn.");
 				return new ResponseEntity<String>(printJsonError(player.playerName + " must make a suggestion before completing their turn."), HttpStatus.BAD_REQUEST);
-			} else if (!player.state.equals(PLAYER_STATE_COMPLETE_TURN)) {
-				LOGGER.error(playerName + " was denied complete-turn action because they are not in complete_turn state.");
-				return new ResponseEntity<String>(printJsonError("player may not complete turn as they're not in complete_turn state."), HttpStatus.BAD_REQUEST);
-			} else {
+			} else if (player.state.equals(PLAYER_STATE_COMPLETE_TURN)) {
 
 				// update game event message
-				logInfoEvent(game, player.playerName + " completed their turn. " + game.getNextPlayer().playerName + " is next to make move.");
+				LOGGER.info( player.playerName + " completed their turn. " + nextPlayer.playerName + " is next to make move.");
 				player.eventMessage = "You have completed your turn.";
-				nextPlayer.eventMessage = "It is your turn, please make your move";
+				
 				// change turns
 				game.changeTurn();
-				
 
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
+				
+			} else {
+				
+				LOGGER.error(playerName + " was denied complete-turn action because they are not in complete_turn state.");
+				return new ResponseEntity<String>(printJsonError("player may not complete turn as they're not in complete_turn state."), HttpStatus.BAD_REQUEST);
+				
 			}
 		}
 	}
@@ -361,6 +363,9 @@ class GameService extends GameDataManager {
 				game.suggestionCards.addAll(suggestion); // update game suggestion cards
 
 				Player playerWithClue = game.whoHasClue(suggestion);
+				
+				// update player possible moves given character has moved
+				game.updatePossibleMoves();
 
 				if (Objects.isNull(playerWithClue)) { // if null, no one has clue -- set suggester to complete_turn
 
