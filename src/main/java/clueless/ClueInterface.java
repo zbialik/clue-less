@@ -337,11 +337,10 @@ public interface ClueInterface extends ClueConstants {
 		String cardsListString = new String();
 		
 		for (int i=0; i < cards.size(); i++) {
-			
 
 			if ( i == cards.size() - 1 ) {
 				
-				cardsListString += cards.get(i).name+ ".";
+				cardsListString += cards.get(i).name;
 				
 			} else {
 				

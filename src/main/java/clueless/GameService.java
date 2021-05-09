@@ -364,13 +364,13 @@ class GameService extends GameDataManager {
 
 				if (Objects.isNull(playerWithClue)) { // if null, no one has clue -- set suggester to complete_turn
 
-					logInfoEvent(game, suggester.playerName + " made a suggestion that no one has a clue for.");
+					logInfoEvent(game, suggester.playerName + " made a suggestion that no one has a clue for (" + cardsToString(game.suggestionCards) + ").");
 					suggester.eventMessage = "No one had a clue for your suggestion. Please complete your turn or make an accusation.";
 					suggester.state = PLAYER_STATE_COMPLETE_TURN;
 
 				} else { // else, playerWithClue should be set to reveal
 
-					logInfoEvent(game, suggester.playerName + " made a suggestion that " + playerWithClue.playerName + " must reveal a clue for.");
+					logInfoEvent(game, suggester.playerName + " made a suggestion that " + playerWithClue.playerName + " must reveal a clue for (" + cardsToString(game.suggestionCards) + ").");
 					suggester.eventMessage = "Waiting for clue from " + playerWithClue.playerName;
 					playerWithClue.eventMessage = "Please reveal a clue for the provided suggestion.";
 					playerWithClue.state = PLAYER_STATE_REVEAL;
@@ -468,7 +468,7 @@ class GameService extends GameDataManager {
 				player.eventMessage = "You have started a new game.";
 				
 				// log the mystery cards selected
-				LOGGER.info("Mystery cards for game " + gid + " are: " + cardsToString(game.mysteryCards));
+				LOGGER.info("Mystery cards for game " + gid + " are: " + cardsToString(game.mysteryCards) + ".");
 				
 			} else {
 				LOGGER.info(player.playerName + " send startGame but equal to true.");
