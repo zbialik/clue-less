@@ -375,7 +375,7 @@ class GameService extends GameDataManager {
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 
 			} else { // return 400 (BAD_REQUEST)
-				LOGGER.error(suggester.playerName + " not in room provided in suggestion (room: " + suggester.currLocation + ")");
+				LOGGER.error(suggester.playerName + " not in room provided in suggestion (room: " + suggester.currLocation.name + ")");
 				suggester.eventMessage = "Please make a suggestion for the room you are in.";
 				return new ResponseEntity<String>(printJsonError("player not in room provided in suggestion"), HttpStatus.BAD_REQUEST);
 			}
@@ -416,6 +416,7 @@ class GameService extends GameDataManager {
 					suggester.state = PLAYER_STATE_ACCEPT_REVEAL;
 
 					// update player and game eventMessages
+					LOGGER.info(revealer.playerName + " revealed clue " + revealedCard + " to player " + suggester.playerName);
 					logInfoEvent(game, revealer.playerName + " revealed a clue to " + suggester.playerName + ".");
 					suggester.eventMessage = revealer.playerName + " revealed a clue to you.";
 
