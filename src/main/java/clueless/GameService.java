@@ -454,20 +454,28 @@ class GameService extends GameDataManager {
 		Game game = getGame(gid);
 		Player player = game.getPlayer(charName);
 		Player startingPlayer = game.startingPlayer();
-
-		// return 400 (BAD_REQUEST) if not VIP
-		if (!(player.vip)) { 
+		
+		if (!(player.vip)) { // return 400 (BAD_REQUEST) if not VIP
+			
 			return new ResponseEntity<String>(printJsonError("player not vip"), HttpStatus.BAD_REQUEST);
+			
 		} else { 
+			
 			// check if startName is true
 			if (activate) {
 				game.startGame(); // initiate game's start game sequence
 				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName + ". Starting player is " + startingPlayer.playerName);
 				player.eventMessage = "You have started a new game.";
+				
+				// log the mystery cards selected
+				LOGGER.info("Mystery cards for game " + gid + " are: " + cardsToString(game.mysteryCards));
+				
 			} else {
 				LOGGER.info(player.playerName + " send startGame but equal to true.");
 			}
+			
 			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
+			
 		}
 	}
 

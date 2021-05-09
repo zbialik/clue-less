@@ -329,6 +329,32 @@ public interface ClueInterface extends ClueConstants {
 	}
 	
 	/**
+	 * Returns a String representing the list of cards provided
+	 * @return cardsListString
+	 */
+	public default String cardsToString(List<Card> cards) {
+		
+		String cardsListString = new String();
+		
+		for (int i=0; i < cards.size(); i++) {
+			
+
+			if ( i == cards.size() - 1 ) {
+				
+				cardsListString += cards.get(i).name+ ".";
+				
+			} else {
+				
+				cardsListString += cards.get(i).name + ", ";
+				
+			}
+		}
+		
+		return cardsListString;
+		
+	}
+	
+	/**
 	 * Returns a JSONArray representing the list of cards provided
 	 * @return cardsListJson
 	 */
