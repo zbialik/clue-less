@@ -390,6 +390,22 @@ public class Game implements ClueInterface {
 		
 		// get winner
 		Player  winner = this.getPlayer(charName);
+		Character character;
+		Player player;
+		
+		for (int i = 0; i < CHARACTER_TURN_ORDER.length; i++) {
+			
+			character = this.characterMap.get(CHARACTER_TURN_ORDER[i]);
+			
+			if (character instanceof Player) {
+				
+				player = (Player) character;
+				
+				if ( !player.equals(winner) ) { // set losers to ‘lose’ state
+					player.state = PLAYER_STATE_LOSE;
+				}
+			}
+		}
 
 		// set winner to ‘win’ state
 		winner.state = PLAYER_STATE_WIN;
