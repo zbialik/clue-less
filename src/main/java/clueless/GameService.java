@@ -466,21 +466,38 @@ class GameService extends GameDataManager {
 			
 		} else { 
 			
-			// check if startName is true
-			if (activate) {
-				game.startGame(); // initiate game's start game sequence
-				logInfoEvent(game, "Game " + gid + " was started by " + player.playerName + ". Starting player is " + startingPlayer.playerName);
-				player.eventMessage = "You have started a new game.";
-				
-				// log the mystery cards selected
-				LOGGER.info("Mystery cards for game " + gid + " are: " + cardsToString(game.mysteryCards) + ".");
-				
-			} else {
-				LOGGER.info(player.playerName + " send startGame but equal to true.");
+			// check if there are atleast 3 players
+			int count = 0;
+			
+			for (Character character : game.characterMap.values()) {
+				if (game.isPlayer(character)) {
+					count++;
+				}
 			}
 			
-			return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
-			
+			if (count >= 3) { // minimum of 3 players
+				// check if startName is true
+				if (activate) {
+					game.startGame(); // initiate game's start game sequence
+					logInfoEvent(game, "Game " + gid + " was started by " + player.playerName + ". Starting player is " + startingPlayer.playerName);
+					player.eventMessage = "You have started a new game.";
+					
+					// log the mystery cards selected
+					LOGGER.info("Mystery cards for game " + gid + " are: " + cardsToString(game.mysteryCards) + ".");
+					
+					// TODO: loop through rest of players and set their event messages
+					
+				} else {
+					LOGGER.info(player.playerName + " send startGame but equal to true.");
+				}
+				
+				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);	
+			} else {
+				
+				LOGGER.error(player.playerName + " attempted to start game without minimum of 3 players.");
+				player.eventMessage = "You may not start the game until 3 players have joined.";
+				return new ResponseEntity<String>(printJsonError("minimum 3 players required to start game"), HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 
