@@ -480,12 +480,20 @@ class GameService extends GameDataManager {
 				if (activate) {
 					game.startGame(); // initiate game's start game sequence
 					logInfoEvent(game, "Game " + gid + " was started by " + player.playerName + ". Starting player is " + startingPlayer.playerName);
-					player.eventMessage = "You have started a new game.";
 					
 					// log the mystery cards selected
 					LOGGER.info("Mystery cards for game " + gid + " are: " + cardsToString(game.mysteryCards) + ".");
 					
-					// TODO: loop through rest of players and set their event messages
+					// loop through rest of players and set their event messages
+					for (Character character : game.characterMap.values()) {
+						if (game.isPlayer(character)) {
+							if (!((Player) character).equals(player)) {
+								((Player) character).eventMessage = "Welcome to clue!";
+							}
+						}
+					}
+					
+					player.eventMessage = "You have started a new game.";
 					
 				} else {
 					LOGGER.info(player.playerName + " send startGame but equal to true.");
@@ -496,7 +504,7 @@ class GameService extends GameDataManager {
 				
 				LOGGER.error(player.playerName + " attempted to start game without minimum of 3 players.");
 				player.eventMessage = "You may not start the game until 3 players have joined.";
-				return new ResponseEntity<String>(printJsonError("minimum 3 players required to start game"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>(printJsonError("You may not start the game until 3 players have joined."), HttpStatus.BAD_REQUEST);
 			}
 		}
 	}
