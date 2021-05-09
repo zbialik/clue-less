@@ -384,9 +384,9 @@ class GameService extends GameDataManager {
 				return new ResponseEntity<String>(jsonToString(game.toJson()), HttpStatus.OK);
 
 			} else { // return 400 (BAD_REQUEST)
+				
 				LOGGER.error(suggester.playerName + " not in room provided in suggestion (room: " + suggester.currLocation.name + ")");
-				suggester.eventMessage = "Sorry, your suggestion must include the room you're in.";
-				return new ResponseEntity<String>(printJsonError("player not in room provided in suggestion"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>(printJsonError("Your suggestion must include the room you are occupying."), HttpStatus.BAD_REQUEST);
 			}
 		}
 	}
@@ -462,7 +462,7 @@ class GameService extends GameDataManager {
 		
 		if (!(player.vip)) { // return 400 (BAD_REQUEST) if not VIP
 			
-			return new ResponseEntity<String>(printJsonError("player not vip"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(printJsonError("Only VIP Player may start the game."), HttpStatus.BAD_REQUEST);
 			
 		} else { 
 			
