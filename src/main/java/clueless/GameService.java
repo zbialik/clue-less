@@ -462,7 +462,7 @@ class GameService extends GameDataManager {
 		
 		if (!(player.vip)) { // return 400 (BAD_REQUEST) if not VIP
 			
-			return new ResponseEntity<String>(printJsonError("Only VIP Player may start the game."), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(printJsonError("Only VIP player may start the game."), HttpStatus.BAD_REQUEST);
 			
 		} else { 
 			
