@@ -416,7 +416,7 @@ class GameService extends GameDataManager {
 					suggester.state = PLAYER_STATE_ACCEPT_REVEAL;
 
 					// update player and game eventMessages
-					LOGGER.info(revealer.playerName + " revealed clue " + revealedCard + " to player " + suggester.playerName);
+					LOGGER.info(revealer.playerName + " revealed clue " + revealedCard.name + " to player " + suggester.playerName);
 					logInfoEvent(game, revealer.playerName + " revealed a clue to " + suggester.playerName + ".");
 					suggester.eventMessage = revealer.playerName + " revealed a clue to you.";
 
