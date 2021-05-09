@@ -513,7 +513,7 @@ class GameService extends GameDataManager {
 						player.state = PLAYER_STATE_SUGGEST;
 
 						// update game eventMessage
-						game.eventMessage = player.playerName + " moved " + charName + " to the " + locName;
+						game.eventMessage = player.playerName + " moved " + charName + " to the " + locName + ". Awaiting their suggestion" ;
 						player.eventMessage = "You moved to room " + locName + ", please make a suggestion";
 
 					} else { // else, prompt to complete turn
