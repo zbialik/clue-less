@@ -29,6 +29,7 @@ public class Player extends Character implements Serializable {
 		super(charName, location); 
 		this.activate(); // always change character to active when player is instantiated
 		this.playerName = name;
+		this.eventMessage = "Welcome to Clue!";
 	}
 	
 	public Player(String charName, String name, boolean firstPlayer, Location location) { // unique constructor
@@ -36,6 +37,7 @@ public class Player extends Character implements Serializable {
 		this.activate(); // always change character to active when player is instantiated
 		this.playerName = name;
 		this.vip = firstPlayer;
+		this.eventMessage = "Welcome to Clue!";
 	}
 	
 	/**
